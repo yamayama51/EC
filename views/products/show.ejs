@@ -1,0 +1,20 @@
+
+<!-- 商品詳細画面 -->
+
+<% layout('layouts/boilerplate') %>
+
+<div class="mb-3">
+    <a href="/products/<%= product._id %>/edit" class="btn btn-success">編集</a>
+    <form action="/products/<%= product._id %>?_method=DELETE" method="post" class="d-inline">
+        <button class="btn btn-danger">削除</button>
+    </form>
+</div>
+
+<h1>商品詳細</h1>
+
+<div>
+    <img src="<%= product.image %>" alt="">
+    <%= product.name %>
+    <%= product.price %>
+    <%= product.description %>
+</div>

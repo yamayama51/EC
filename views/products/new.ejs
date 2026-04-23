@@ -1,0 +1,34 @@
+
+<!-- 商品登録画面 -->
+
+<% layout('layouts/boilerplate') %>
+
+<h1>商品登録</h1>
+
+<form action="/products" method="post">
+    <div class="mb-3">
+        <label for="name">商品名：</label>
+        <input type="text" id="name" name="product[name]" required>
+    </div>
+    <div class="mb-3">
+        <label for="price">価格：</label>
+        <input type="text" id="price" name="product[price]" required>
+    </div>
+    <div class="mb-3">
+        <label for="description">商品説明：</label>
+        <textarea id="description" name="product[description]" required></textarea>
+    </div>
+    <div class="mb-3">
+        <label for="image">商品画像：</label>
+        <input type="text" id="image" name="product[image]" required>
+    </div>
+    <div class="mb-3">
+        <label for="category">カテゴリー：</label>
+        <input type="text" id="category" name="product[category]" required>
+    </div>
+    <div class="mb-3">
+        <label for="stock">在庫数：</label>
+        <input type="text" id="stock" name="product[stock]" required>
+    </div>
+    <button>登録</button>
+</form>
