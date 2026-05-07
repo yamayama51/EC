@@ -16,22 +16,29 @@
             Category
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">tops</a></li>
-            <li><a class="dropdown-item" href="#">bottoms</a></li>
-            <li><a class="dropdown-item" href="#">shoes</a></li>
-            <li><a class="dropdown-item" href="#">accessories</a></li>
+            <% Object.values(categories).forEach(category => { %>
+            <li><a class="dropdown-item" href="#"><%= category %></a></li>
+            <% }) %>
           </ul>
         </li>
       </ul>
       <ul class="navbar-nav ms-auto">
+        <% if (currentUser && currentUser.isAdmin) { %>
         <li class="nav-item">
           <a class="nav-link" href="/products/new">Add Item</a>
         </li>
+        <% } %>
+        <% if (!currentUser) { %>
         <li class="nav-item">
-          <a class="nav-link" href="#">Login</a>
+          <a class="nav-link" href="/login">Login</a>
         </li>
+        <% } else { %>
+          <li class="nav-item">
+          <a class="nav-link" href="/logout">Logout</a>
+        </li>
+        <% } %>
         <li class="nav-item">
-          <a class="nav-link" href="#">Cart</a>
+          <a class="nav-link" href="/cart">Cart</a>
         </li>
       </ul>
     </div>

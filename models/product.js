@@ -5,6 +5,7 @@
 
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
+const { PRODUCT_CATEGORIES } = require('../constants');
 
 // スキーマの定義
 const productSchema = new Schema({
@@ -30,7 +31,7 @@ const productSchema = new Schema({
     category: {
         type: String,
         required: [true, 'カテゴリーは必須です'],
-        enum: ['tops', 'bottoms', 'shoes', 'accessories'],
+        enum: Object.values(PRODUCT_CATEGORIES),
     },
     stock: {
         type: Number,

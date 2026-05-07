@@ -4,10 +4,23 @@ const express = require('express');
 const mongoose = require('mongoose');
 const path = require('path');
 const ejsMate = require('ejs-mate');
+const session = require('express-session');
+const flash = require('connect-flash');
 const methodOverride = require('method-override');
+const passport = require('passport');
+const LocalStrategy = require('passport-local');
+
+const ExpressError = require('./exceptions/ExpressError');
+const { PRODUCT_CATEGORIES } = require('./constants/index');
 
 // モデルの読み込み
-const Product = require('./models/product');
+const User = require('./models/user');
+
+// ルートの読み込み
+const userRoutes = require('./routes/users');
+const productRoutes = require('./routes/products');
+const cartRoutes = require('./routes/cart');
+const orderRoutes = require('./routes/order');
 
 // DBの接続先
 const dbUrl = 'mongodb://localhost:27017/my-fashin-store';
@@ -31,91 +44,69 @@ app.engine('ejs', ejsMate);
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-// TODO:これはなんやねん
+// リクエスト結果をreq.bodyに入れるための処理
 app.use(express.urlencoded({ extended: true }));
 
 app.use(methodOverride('_method'));
+app.use(express.static(path.join(__dirname, 'public')));
 
-// TODO:ミドルウェアを定義(あとで切り出す)
-const { productSchema } = require('./schemas');
-const ExpressError = require('./utils/ExpressError');
+// sessionの設定
+const sessionConfig = {
+    secret: 'mysecret',
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+        httpOnly: true,
+        maxAge: 1000 * 60 * 60 * 24 * 7,
+    }
+}
+app.use(session(sessionConfig));
 
+// パスポートの設定
+app.use(passport.initialize());
+app.use(passport.session());
+passport.use(new LocalStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
+
+app.use(flash());
+
+// ejs内で変数を利用できるようにする
+app.use((req, res, next) => {
+
+    res.locals.success = req.flash('success');
+    res.locals.error = req.flash('error');
+
+    // ユーザー情報を利用可能にする
+    res.locals.currentUser = req.user;
+
+    res.locals.categories = PRODUCT_CATEGORIES;
+
+    next();
+});
 
 // トップページのルーティング
 app.get('/', (req, res) => {
     res.send('トップページ');
 });
 
-// 商品のルーティング
-// TODO : 後ほどroutesに移動
-app.get('/products', async (req, res) => {
-    
-    // DBから商品一覧を取得
-    const products = await Product.find({});
+// ルーティングの設定
+app.use('/', userRoutes);
+app.use('/cart', cartRoutes);
+app.use('/order', orderRoutes);
+app.use('/products', productRoutes);
 
-    res.render('products/index', { products });
+// ページが見つからない場合
+app.use((req, res, next) => {
+    next(new ExpressError('ページが見つかりませんでした'), 404);
 });
 
-app.get('/products/new', (req, res) => {
-    res.render('products/new');
+// エラー処理
+app.use((err, req, res, next) => {
+    const { statusCode = 500 } = err;
+    if (!err.message) err.message = '問題が発生しました';
+    res.status(statusCode).render('error', { err });
 });
-
-app.post('/products', async (req, res) => {
-
-    // リクエストから入力内容を取得
-    const product = new Product(req.body.product);
-    console.log(product);
-
-    // DBに登録
-    await product.save();
-
-    res.redirect(`/products/${product._id}`);
-});
-
-app.get('/products/:id', async (req, res) => {
-
-    // URLからIDを取得
-    const { id } = req.params;
-
-    // DBから商品を取得
-    const product = await Product.findById(id);
-
-    res.render('products/show', { product });
-});
-
-app.put('/products/:id', async (req, res) => {
-
-    // URLからIDを取得
-    const { id } = req.params;
-
-    // IDに一致するデータを入力内容に書き換える
-    await Product.findByIdAndUpdate(id, {...req.body.product});
-
-    res.redirect(`/products/${product._id}`);
-});
-
-app.delete('/products/:id', async (req, res) => {
-
-    // URLからIDを取得
-    const { id } = req.params;
-
-    // IDに一致するデータを削除
-    await Product.findByIdAndDelete(id);
-
-    res.redirect('/products');
-});
-
-app.get('/products/:id/edit', async (req, res) => {
-
-    // URLからIDを取得
-    const { id } = req.params;
-
-    // DBから商品を取得
-    const product = await Product.findById(id);
-
-    res.render('products/edit', { product });
-});
-
 
 // ポートを立ち上げる
 app.listen(3000, () => {

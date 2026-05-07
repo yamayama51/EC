@@ -3,32 +3,42 @@
 
 <% layout('layouts/boilerplate') %>
 
-<h1>商品編集</h1>
-
-<form action="/products/<%= product._id %>?_method=PUT" method="post">
-    <div class="mb-3">
-        <label for="name">商品名：</label>
-        <input type="text" id="name" name="product[name]" value="<%= product.name %>" required>
+<div class="row">
+    <h1 class="text-center">商品編集</h1>
+    <div class="offset-3 col-md-6">
+        <form action="/products/<%= product._id %>?_method=PUT" method="post" class="validated-form" novalidate>
+            <div class="mb-3">
+                <label for="name" class="form-label">商品名：</label>
+                <input type="text" id="name" name="product[name]" class="form-control" value="<%= product.name %>" required>
+            </div>
+            <div class="mb-3">
+                <label for="price" class="form-label">価格：</label>
+                <input type="text" id="price" name="product[price]" class="form-control" value="<%= product.price %>" required>
+            </div>
+            <div class="mb-3">
+                <label for="description" class="form-label">商品説明：</label>
+                <textarea id="description" name="product[description]" class="form-control" required><%= product.description %></textarea>
+            </div>
+            <div class="mb-3">
+                <label for="image" class="form-label">商品画像：</label>
+                <input type="text" id="image" name="product[image]" class="form-control" value="<%= product.image %>" required>
+            </div>
+            <div class="mb-3">
+                <label for="category" class="form-label">カテゴリー：</label>
+                <select id="category" name="product[category]" class="form-select" required>
+                    <% Object.values(categories).forEach(category => { %>
+                    <option value="<%= category %>" <%= product.category === category ? 'selected' : '' %>>
+                        <%= category %>
+                    </option>
+                    <% }) %>
+                </select>
+            </div>
+            <div class="mb-3">
+                <label for="stock" class="form-label">在庫数：</label>
+                <input type="text" id="stock" name="product[stock]" class="form-control" value="<%= product.stock %>" required>
+            </div>
+            <button class="btn btn-success">更新</button>
+            <a href="/products/<%= product._id %>" class="btn btn-secondary">商品詳細へ</a>
+        </form>
     </div>
-    <div class="mb-3">
-        <label for="price">価格：</label>
-        <input type="text" id="price" name="product[price]" value="<%= product.price %>" required>
-    </div>
-    <div class="mb-3">
-        <label for="description">商品説明：</label>
-        <textarea id="description" name="product[description]" required><%= product.description %></textarea>
-    </div>
-    <div class="mb-3">
-        <label for="image">商品画像：</label>
-        <input type="text" id="image" name="product[image]" value="<%= product.image %>" required>
-    </div>
-    <div class="mb-3">
-        <label for="category">カテゴリー：</label>
-        <input type="text" id="category" name="product[category]" value="<%= product.category %>" required>
-    </div>
-    <div class="mb-3">
-        <label for="stock">在庫数：</label>
-        <input type="text" id="stock" name="product[stock]" value="<%= product.stock %>" required>
-    </div>
-    <button>更新</button>
-</form>
+</div>

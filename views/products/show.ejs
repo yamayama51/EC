@@ -3,18 +3,34 @@
 
 <% layout('layouts/boilerplate') %>
 
+<!-- 管理者権限がある場合 -->
+<% if (currentUser && currentUser.isAdmin) { %>
 <div class="mb-3">
     <a href="/products/<%= product._id %>/edit" class="btn btn-success">編集</a>
     <form action="/products/<%= product._id %>?_method=DELETE" method="post" class="d-inline">
         <button class="btn btn-danger">削除</button>
     </form>
 </div>
+<% } %>
 
 <h1>商品詳細</h1>
 
-<div>
+<div class="mb-3">
     <img src="<%= product.image %>" alt="">
     <%= product.name %>
     <%= product.price %>
     <%= product.description %>
 </div>
+
+<form action="/cart" method="post" class="mb-3">
+    <input type="hidden" name="productId" value="<%= product._id %>">
+
+    <label for="quantity">数量：</label>
+    <select name="quantity" id="quantity">
+        <% for (let i = 1; i <= 10; i++) { %>
+        <option value="<%= i %>"><%= i %></option>
+        <% } %>
+    </select>
+    <button class="btn btn-primary">カートに入れる</button>
+    <a href="/products" class="btn btn-secondary">商品一覧に戻る</a>
+</form>

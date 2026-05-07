@@ -1,0 +1,45 @@
+
+<!-- カート編集画面 -->
+
+<% layout('layouts/boilerplate') %>
+
+<h1>カート</h1>
+
+<% if (user.cart.length > 0) { %>
+    <% user.cart.forEach(item => { %>
+        <div class="mb-3">
+            <h5><%= item.productId.name %></h5>
+            <img src="<%= item.productId.image %>" alt="">
+            <div>
+                <nav aria-label="Page navigation example">
+                <ul class="pagination">
+                    <li class="page-item">
+                        <form action="/cart/<%= item.productId._id %>/reduce?_method=PATCH" method="POST">
+                            <button class="page-link">-</button>
+                        </form>
+                    </li>
+                    <li class="page-item disabled"><p class="page-link"><%= item.quantity %></p></li>
+                    <li class="page-item">
+                        <form action="/cart/<%= item.productId._id %>/add?_method=PATCH" method="POST">
+                            <button class="page-link">+</button>
+                        </form>
+                    </li>
+                </ul>
+                </nav>
+                <form action="/cart/<%= item.productId._id %>/delete?_method=PATCH" method="POST">
+                    <button class="btn btn-dark">カートから削除</button>
+                </form>
+            </div>
+            <p>\ <%= item.productId.price %></p>
+        </div>
+    <% }) %>
+<% } else { %>
+    <h5>カートに商品がありません</h5>
+<% } %>
+
+<p>合計金額：\ <%= total %></p>
+
+<form action="/order" method="post">
+    <button>注文する</button>
+</form>
+
