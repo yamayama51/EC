@@ -4,6 +4,7 @@
 // |ーーーーーーーーーーーーーーーーーーーーーーーーー
 
 const User = require('../models/user');
+const Product = require('../models/product');
 
 const { MAX_PRODUCT_QTY } = require('../constants/index');
 
@@ -27,10 +28,20 @@ module.exports.addToCart = async (req, res) => {
 
     // 入力データを取得
     const { productId, quantity } = req.body;
+
+    // セッションからユーザーを取得
     const user = await User.findById(req.user._id);
 
     // すでに同じ商品がカートにあるかを確認する
     const cartItem = user.cart.find(item => item.productId.equals(productId));
+    const currentQuantityInCart = cartItem ? cartItem.quantity : 0;
+
+    // カート内の数量と在庫数を比較
+    const product = await Product.findById(productId);
+    if (parseInt(product.stock) < currentQuantityInCart + parseInt(quantity)) {
+        req.flash('error', '注文数が在庫数を超過しています');
+        return res.redirect(`/products/${productId}`);
+    }
 
     if (cartItem) {
         
@@ -63,6 +74,13 @@ module.exports.addQuantity = async (req, res) => {
 
     // カートのアイテムを探す
     const cartItem = user.cart.find(item => item.productId.equals(productId));
+
+    // カート内の数量と在庫数を比較
+    const product = await Product.findById(productId);
+    if (parseInt(product.stock) < parseInt(cartItem.quantity) + 1) {
+        req.flash('error', '注文数が在庫数を超過しています');
+        return res.redirect('/cart');
+    }
 
     // 数量を+1して保存
     if (cartItem) {

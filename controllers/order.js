@@ -5,6 +5,7 @@
 
 const User = require('../models/user');
 const Order = require('../models/order');
+const Product = require('../models/product');
 
 // オーダーの作成処理
 module.exports.createOrder = async (req, res) => {
@@ -15,7 +16,20 @@ module.exports.createOrder = async (req, res) => {
     // カートが空なら何もしない
     if (user.cart.length === 0) return res.redirect('/cart');
 
-    // アイテム情報を取得する
+    // カート内の各商品に対して在庫確認の処理を実行
+    for (let item of user.cart) {
+
+        // 今の商品在庫と注文数を定義
+        const currentStock = item.productId.stock;
+        const requestQty = item.quantity;
+
+        if (currentStock < requestQty) {
+            req.flash('error', `${item.productId.name}の在庫が不足しています (残り${currentStock}個)`);
+            return res.redirect('/cart');
+        }
+    }
+
+    // カート内のアイテム情報を取得する
     const orderItems = user.cart.map(item => {
         return {
             productId: item.productId._id,
@@ -24,6 +38,7 @@ module.exports.createOrder = async (req, res) => {
         }
     });
 
+    // MEMO:関数に切り分けたい
     // 商品の合計金額を計算する
     let total = 0;
     for (let item of user.cart) {
@@ -40,6 +55,13 @@ module.exports.createOrder = async (req, res) => {
 
     // Orderを保存
     await order.save();
+
+    // 在庫の減算処理を実行
+    for (let item of user.cart) {
+        await Product.findByIdAndUpdate(item.productId._id, {
+            $inc: { stock: -item.quantity }
+        });
+    }
 
     // カートを空にして保存
     user.cart = [];

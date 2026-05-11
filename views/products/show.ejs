@@ -17,9 +17,20 @@
 
 <div class="mb-3">
     <img src="<%= product.image %>" alt="">
-    <%= product.name %>
-    <%= product.price %>
-    <%= product.description %>
+    <p>
+        <% if (product.stock <= 10) { %>
+        残り在庫数：<%= product.stock %>点
+        <% } %>
+    </p>
+    <p>
+        商品名：<%= product.name %>
+    </p>
+    <p>
+        \ <%= product.price %>
+    </p>
+    <p>
+        商品説明：<%= product.description %>
+    </p>
 </div>
 
 <form action="/cart" method="post" class="mb-3">

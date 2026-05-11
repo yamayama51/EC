@@ -8,10 +8,10 @@ const router = express.Router();
 const order = require('../controllers/order');
 const { orderSchema } = require('../schemas/schemas');
 
-const { validate } = require('../middlewares/middlewares');
+const { isLogedIn } = require('../middlewares/middlewares');
 const catchAsync = require('../helpers/catchAsync');
 
 router.route('/')
-    .post(validate(orderSchema), catchAsync(order.createOrder))
+    .post(isLogedIn, catchAsync(order.createOrder))
 
 module.exports = router;
