@@ -3,9 +3,26 @@
 // | オーダーのDB処理・htmlの表示等(処理系)
 // |ーーーーーーーーーーーーーーーーーーーーーーーーー
 
+const { format } = require('date-fns');
+
 const User = require('../models/user');
 const Order = require('../models/order');
 const Product = require('../models/product');
+
+// 注文一覧の表示
+module.exports.index = async (req, res) => {
+
+    // セッションからユーザーIDを取得
+    const userId = req.user._id;
+
+    // ユーザーに一致するオーダー情報を取得
+    const orders = await Order.find({ user: userId })
+        .populate('items.productId')
+        .sort({ createdAt: -1 }
+    );
+
+    res.render('orders/index', { orders, format });
+}
 
 // オーダーの作成処理
 module.exports.createOrder = async (req, res) => {

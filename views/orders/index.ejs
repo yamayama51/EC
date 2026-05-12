@@ -1,0 +1,38 @@
+
+<!-- 注文履歴画面 -->
+
+<% layout('layouts/boilerplate') %>
+
+<h1>注文履歴</h1>
+
+<div class="mb-3">
+    <% if (orders.length === 0) { %>
+        <p>注文履歴がありません</p>
+    <% } %>
+        
+    <% for (order of orders) { %>
+        <div class="mb-3 card">
+            <p>
+            <% for (item of order.items) { %>
+                <% if (item.productId) { %>
+                    <p>商品名：
+                        <a href="/products/<%= item.productId._id %>">
+                            <%= item.productId.name %>
+                        </a>
+                    </p>
+                <% } else { %>
+                    <p>不明な商品(削除された可能性があります)</p>
+                <% } %>
+                <p>数量：<%= item.quantity %></p>
+            <% } %>
+            </p>
+            <div>
+                <h5>注文情報</h5>
+                <p>注文番号：<%= order._id %></p>
+                <p>注文日：<%= format(order.createdAt, 'yyyy/MM/dd') %></p>
+                <p>合計金額：\<%= order.totalPrice.toLocaleString() %></p>
+            </div>
+            <a href="/orders/<%= order._id %>">注文詳細へ</a>
+        </div>
+    <% } %>
+</div>

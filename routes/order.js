@@ -12,6 +12,7 @@ const { isLogedIn } = require('../middlewares/middlewares');
 const catchAsync = require('../helpers/catchAsync');
 
 router.route('/')
+    .get(isLogedIn, catchAsync(order.index))
     .post(isLogedIn, catchAsync(order.createOrder))
 
 router.route('/success')
