@@ -69,7 +69,7 @@ module.exports.createOrder = async (req, res) => {
 
     req.flash('success', '注文が完了しました');
 
-    res.redirect(`/order/success?orderId=${order._id}`);
+    res.redirect(`/orders/success?orderId=${order._id}`);
 }
 
 // 注文完了画面の表示
