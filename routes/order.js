@@ -14,4 +14,7 @@ const catchAsync = require('../helpers/catchAsync');
 router.route('/')
     .post(isLogedIn, catchAsync(order.createOrder))
 
+router.route('/success')
+    .get(isLogedIn, order.renderSuccessForm);
+
 module.exports = router;

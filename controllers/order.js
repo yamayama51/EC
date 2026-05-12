@@ -69,5 +69,19 @@ module.exports.createOrder = async (req, res) => {
 
     req.flash('success', '注文が完了しました');
 
-    res.redirect('/products');
+    res.redirect(`/order/success?orderId=${order._id}`);
+}
+
+// 注文完了画面の表示
+module.exports.renderSuccessForm = (req, res) => {
+
+    // URLからorderIdを取得
+    const { orderId } = req.query;
+
+    // queryがない場合、一覧画面へ遷移
+    if (!orderId) {
+        return res.redirect('/products');
+    }
+
+    res.render('orders/success', { orderId });
 }
