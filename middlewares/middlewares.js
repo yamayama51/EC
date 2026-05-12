@@ -6,7 +6,7 @@
 const ExpressError = require('../exceptions/ExpressError');
 
 // ログイン状態を確認
-module.exports.isLogedIn = (req, res, next) => {
+module.exports.isLoggedIn = (req, res, next) => {
     
     if (!req.isAuthenticated()) {
         console.log('ログインしてください');
