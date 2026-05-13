@@ -89,6 +89,22 @@ module.exports.createOrder = async (req, res) => {
     res.redirect(`/orders/success?orderId=${order._id}`);
 }
 
+// 注文詳細画面の表示
+module.exports.renderShowForm = async (req, res) => {
+
+    // 注文を1件取得
+    const { id } = req.params;
+    const order = await Order.findById(id).populate('items.productId');
+
+    // orderを取得できない場合、
+    if (!order || !order.user.equals(req.user._id)) {
+        req.flash('error', '注文が見つかりませんでした');
+        return res.redirect('/orders');
+    }
+
+    res.render('orders/show', { order, format });
+}
+
 // 注文完了画面の表示
 module.exports.renderSuccessForm = (req, res) => {
 

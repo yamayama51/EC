@@ -15,6 +15,9 @@ router.route('/')
     .get(isLoggedIn, catchAsync(order.index))
     .post(isLoggedIn, catchAsync(order.createOrder))
 
+router.route('/:id')
+    .get(isLoggedIn, order.renderShowForm)
+
 router.route('/success')
     .get(isLoggedIn, order.renderSuccessForm);
 
