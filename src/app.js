@@ -95,6 +95,7 @@ app.use('/', userRoutes);
 app.use('/cart', cartRoutes);
 app.use('/orders', orderRoutes);
 app.use('/products', productRoutes); 
+
 // ページが見つからない場合
 app.use((req, res, next) => {
     next(new ExpressError('ページが見つかりませんでした'), 404);
