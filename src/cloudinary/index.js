@@ -1,0 +1,26 @@
+
+// Cloudinaryをこのアプリ用に設定するファイル
+
+const cloudinary = require('cloudinary').v2;
+const { CloudinaryStorage } = require('multer-storage-cloudinary');
+
+// cloudinaryのアカウント設定
+cloudinary.config({
+    cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
+    api_key: process.env.CLOUDINARY_KEY,
+    api_secret: process.env.CLOUDINARY_SECRET
+});
+
+// 保存先の設定
+const storage = new CloudinaryStorage({
+    cloudinary,
+    params: {
+        folder: 'EC',
+        allowed_formats: ['jpeg', 'png', 'jpg']
+    }
+});
+
+module.exports = {
+    cloudinary,
+    storage,
+};

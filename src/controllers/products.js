@@ -3,6 +3,8 @@
 // | 商品のDB処理・htmlの表示等(処理系)
 // |ーーーーーーーーーーーーーーーーーーーーーーーーー
 
+const { cloudinary } = require('../cloudinary');
+
 const Product = require('../models/product');
 
 // 商品一覧の表示
@@ -62,6 +64,9 @@ module.exports.createProduct = async (req, res) => {
     // リクエストから入力内容を取得
     const product = new Product(req.body.product);
 
+    // 画像をループし格納
+    product.images = req.files.map(f => ({ url: f.path, filename: f.filename }));
+
     // DBに登録
     await product.save();
 
@@ -79,6 +84,27 @@ module.exports.updateProduct = async (req, res) => {
     // IDに一致するデータを入力内容に書き換える
     const product = await Product.findByIdAndUpdate(id, {...req.body.product});
 
+    // 画像をループし格納
+    const imgs = req.files.map(f => ({ url: f.path, filename: f.filename }));
+    product.images.push(...imgs);
+
+    await product.save();
+
+    // 画像削除がある場合、DB・Cloudinaryの両方から削除する
+    console.log(req.body.deleteImages);
+    if (req.body.deleteImages) {
+
+        // Cloudinary上から削除する
+        for (let filename of req.body.deleteImages) {
+            if (filename) {
+                await cloudinary.uploader.destroy(filename);
+            }
+        }
+
+        // DB上から削除する
+        await Product.findByIdAndUpdate(id, {$pull: {images: {filename: {$in: req.body.deleteImages}}}});
+    }
+
     req.flash('success', '商品を更新しました');
 
     res.redirect(`/products/${product._id}`);
@@ -89,6 +115,22 @@ module.exports.deleteProduct = async (req, res) => {
 
     // URLからIDを取得
     const { id } = req.params;
+
+    // 商品データを取得
+    const product = await Product.findById(id);
+
+    // 商品が見つからない場合は、商品一覧へ戻る
+    if (!product) {
+        req.flash('error', '対象の商品が見つかりません');
+        return res.redirect('/products');
+    }
+
+    // Cloudinary上から画像を削除する
+    if (product.images.length > 0) {
+        for (let img of product.images) {
+            await cloudinary.uploader.destroy(img.filename);
+        }
+    }
 
     // IDに一致するデータを削除
     await Product.findByIdAndDelete(id);

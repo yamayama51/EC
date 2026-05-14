@@ -6,7 +6,7 @@
 <div class="row">
     <h1 class="text-center">商品編集</h1>
     <div class="offset-3 col-md-6">
-        <form action="/products/<%= product._id %>?_method=PUT" method="post" class="validated-form" novalidate>
+        <form action="/products/<%= product._id %>?_method=PUT" method="post" class="validated-form" novalidate enctype="multipart/form-data">
             <div class="mb-3">
                 <label for="name" class="form-label">商品名：</label>
                 <input type="text" id="name" name="product[name]" class="form-control" value="<%= product.name %>" required>
@@ -20,8 +20,15 @@
                 <textarea id="description" name="product[description]" class="form-control" required><%= product.description %></textarea>
             </div>
             <div class="mb-3">
-                <label for="image" class="form-label">商品画像：</label>
-                <input type="text" id="image" name="product[image]" class="form-control" value="<%= product.image %>" required>
+                <label for="image" class="form-label">商品画像のアップロード：</label>
+                <input type="file" id="image" name="product[images]" class="form-control" multiple>
+            </div>
+            <div class="mb-3">
+                <% product.images.forEach((img, i) => { %>
+                    <img src="<%= img.url %>" alt="">
+                    <input type="checkbox" id="image-<%= i %>" name="deleteImages[]" value="<%= img.filename %>">
+                    <label for="image-<%= i %>">削除する</label>
+                <% }) %>
             </div>
             <div class="mb-3">
                 <label for="category" class="form-label">カテゴリー：</label>

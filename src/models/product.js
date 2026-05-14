@@ -6,8 +6,21 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 const { PRODUCT_CATEGORIES } = require('../constants');
+const { required } = require('joi');
 
-// スキーマの定義
+// 画像のスキーマ定義
+const imageSchema = new Schema({
+    url: {
+        type: String,
+        required: true,
+    },
+    filename: {
+        type: String,
+        required: true,
+    }
+});
+
+// 商品スキーマ定義
 const productSchema = new Schema({
 
     name: {
@@ -24,9 +37,8 @@ const productSchema = new Schema({
         type: String,
         required: [true, '商品説明は必須です'],
     },
-    image: {
-        type: String,
-        required: [true, '商品画像は必須です'],
+    images: {
+        type: [imageSchema],
     },
     category: {
         type: String,

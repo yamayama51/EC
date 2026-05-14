@@ -26,10 +26,16 @@ module.exports.productSchema = Joi.object({
         name: Joi.string().required(),
         price: Joi.number().required().min(0).max(10000000),
         description: Joi.string().required(),
-        image: Joi.string().required(),
+        images: Joi.array().items(
+			Joi.object({
+				url: Joi.string().required(),
+				filename: Joi.string().required(),
+			})
+		).optional(),
         category: Joi.string().valid(...Object.values(PRODUCT_CATEGORIES)).required(),
         stock: Joi.number().required().min(0).max(100000),
-    }).required()
+    }).required(),
+	deleteImages: Joi.array()
 });
 
 // オーダースキーマのバリデーションルールの作成

@@ -1,4 +1,9 @@
 
+// プロダクション環境（本番環境）以外の場合に .env を読み込む設定
+if (process.env.NODE_ENV !== "production") {
+    require('dotenv').config();
+}
+
 // 外部パッケージのインポート
 const express = require('express');
 const mongoose = require('mongoose');
