@@ -6,20 +6,29 @@
 <div class="row">
 <% for(product of products) { %>
     <div class="col-lg-3 col-md-4 col-sm-6 mb-4">
-        <div class="card shadow-sm">
+        <div class="card shadow-sm border-0 position-relative product-card">
             <a href="/products/<%= product._id %>" class="text-muted text-decoration-none">
                 <% if (product.images && product.images.length) { %>
-                    <img src="<%= product.images[0].url %>" class="card-img-top" alt="...">
+                    <div class="ratio ratio-1x1 overflow-hidden">
+                        <img src="<%= product.images[0].url %>" class="card-img-top object-fit-cover" alt="product-img">
+                    </div>
                 <% } else { %>
-                    <img src="/images/no-image.png" alt="">
+                    <div class="ratio ratio-1x1 overflow-hidden">
+                        <img src="/images/no-image.png" class="card-img-top object-fit-cover" alt="no-img">
+                    </div>
                 <% } %>
                 <div class="card-body">
-                    <h5 class="card-title"><%= product.name %></h5>
-                    <p class="card-text">\ <%= product.price.toLocaleString() %></p>
+                    <p class="text-secondary small mb-1"><%= product.category %></p>
+                    <p class="card-title h5 fw-bold mb-1 text-dark"><%= product.name %></p>
+                    <p class="card-text fw-bold text-dark">\ <%= product.price.toLocaleString() %></p>
                 </div>
             </a>
+
+            <!-- お気に入り機能未実装のため -->
+            <!-- <button class="btn btn-link text-decoration-none position-absolute bottom-0 end-0 m-2 p-0 text-secondary btn-like">
+                <span class="h4">♡</span>
+            </button> -->
         </div>
     </div>
 <% } %>
 </div>
-

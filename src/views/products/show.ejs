@@ -6,77 +6,98 @@
 <!-- 管理者権限がある場合 -->
 <% if (currentUser && currentUser.isAdmin) { %>
 <div class="mb-3">
-    <a href="/products/<%= product._id %>/edit" class="btn btn-success">編集</a>
+    <a href="/products/<%= product._id %>/edit" class="btn btn-primary mx-3">編集</a>
     <form action="/products/<%= product._id %>?_method=DELETE" method="post" class="d-inline">
         <button class="btn btn-danger">削除</button>
     </form>
 </div>
 <% } %>
 
-<h1>商品詳細</h1>
-
 <div class="mb-3">
-    <div id="productCarousel" class="carousel slide">
-        <div class="carousel-indicators">
-            <% product.images.forEach((img, i) => { %>
-            <button
-                type="button" 
-                data-bs-target="#productCarousel" 
-                data-bs-slide-to="<%= i %>" 
-                class="<%= i === 0 ? 'active' : '' %>" 
-                aria-current="<%= i === 0 ? 'true' : 'false' %>" 
-                aria-label="Slide 1">
-            </button>
-            <% }) %>
-        </div>
-        <div class="carousel-inner">
-            <% if (product.images && product.images.length) { %>
-                <% product.images.forEach((img, i) => { %>
-                    <div class="carousel-item <%= i === 0 ? 'active' : '' %>">
-                        <img src="<%= img.url %>" class="d-block w-100" alt="...">
-                    </div>
-                <% }) %>
-            <% } else { %>
-                <img src="/images/no-image.png" alt="">
-            <% } %>
-        </div>
+    <div class="row g-lg-5">
+        <div class="col-md-6 mb-5">
+            <div id="productCarousel" class="carousel slide">
+                <div class="carousel-indicators">
+                    <% product.images.forEach((img, i) => { %>
+                    <button
+                        type="button" 
+                        data-bs-target="#productCarousel" 
+                        data-bs-slide-to="<%= i %>" 
+                        class="<%= i === 0 ? 'active' : '' %>" 
+                        aria-current="<%= i === 0 ? 'true' : 'false' %>" 
+                        aria-label="Slide 1">
+                    </button>
+                    <% }) %>
+                </div>
+                <div class="carousel-inner shadow-sm">
+                    <% if (product.images && product.images.length) { %>
+                        <% product.images.forEach((img, i) => { %>
+                            <div class="ratio ratio-1x1 overflow-hidden rounded-3 carousel-item <%= i === 0 ? 'active' : '' %>">
+                                <img src="<%= img.url %>" class="card-img-top object-fit-cover" alt="product-img">
+                            </div>
+                        <% }) %>
+                    <% } else { %>
+                        <div class="ratio ratio-1x1 overflow-hidden rounded-3 carousel-item active">
+                            <img src="/images/no-image.png" class="card-img-top object-fit-cover" alt="no-img">
+                        </div>
+                    <% } %>
+                </div>
 
-        <% if (product.images.length > 1) { %>
-        <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
-            <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Previous</span>
-        </button>
-        <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
-            <span class="carousel-control-next-icon" aria-hidden="true"></span>
-            <span class="visually-hidden">Next</span>
-        </button>
-        <% } %>
+                <% if (product.images.length > 1) { %>
+                <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+                <% } %>
+            </div>
+        </div>
+        <div class="col-md-6 position-relative">
+
+            <!-- お気に入り機能未実装のため -->
+            <!-- <button class="btn btn-link text-decoration-none position-absolute top-0 end-0 m-2 p-0 text-secondary btn-like">
+                <span class="h3">♡</span>
+            </button> -->
+            <div class="mb-5">
+                <p class="text-muted small mb-2">My-Style</p>
+                <p class="h2 fw-bold mb-2"><%= product.name %></p>
+                <p class="h4 fw-light mb-1">\ <%= product.price.toLocaleString() %> <span class="h6 fw-normal text-muted">(税込み)</span></p>
+            </div>
+
+            <hr class="my-4 opacity-10">
+
+            <div class="mb-5">
+                <p class="text-muted small mb-1">商品説明</p>
+                <p class="h6 lh-lg fw-normal"><%= product.description %></p>
+            </div>
+            <% if (product.stock <= 10) { %>
+                <p class="text-danger fw-bold small">残り在庫数：<%= product.stock %>点</p>
+            <% } %>
+
+            <div class="card border-0 shadow-sm bg-white p-4 rounded-3">
+                <form action="/cart" method="post" class="mb-3">
+                    <input type="hidden" name="productId" value="<%= product._id %>">
+
+                    <div class="row mb-3 align-items-center">
+                        <label for="quantity" class="col-3 fw-bold">数量</label>
+                        <div class="col-9">
+                            <select name="quantity" id="quantity" class="form-select border-0 bg-light shadow-sm">
+                                <% for (let i = 1; i <= 10; i++) { %>
+                                <option value="<%= i %>"><%= i %></option>
+                                <% } %>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-dark py-3 fw-bold mb-3">カートに入れる</button>
+                        <a href="/products" class="btn text-muted">商品一覧に戻る</a>
+                    </div>
+                </form>
+            </div>
+        </div>
     </div>
-    <p>
-        <% if (product.stock <= 10) { %>
-        残り在庫数：<%= product.stock %>点
-        <% } %>
-    </p>
-    <p>
-        商品名：<%= product.name %>
-    </p>
-    <p>
-        \ <%= product.price.toLocaleString() %>
-    </p>
-    <p>
-        商品説明：<%= product.description %>
-    </p>
 </div>
 
-<form action="/cart" method="post" class="mb-3">
-    <input type="hidden" name="productId" value="<%= product._id %>">
-
-    <label for="quantity">数量：</label>
-    <select name="quantity" id="quantity">
-        <% for (let i = 1; i <= 10; i++) { %>
-        <option value="<%= i %>"><%= i %></option>
-        <% } %>
-    </select>
-    <button class="btn btn-primary">カートに入れる</button>
-    <a href="/products" class="btn btn-secondary">商品一覧に戻る</a>
-</form>

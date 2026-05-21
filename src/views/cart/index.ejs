@@ -3,44 +3,90 @@
 
 <% layout('layouts/boilerplate') %>
 
-<h1>カート</h1>
+<h1 class="h3 fw-bold mb-5">ショッピングカート</h1>
 
-<% if (user.cart.length > 0) { %>
-    <% user.cart.forEach(item => { %>
-        <div class="mb-3">
-            <h5><%= item.productId.name %></h5>
-            <img src="<%= item.productId.image %>" alt="">
-            <p>在庫数：<%= item.productId.stock %></p>
-            <div>
-                <nav aria-label="Page navigation example">
-                <ul class="pagination">
-                    <li class="page-item">
-                        <form action="/cart/<%= item.productId._id %>/reduce?_method=PATCH" method="POST">
-                            <button class="page-link">-</button>
-                        </form>
-                    </li>
-                    <li class="page-item disabled"><p class="page-link"><%= item.quantity %></p></li>
-                    <li class="page-item">
-                        <form action="/cart/<%= item.productId._id %>/add?_method=PATCH" method="POST">
-                            <button class="page-link">+</button>
-                        </form>
-                    </li>
-                </ul>
-                </nav>
-                <form action="/cart/<%= item.productId._id %>/delete?_method=PATCH" method="POST">
-                    <button class="btn btn-dark">カートから削除</button>
-                </form>
+<div class="row g-lg-5">
+    <div class="col-lg-8 mb-3">
+    <% if (user.cart.length > 0) { %>
+        <% user.cart.forEach(item => { %>
+            <div class="d-flex align-items-center py-4 border-bottom position-relative">
+
+                <a href="/products/<%= item.productId._id %>">
+                    <div class="ratio ratio-1x1 bg-white rounded-3 shadow-sm overflow-hidden" style="width: 100px">
+                        <% if (item.productId.images.length > 0) { %>
+                            <img src="<%= item.productId.images[0].url %>" class="object-fit-cover" alt="product-img">
+                        <% } else { %>
+                            <img src="/images/no-image.png" class="object-fit-cover" alt="no-img">
+                        <% } %>
+                    </div>
+                </a>
+
+                <div class="flex-grow-1 ms-3 ms-md-4">
+                    <p class="text-muted small mb-1">My-Style</p>
+                    <p><a href="/products/<%= item.productId._id %>" class="h5 fw-bold text-dark text-decoration-none"><%= item.productId.name %></a></p>
+                    <p class="fw-bold">\ <%= item.productId.price.toLocaleString() %></p>
+                </div>
+
+                <div class="position-absolute end-0 top-4 text-end d-flex flex-column align-items-end">
+                    <ul class="pagination">
+                        <% if (item.quantity !== 1) { %>
+                            <li class="page-item">
+                                <form action="/cart/<%= item.productId._id %>/reduce?_method=PATCH" method="POST">  
+                                    <button class="page-link text-dark">-</button>
+                                </form>
+                            </li>
+                        <% } %>
+                        <li class="page-item disabled"><p class="page-link"><%= item.quantity %></p></li>
+                        <% if (item.quantity < 10) { %>
+                            <li class="page-item">
+                                <form action="/cart/<%= item.productId._id %>/add?_method=PATCH" method="POST">
+                                    <button class="page-link text-dark">+</button>
+                                </form>
+                            </li>
+                        <% } %>
+                    </ul>
+                    <form action="/cart/<%= item.productId._id %>/delete?_method=PATCH" method="POST">
+                        <button class="btn btn-link btn-sm text-muted text-decoration-none p-0 small">削除</button>
+                    </form>
+                </div>
+                
             </div>
-            <p>\ <%= item.productId.price %></p>
+        <% }) %>
+    <% } else { %>
+        <p class="h4 text-muted fw-bold">現在カートに商品がありません</p>
+    <% } %>
+    </div>
+
+    <div class="col-lg-4">
+        <div class="card bg-white shadow-sm rounded-3 p-4 border-0">
+            <% if (user.cart.length > 0) { %>
+                <h2 class="h5 fw-bold text-dark mb-3">注文内容</h2>
+
+                <div class="d-flex justify-content-between mb-3">
+                    <span class="text-secondary small">商品合計</span>
+                    <span class="fw-bold text-dark small">\ <%= total.toLocaleString() %></span>
+                </div>
+
+                <div class="d-flex justify-content-between mb-3">
+                    <span class="text-secondary small">送料</span>
+                    <span class="text-success small fw-bold">無料</span>
+                </div>
+
+                <hr class="my-4 opacity-10">
+
+                <div class="d-flex justify-content-between mb-3">
+                    <span class="text-dark fw-bold">合計金額</span>
+                    <span class="h4 text-dark fw-bold">\ <%= total.toLocaleString() %></span>
+                </div>
+
+                <form action="/orders" method="post">
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-dark btn-lg py-3 fw-bold shadow-sm">注文する</button>
+                    </div>
+                </form>
+            <% } else { %>
+                <a href="/products" class="btn btn-dark py-3">買い物を続ける</a>
+            <% } %>
         </div>
-    <% }) %>
-<% } else { %>
-    <h5>カートに商品がありません</h5>
-<% } %>
-
-<p>合計金額：\ <%= total %></p>
-
-<form action="/orders" method="post">
-    <button class="btn btn-primary">注文する</button>
-</form>
-
+    </div>
+</div>
