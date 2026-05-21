@@ -38,7 +38,9 @@ const userSchema = new Schema({
 });
 
 // ユーザー名・パスワード等を自動で生成する
-userSchema.plugin(passportLocalMongoose.default || passportLocalMongoose);
+userSchema.plugin(passportLocalMongoose.default || passportLocalMongoose, {
+	usernameField: 'email'
+});
 
 // エクスポートして外部で使用できるようにする
 module.exports = mongoose.model('User', userSchema);

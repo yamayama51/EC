@@ -12,14 +12,14 @@ module.exports.renderRegister = (req, res) => {
 }
 
 // ユーザー登録処理
-module.exports.register = async (req, res) => {
+module.exports.register = async (req, res, next) => {
 
     try{
         // ユーザー情報を取得
-        const { email, username, password } = req.body;
+        const { email, password } = req.body;
 
         // ユーザーを作成
-        const user = new User({ email, username });
+        const user = new User({ email });
 
         // 登録処理
         const registeredUser = await User.register(user, password);

@@ -8,7 +8,6 @@ const { PRODUCT_CATEGORIES } = require('../constants/index');
 
 // ユーザースキーマのバリデーションルールの作成
 module.exports.userSchema = Joi.object({
-	username: Joi.string().required().alphanum().min(3).max(20).trim(),
 	email: Joi.string().email().required().trim(),
 	password: Joi.string().required().min(8),
 	isAdmin: Joi.boolean().default(false),
