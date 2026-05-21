@@ -50,6 +50,7 @@ module.exports.createOrder = async (req, res) => {
     const orderItems = user.cart.map(item => {
         return {
             productId: item.productId._id,
+            name: item.productId.name,
             quantity: item.quantity,
             priceAtPurchase: item.productId.price,
         }

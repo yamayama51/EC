@@ -21,6 +21,10 @@ const orderSchema = new Schema({
 				ref: 'Product',
 				required: [true, '商品IDは必須です'],
 			},
+			name: {
+				type: String,
+				required: [true, '商品名は必須です']
+			},
 			quantity: {
 				type: Number,
 				required: [true, '注文数量は必須です'],
