@@ -20,6 +20,11 @@ const imageSchema = new Schema({
     }
 });
 
+// 画像スキーマに仮想のプロパティを追加
+imageSchema.virtual('thumbnail').get(function () {
+    return this.url.replace('/upload', '/upload/w_120,h_120,c_fill');
+});
+
 // 商品スキーマ定義
 const productSchema = new Schema({
 

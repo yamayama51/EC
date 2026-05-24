@@ -11,10 +11,10 @@
         <% user.cart.forEach(item => { %>
             <div class="d-flex align-items-center py-4 border-bottom position-relative">
 
-                <a href="/products/<%= item.productId._id %>">
-                    <div class="ratio ratio-1x1 bg-white rounded-3 shadow-sm overflow-hidden" style="width: 100px">
+                <a href="/products/<%= item.productId._id %>" class="text-decoration-none">
+                    <div class="ratio ratio-1x1 bg-white rounded-3 shadow-sm overflow-hidden img-thumbnail">
                         <% if (item.productId.images.length > 0) { %>
-                            <img src="<%= item.productId.images[0].url %>" class="object-fit-cover" alt="product-img">
+                            <img src="<%= item.productId.images[0].thumbnail %>" class="object-fit-cover" alt="product-img">
                         <% } else { %>
                             <img src="/images/no-image.png" class="object-fit-cover" alt="no-img">
                         <% } %>

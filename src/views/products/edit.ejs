@@ -25,7 +25,7 @@
             </div>
             <div class="mb-3">
                 <% product.images.forEach((img, i) => { %>
-                    <img src="<%= img.url %>" alt="">
+                    <img src="<%= img.thumbnail %>" alt="">
                     <input type="checkbox" id="image-<%= i %>" name="deleteImages[]" value="<%= img.filename %>">
                     <label for="image-<%= i %>">削除する</label>
                 <% }) %>

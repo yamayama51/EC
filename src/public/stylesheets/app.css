@@ -68,3 +68,9 @@
 .alert-dismissible .btn-close {
     padding: 1.25rem;
 }
+
+/* 画像サイズの調整 */
+.img-thumbnail {
+    width: 120px;
+    height: 120px;
+}
