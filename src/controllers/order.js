@@ -40,6 +40,11 @@ module.exports.createOrder = async (req, res) => {
         const currentStock = item.productId.stock;
         const requestQty = item.quantity;
 
+        if (requestQty > 10) {
+            req.flash('error', '一度に購入できる数量は10個までです');
+            return res.redirect('/cart');
+        }
+
         if (currentStock < requestQty) {
             req.flash('error', `${item.productId.name}の在庫が不足しています (残り${currentStock}個)`);
             return res.redirect('/cart');

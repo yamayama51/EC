@@ -1,4 +1,3 @@
-
 // |ーーーーーーーーーーーーーーーーーーーーーーーーー
 // | カートのDB処理・htmlの表示等(処理系)
 // |ーーーーーーーーーーーーーーーーーーーーーーーーー
@@ -33,24 +32,24 @@ module.exports.addToCart = async (req, res) => {
     const user = await User.findById(req.user._id);
 
     // すでに同じ商品がカートにあるかを確認する
-    const cartItem = user.cart.find(item => item.productId.equals(productId));
-    const currentQuantityInCart = cartItem ? cartItem.quantity : 0;
+    const existingItem = user.cart.find(item => item.productId.equals(productId));
 
-    // カート内の数量と在庫数を比較
-    const product = await Product.findById(productId);
-    if (parseInt(product.stock) < currentQuantityInCart + parseInt(quantity)) {
-        req.flash('error', '注文数が在庫数を超過しています');
+    // 現在カートに入っている数量を取得
+    const currentQuantityInCart = existingItem ? existingItem.quantity : 0;
+
+    // 現在のカート内と追加数量の合計が10を超えるかを確認
+    const totalQuantity = currentQuantityInCart + parseInt(quantity);
+    if (totalQuantity > 10) {
+        console.log(totalQuantity);
+        req.flash('error', '一度にカートに入れられるのは10個までです');
         return res.redirect(`/products/${productId}`);
     }
 
-    if (cartItem) {
-        
-        // 最大注文数なら変えない
-        if (cartItem.quantity < MAX_PRODUCT_QTY) {
+    if (existingItem) {
 
-            // すでにカートにあればquantity分増やす
-            cartItem.quantity += parseInt(quantity);
-        }
+        // すでにカートにあればquantity分増やす
+        existingItem.quantity += parseInt(quantity);
+
     } else {
         
         // なければ新しく追加
@@ -74,13 +73,6 @@ module.exports.addQuantity = async (req, res) => {
 
     // カートのアイテムを探す
     const cartItem = user.cart.find(item => item.productId.equals(productId));
-
-    // カート内の数量と在庫数を比較
-    const product = await Product.findById(productId);
-    if (parseInt(product.stock) < parseInt(cartItem.quantity) + 1) {
-        req.flash('error', '注文数が在庫数を超過しています');
-        return res.redirect('/cart');
-    }
 
     // 数量を+1して保存
     if (cartItem) {

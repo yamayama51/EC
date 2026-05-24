@@ -14,7 +14,7 @@ module.exports.userSchema = Joi.object({
 	cart: Joi.array().items(
 		Joi.object({
 			productId: Joi.string().required(),
-			quantity: Joi.number().integer().min(1).required(),
+			quantity: Joi.number().integer().min(1).max(10).required(),
 		})
 	).default([])
 });
@@ -44,7 +44,7 @@ module.exports.orderSchema = Joi.object({
 		items: Joi.array().items(
 			Joi.object({
 				productId: Joi.string().required(),
-				quantity: Joi.number().min(1).required(),
+				quantity: Joi.number().integer().min(1).max(10).required(),
 				priceAtPurchase: Joi.number().min(0).required(),
 			})
 		).min(1).required(),
