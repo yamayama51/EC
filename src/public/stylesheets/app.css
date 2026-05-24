@@ -1,4 +1,5 @@
 
+/* 汎用的なクラス */
 .object-fit-cover {
     object-fit: cover;
 }
@@ -7,6 +8,16 @@
     object-position: center;
 }
 
+/* Bootstrapのボタンを少し修正 */
+.btn-dark {
+    border: none;
+}
+
+.btn-dark:hover {
+    background-color: rgb(99, 99, 99);
+}
+
+/* 商品一覧カードの調整 */
 .product-card {
     transition: transform 0.3s ease, box-shadow 0.3s ease;
     cursor: pointer;
@@ -28,10 +39,32 @@
     transition: transform 0.2s ease;
 }
 
-.btn-dark {
+/* flashのレイアウト調整 */
+.alert.alert-dismissible {
+    position: fixed;
+    top: 70px;
+    right: 20px;
+    /* 他の要素（ナビバーなど）より確実に手前に出す */
+    z-index: 1050;
+    
+    min-width: 350px;
+    max-width: 450px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    
+    border-radius: 8px;
     border: none;
 }
 
-.btn-dark:hover {
-    background-color: rgb(99, 99, 99);
+.alert-success {
+    background-color: #e6f4ea;
+    color: #137333;
+}
+
+.alert-danger {
+    background-color: #fce8e6;
+    color: #c5221f;
+}
+
+.alert-dismissible .btn-close {
+    padding: 1.25rem;
 }
