@@ -16,10 +16,13 @@ module.exports.index = async (req, res) => {
     // 商品の合計金額を計算する
     let total = 0;
     for (let item of user.cart) {
-        total += item.productId.price * item.quantity;
+        total += item.productId.price * item.quantity; 
     }
 
-    res.render('cart/index', { user, total });
+    // カート内に売り切れの商品があるかどうかを確認
+    const hasSoldOut = user.cart.some(item => item.productId.stock <= 0);
+
+    res.render('cart/index', { user, total, hasSoldOut });
 }
 
 // カートに追加
@@ -30,6 +33,13 @@ module.exports.addToCart = async (req, res) => {
 
     // セッションからユーザーを取得
     const user = await User.findById(req.user._id);
+
+    // 在庫数が0以下なら戻す
+    const product = await Product.findById(productId);
+    if (!product || product.stock <= 0) {
+        req.flash('error', '申し訳ありません。この商品は現在売り切れです。');
+        return res.redirect(`/products/${productId}`);
+    }
 
     // すでに同じ商品がカートにあるかを確認する
     const existingItem = user.cart.find(item => item.productId.equals(productId));

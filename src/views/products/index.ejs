@@ -17,7 +17,12 @@
                         <img src="/images/no-image.png" class="card-img-top object-fit-cover" alt="no-img">
                     </div>
                 <% } %>
-                <div class="card-body">
+                <div class="card-body position-relative">
+                    <% if (product.stock <= 0) { %>
+                        <span class="badge bg-danger position-absolute top-0 end-0 m-2 p-2">
+                            SOLD OUT
+                        </span>
+                    <% } %>
                     <p class="text-secondary small mb-1"><%= product.category %></p>
                     <p class="card-title h5 fw-bold mb-1 text-dark"><%= product.name %></p>
                     <p class="card-text fw-bold text-dark">\ <%= product.price.toLocaleString() %></p>

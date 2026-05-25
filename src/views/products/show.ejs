@@ -73,8 +73,10 @@
                 <p class="text-muted small mb-1">商品説明</p>
                 <p class="h6 lh-lg fw-normal"><%= product.description %></p>
             </div>
-            <% if (product.stock <= 10) { %>
-                <p class="text-danger fw-bold small">残り在庫数：<%= product.stock %>点</p>
+            <% if (product.stock <= 0) { %>
+                <p class="text-danger fw-bold h5 mb-3">Sold Out</p>
+            <% } else if (product.stock <= 10) { %>
+                <p class="text-danger fw-bold h5 mb-3">残り在庫数：<%= product.stock %>点</p>
             <% } %>
 
             <div class="card border-0 shadow-sm bg-white p-4 rounded-3">
@@ -92,7 +94,11 @@
                         </div>
                     </div>
                     <div class="d-grid gap-2">
+                        <% if (product.stock <= 0) { %>
+                        <button class="btn btn-dark py-3 fw-bold mb-3 disabled">現在購入できません</button>
+                        <% } else { %>
                         <button class="btn btn-dark py-3 fw-bold mb-3">カートに入れる</button>
+                        <% } %>
                         <a href="/products" class="btn text-muted">商品一覧に戻る</a>
                     </div>
                 </form>

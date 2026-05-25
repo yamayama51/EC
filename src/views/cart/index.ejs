@@ -28,28 +28,34 @@
                 </div>
 
                 <div class="position-absolute end-0 top-4 text-end d-flex flex-column align-items-end">
-                    <ul class="pagination">
-                        <% if (item.quantity !== 1) { %>
-                            <li class="page-item">
-                                <form action="/cart/<%= item.productId._id %>/reduce?_method=PATCH" method="POST">  
-                                    <button class="page-link text-dark">-</button>
-                                </form>
-                            </li>
+                    <% if (item.productId.stock <= 0) { %>
+                        <p class="text-danger fw-bold h6">Sold Out</p>
+                    <% } else { %>
+                        <% if (item.productId.stock <= 10) { %>
+                            <p class="text-danger fw-bold small">残り在庫数：<%= item.productId.stock %>点</p>
                         <% } %>
-                        <li class="page-item disabled"><p class="page-link"><%= item.quantity %></p></li>
-                        <% if (item.quantity < 10) { %>
-                            <li class="page-item">
-                                <form action="/cart/<%= item.productId._id %>/add?_method=PATCH" method="POST">
-                                    <button class="page-link text-dark">+</button>
-                                </form>
-                            </li>
-                        <% } %>
-                    </ul>
+                        <ul class="pagination">
+                            <% if (item.quantity !== 1) { %>
+                                <li class="page-item">
+                                    <form action="/cart/<%= item.productId._id %>/reduce?_method=PATCH" method="POST">
+                                        <button class="page-link text-dark">-</button>
+                                    </form>
+                                </li>
+                            <% } %>
+                            <li class="page-item disabled"><p class="page-link"><%= item.quantity %></p></li>
+                            <% if (item.quantity < 10) { %>
+                                <li class="page-item">
+                                    <form action="/cart/<%= item.productId._id %>/add?_method=PATCH" method="POST">
+                                        <button class="page-link text-dark">+</button>
+                                    </form>
+                                </li>
+                            <% } %>
+                        </ul>
+                    <% } %>
                     <form action="/cart/<%= item.productId._id %>/delete?_method=PATCH" method="POST">
                         <button class="btn btn-link btn-sm text-muted text-decoration-none p-0 small">削除</button>
                     </form>
                 </div>
-                
             </div>
         <% }) %>
     <% } else { %>
@@ -81,7 +87,11 @@
 
                 <form action="/orders" method="post">
                     <div class="d-grid gap-2">
-                        <button class="btn btn-dark btn-lg py-3 fw-bold shadow-sm">注文する</button>
+                        <% if (hasSoldOut) { %>
+                            <button class="btn btn-dark btn-lg py-3 fw-bold shadow-sm disabled">売り切れの商品が含まれています</button>
+                        <% } else { %>
+                            <button class="btn btn-dark btn-lg py-3 fw-bold shadow-sm">注文する</button>
+                        <% } %>
                     </div>
                 </form>
             <% } else { %>

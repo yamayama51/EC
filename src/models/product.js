@@ -59,5 +59,10 @@ const productSchema = new Schema({
     timestamps: true
 });
 
+// 売り切れかどうかのフラグを追加
+productSchema.virtual('isSoldOut').get(function() {
+    return this.stock <= 0;
+});
+
 // エクスポートして外部で使用できるようにする
 module.exports = mongoose.model('Product', productSchema);
