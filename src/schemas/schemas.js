@@ -37,6 +37,15 @@ module.exports.productSchema = Joi.object({
 	deleteImages: Joi.array()
 });
 
+// レビュースキーマのバリデーションルールを作成する
+module.exports.reviewSchema = Joi.object({
+	review: Joi.object({
+		rating: Joi.number().required().min(1).max(5),
+		title: Joi.string().required().max(30),
+		body: Joi.string().required(),
+	}).required()
+});
+
 // オーダースキーマのバリデーションルールの作成
 module.exports.orderSchema = Joi.object({
 	order: Joi.object({

@@ -54,7 +54,13 @@ const productSchema = new Schema({
         type: Number,
         required: [true, '在庫数は必須です'],
         min: 0,
-    }
+    },
+    reviews: [
+        {
+            type: Schema.Types.ObjectId,
+            ref: 'Review'
+        }
+    ]
 }, {
     timestamps: true
 });
