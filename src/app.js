@@ -24,6 +24,7 @@ const User = require('./models/user');
 // ルートの読み込み
 const userRoutes = require('./routes/users');
 const productRoutes = require('./routes/products');
+const reviewRoutes = require('./routes/reviews');
 const cartRoutes = require('./routes/cart');
 const orderRoutes = require('./routes/order');
 
@@ -99,7 +100,8 @@ app.get('/', (req, res) => {
 app.use('/', userRoutes);
 app.use('/cart', cartRoutes);
 app.use('/orders', orderRoutes);
-app.use('/products', productRoutes); 
+app.use('/products', productRoutes);
+app.use('/products/:productId/reviews', reviewRoutes);
 
 // ページが見つからない場合
 app.use((req, res, next) => {

@@ -4,6 +4,7 @@
 // |ーーーーーーーーーーーーーーーーーーーーーーーーー
 
 const ExpressError = require('../exceptions/ExpressError');
+const Review = require('../models/review');
 
 // ログイン状態を確認
 module.exports.isLoggedIn = (req, res, next) => {
@@ -21,6 +22,20 @@ module.exports.isAdmin = (req, res, next) => {
     if (!req.user || !req.user.isAdmin) {
         console.log('権限がありません');
         return res.redirect('/products')
+    }
+    next();
+}
+
+// レビューの著者かどうかを確認
+module.exports.isReviewAuthor = async (req, res, next) => {
+
+    // URLからレビューIDを取得
+    const { productId, reviewId } = req.params;
+    const review = await Review.findById(reviewId);
+
+    if (!review.author.equals(req.user._id)) {
+        req.flash('error', 'そのアクションの権限がありません');
+        return res.redirect(`/products/${productId}`);
     }
     next();
 }

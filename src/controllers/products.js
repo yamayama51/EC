@@ -6,6 +6,8 @@
 const { cloudinary } = require('../cloudinary');
 
 const Product = require('../models/product');
+const Order = require('../models/order');
+const Review = require('../models/review');
 
 // 商品一覧の表示
 module.exports.index = async (req, res) => {
@@ -29,7 +31,12 @@ module.exports.renderShowForm = async (req, res) => {
     const { id } = req.params;
 
     // DBから商品を取得
-    const product = await Product.findById(id);
+    const product = await Product.findById(id).populate({
+        path: 'reviews',
+        populate: {
+            path: 'author'
+        }
+    });
 
     // 商品が見つからなければ一覧画面へ遷移
     if (!product) {
@@ -37,7 +44,31 @@ module.exports.renderShowForm = async (req, res) => {
         return res.redirect('/products');
     }
 
-    res.render('products/show', { product });
+    // レビュー書込み権限があるかを確認
+    let canWriteReview = false;
+
+    // ログインしているかを確認
+    if (req.user) {
+
+        // 購入済みかどうかを確認
+        const hasPurchased = await Order.findOne({
+            user: req.user._id,
+            'items.productId': id
+        });
+
+        // レビューを投稿済みかを確認
+        const hasReview = await Review.findOne({
+            author: req.user._id,
+            product: id
+        });
+
+        // 「購入済み」かつ「レビュー未投稿」なら投稿可能
+        if (hasPurchased && !hasReview) {
+            canWriteReview = true;
+        }
+    }
+
+    res.render('products/show', { product, canWriteReview });
 }
 
 // 商品編集画面表示
