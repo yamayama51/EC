@@ -74,3 +74,8 @@
     width: 120px;
     height: 120px;
 }
+
+/* フォームのテキストエリアの高さを調整 */
+.form-floating > .form-control-textarea {
+    height: 200px;
+}

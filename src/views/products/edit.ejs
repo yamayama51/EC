@@ -7,45 +7,63 @@
     <h1 class="text-center">商品編集</h1>
     <div class="offset-3 col-md-6">
         <form action="/products/<%= product._id %>?_method=PUT" method="post" class="validated-form" novalidate enctype="multipart/form-data">
-            <div class="mb-3">
-                <label for="name" class="form-label">商品名：</label>
-                <input type="text" id="name" name="product[name]" class="form-control" value="<%= product.name %>" required>
-            </div>
-            <div class="mb-3">
-                <label for="price" class="form-label">価格：</label>
-                <input type="text" id="price" name="product[price]" class="form-control" value="<%= product.price %>" required>
-            </div>
-            <div class="mb-3">
-                <label for="description" class="form-label">商品説明：</label>
-                <textarea id="description" name="product[description]" class="form-control" required><%= product.description %></textarea>
-            </div>
-            <div class="mb-3">
-                <label for="image" class="form-label">商品画像のアップロード：</label>
-                <input type="file" id="image" name="product[images]" class="form-control" multiple>
-            </div>
-            <div class="mb-3">
-                <% product.images.forEach((img, i) => { %>
-                    <img src="<%= img.thumbnail %>" alt="">
-                    <input type="checkbox" id="image-<%= i %>" name="deleteImages[]" value="<%= img.filename %>">
-                    <label for="image-<%= i %>">削除する</label>
-                <% }) %>
-            </div>
-            <div class="mb-3">
-                <label for="category" class="form-label">カテゴリー：</label>
-                <select id="category" name="product[category]" class="form-select" required>
-                    <% Object.values(categories).forEach(category => { %>
-                    <option value="<%= category %>" <%= product.category === category ? 'selected' : '' %>>
-                        <%= category %>
-                    </option>
+            <div class="mb-5">
+                
+                <%# 商品名 %>
+                <div class="form-floating mb-3">
+                    <input type="text" id="floatingName" name="product[name]" class="form-control" placeholder="商品名" value="<%= product.name %>" required>
+                    <label for="floatingName" class="form-label text-muted">商品名</label>
+                </div>
+
+                <%# 価格 %>
+                <div class="form-floating mb-3">
+                    <input type="text" id="floatingPrice" name="product[price]" class="form-control" placeholder="価格" value="<%= product.price %>" required>
+                    <label for="floatingPrice" class="form-label text-muted">価格</label>
+                </div>
+
+                <%# 商品説明 %>
+                <div class="form-floating mb-3">
+                    <textarea id="floatingDescription" name="product[description]" class="form-control form-control-textarea" placeholder="商品説明" rows="5" required><%= product.description %></textarea>
+                    <label for="floatingDescription" class="form-label text-muted">商品説明</label>
+                </div>
+
+                <%# 画像 %>
+                <div class="mb-3">
+                    <label for="image" class="form-label small fw-bold text-muted ms-1">商品画像のアップロード</label>
+                    <input type="file" id="image" name="product[images]" class="form-control form-control-lg fs-6">
+                </div>
+                <div class="mb-3">
+                    <% product.images.forEach((img, i) => { %>
+                        <img src="<%= img.thumbnail %>" alt="">
+                        <input type="checkbox" id="image-<%= i %>" name="deleteImages[]" value="<%= img.filename %>">
+                        <label for="image-<%= i %>">削除する</label>
                     <% }) %>
-                </select>
+                </div>
+
+                <%# カテゴリー %>
+                <div class="form-floating mb-3">
+                    <select id="category" name="product[category]" class="form-select mb-3" required>
+                        <% Object.values(categories).forEach(category => { %>
+                        <option value="<%= category %>" <%= product.category === category ? 'selected' : '' %>>
+                            <%= category %>
+                        </option>
+                        <% }) %>
+                    </select>
+                    <label for="category" class="form-label text-muted">カテゴリー</label>
+                </div>
+
+                <%# 在庫数 %>
+                <div class="form-floating mb-3">
+                    <input type="text" id="floatingStock" name="product[stock]" class="form-control" placeholder="在庫数" value="<%= product.stock %>" required>
+                    <label for="floatingStock" class="form-label text-muted" >在庫数</label>
+                </div>
             </div>
-            <div class="mb-3">
-                <label for="stock" class="form-label">在庫数：</label>
-                <input type="text" id="stock" name="product[stock]" class="form-control" value="<%= product.stock %>" required>
+
+            <%# 操作系 %>
+            <div class="d-flex justify-content-end align-items-center gap-2">
+                <a href="/products" class="btn btn-link text-decoration-none text-muted me-2">商品一覧へ戻る</a>
+                <button class="btn btn-success px-4 py-2 rounded-3 fw-bold shadow-sm">商品を更新する</button>
             </div>
-            <button class="btn btn-success">更新</button>
-            <a href="/products/<%= product._id %>" class="btn btn-secondary">商品詳細へ</a>
         </form>
     </div>
 </div>
