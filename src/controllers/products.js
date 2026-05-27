@@ -122,7 +122,6 @@ module.exports.updateProduct = async (req, res) => {
     await product.save();
 
     // 画像削除がある場合、DB・Cloudinaryの両方から削除する
-    console.log(req.body.deleteImages);
     if (req.body.deleteImages) {
 
         // Cloudinary上から削除する
@@ -155,6 +154,9 @@ module.exports.deleteProduct = async (req, res) => {
         req.flash('error', '対象の商品が見つかりません');
         return res.redirect('/products');
     }
+
+    // 商品に紐づくレビューをすべて削除する
+    await Review.deleteMany({ _id: { $in: product.reviews } });
 
     // Cloudinary上から画像を削除する
     if (product.images.length > 0) {
