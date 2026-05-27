@@ -1,6 +1,7 @@
 
-<!-- flash(一度だけ表示するファイル) -->
+<%# flash %>
 
+<%# 成功時flash %>
 <% if (success && success.length) { %>
 <div id="auto-close-alert" class="alert alert-success alert-dismissible fade show" role="alert">
   <%= success %>
@@ -8,6 +9,7 @@
 </div>
 <% } %>
 
+<%# エラー時flash %>
 <% if (error && error.length) { %>
 <div class="alert alert-danger alert-dismissible fade show" role="alert">
   <%= error %>

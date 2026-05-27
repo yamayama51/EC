@@ -1,16 +1,19 @@
 
-<!-- カート編集画面 -->
+<%# カート編集画面 %>
 
 <% layout('layouts/boilerplate') %>
 
 <h1 class="h3 fw-bold mb-5">ショッピングカート</h1>
 
 <div class="row g-lg-5">
+    <%# カート内アイテム一覧 %>
     <div class="col-lg-8 mb-3">
     <% if (user.cart.length > 0) { %>
         <% user.cart.forEach(item => { %>
+            <%# アイテム1個分 %>
             <div class="d-flex align-items-center py-4 border-bottom position-relative">
 
+                <%# 画像部分 %>
                 <a href="/products/<%= item.productId._id %>" class="text-decoration-none">
                     <div class="ratio ratio-1x1 bg-white rounded-3 shadow-sm overflow-hidden img-thumbnail">
                         <% if (item.productId.images.length > 0) { %>
@@ -21,16 +24,19 @@
                     </div>
                 </a>
 
+                <%# アイテム詳細 %>
                 <div class="flex-grow-1 ms-3 ms-md-4">
                     <p class="text-muted small mb-1">My-Style</p>
                     <p><a href="/products/<%= item.productId._id %>" class="h5 fw-bold text-dark text-decoration-none"><%= item.productId.name %></a></p>
                     <p class="fw-bold">\ <%= item.productId.price.toLocaleString() %></p>
                 </div>
 
+                <%# カート操作 %>
                 <div class="position-absolute end-0 top-4 text-end d-flex flex-column align-items-end">
                     <% if (item.productId.stock <= 0) { %>
                         <p class="text-danger fw-bold h6">Sold Out</p>
                     <% } else { %>
+                        <%# 残り在庫数が10個以下になったら表示 %>
                         <% if (item.productId.stock <= 10) { %>
                             <p class="text-danger fw-bold small">残り在庫数：<%= item.productId.stock %>点</p>
                         <% } %>
@@ -63,6 +69,7 @@
     <% } %>
     </div>
 
+    <%# 注文内容・注文操作 %>
     <div class="col-lg-4">
         <div class="card bg-white shadow-sm rounded-3 p-4 border-0">
             <% if (user.cart.length > 0) { %>
