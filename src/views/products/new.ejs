@@ -2,56 +2,81 @@
 <%# 商品登録画面 %>
 
 <% layout('layouts/boilerplate') %>
+<%- include('../partials/filepond-css') %>
+<link rel="stylesheet" href="/stylesheets/product-form.css">
 
-<div class="row">
-    <div class="card offset-3 col-md-6 p-5 rounded-4 shadow-sm border border-light">
+<div class="row justify-content-center">
+    <div class="card col-md-12 p-5 rounded-4 shadow-sm border border-light">
 
-        <h1 class="text-center mb-3 h3 fw-bold ">商品登録</h1>
-        <p class="text-secondary small text-center mb-4">商品情報を入力してください</p>
+        <div class="mb-3">
+            <h1 class="text-center mb-3 h3 fw-bold ">商品登録</h1>
+            <p class="text-secondary small text-center mb-4">商品情報を入力してください</p>
+        </div>
 
         <form action="/products" method="post" class="validated-form" novalidate enctype="multipart/form-data">
 
-            <div class="mb-5">
-                <%# 商品名 %>
-                <div class="form-floating mb-3">
-                    <input type="text" id="floatingName" name="product[name]" class="form-control" placeholder="商品名" required>
-                    <label for="floatingName" class="form-label text-muted">商品名</label>
+            <div class="row g-4">
+
+                <div class="col-md-6">
+                    <div class="mb-5">
+
+                        <%# 画像選択 %>
+                        <div class="mb-4">
+                            <label for="image" class="form-label small fw-bold text-muted ms-1">商品画像のアップロード(10枚まで)</label>
+                            <input type="file" id="image" name="product[images]" class="form-control form-control-lg fs-6 filepond" accept="image/*">
+                        </div>
+
+                        <%# 商品名 %>
+                        <div class="form-floating mb-3">
+                            <input type="text" id="floatingName" name="product[name]" class="form-control" placeholder="商品名" required>
+                            <label for="floatingName" class="form-label text-muted">商品名</label>
+                        </div>
+
+                        <%# 価格 %>
+                        <div class="form-floating mb-3">
+                            <input type="text" id="floatingPrice" name="product[price]" class="form-control" placeholder="価格" required>
+                            <label for="floatingPrice" class="form-label text-muted">価格</label>
+                        </div>
+
+                        <%# 商品説明 %>
+                        <div class="form-floating mb-3">
+                            <textarea id="floatingDescription" name="product[description]" class="form-control form-control-textarea" placeholder="商品説明" required></textarea>
+                            <label for="floatingDescription" class="form-label text-muted">商品説明</label>
+                        </div>
+
+                        <%# カテゴリー %>
+                        <div class="form-floating mb-3">
+                            <select id="category" name="product[category]" class="form-select mb-3" required>
+                                <% Object.values(categories).forEach(category => { %>
+                                <option value="<%= category %>"><%= category %></option>
+                                <% }) %>
+                            </select>
+                            <label for="category" class="form-label text-muted">カテゴリー</label>
+                        </div>
+
+                        <%# 在庫数 %>
+                        <div class="form-floating mb-3">
+                            <input type="text" id="floatingStock" name="product[stock]" class="form-control" placeholder="在庫数" required>
+                            <label for="floatingStock" class="form-label text-muted">在庫数</label>
+                        </div>
+                    </div>
                 </div>
 
-                <%# 価格 %>
-                <div class="form-floating mb-3">
-                    <input type="text" id="floatingPrice" name="product[price]" class="form-control" placeholder="価格" required>
-                    <label for="floatingPrice" class="form-label text-muted">価格</label>
-                </div>
-
-                <%# 商品説明 %>
-                <div class="form-floating mb-3">
-                    <textarea id="floatingDescription" name="product[description]" class="form-control form-control-textarea" placeholder="商品説明" required></textarea>
-                    <label for="floatingDescription" class="form-label text-muted">商品説明</label>
-                </div>
-
-                <%# 画像 %>
-                <div class="mb-3">
-                    <label for="image" class="form-label small fw-bold text-muted ms-1">商品画像のアップロード</label>
-                    <input type="file" id="image" name="product[images]" class="form-control form-control-lg fs-6">
-                </div>
-
-                <%# カテゴリー %>
-                <div class="form-floating mb-3">
-                    <select id="category" name="product[category]" class="form-select mb-3" required>
-                        <% Object.values(categories).forEach(category => { %>
-                        <option value="<%= category %>"><%= category %></option>
-                        <% }) %>
-                    </select>
-                    <label for="category" class="form-label text-muted">カテゴリー</label>
-                </div>
-
-                <%# 在庫数 %>
-                <div class="form-floating mb-3">
-                    <input type="text" id="floatingStock" name="product[stock]" class="form-control" placeholder="在庫数" required>
-                    <label for="floatingStock" class="form-label text-muted">在庫数</label>
+                <%# 画像のプレビュー %>
+                <div class="col-md-6">
+                    <div class="p-3 bg-light rounded-3">
+                        <div class="main-preview-container ratio ratio-1x1 overflow-hidden border rounded shadow-sm bg-light">
+                            <img id="mainPreview" src="" class="w-100 h-100 object-fit-cover d-none" alt="メインプレビュー">
+                            <div id="mainPreviewPlaceholder" class="text-muted d-flex align-items-center justify-content-center text-center p-3">
+                                画像を選択するとここに大きく表示されます
+                            </div>
+                        </div>
+                    </div>
+                    <p class="text-danger">並び替え未完成・プレビューの並び順が正しいです。追加時は既存→新規画像の順番になります(対応予定です)</p>
                 </div>
             </div>
+
+            <hr class="my-4 opacity-10">
 
             <%# 操作系 %>
             <div class="d-flex justify-content-end align-items-center gap-2">
@@ -61,3 +86,6 @@
         </form>
     </div>
 </div>
+
+<%- include('../partials/filepond-js') %>
+<script src="/javascripts/filepond-init.js"></script>

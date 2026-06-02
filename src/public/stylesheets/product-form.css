@@ -1,0 +1,18 @@
+
+/* filepond を商品登録フォームに適応するためのcss */
+
+/* FilePond全体の横幅制限 */
+.filepond--root {
+    width: 100% !important;
+    max-width: 100% !important;
+}
+
+/* 下のサムネイルのサイズ */
+.filepond--item {
+    width: 100px !important;
+    height: 100px !important;
+}
+
+.filepond--image-preview img {
+    object-fit: cover !important;
+}
