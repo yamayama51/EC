@@ -5,9 +5,9 @@
 
 const { format } = require('date-fns');
 
-const User = require('../models/user');
 const Order = require('../models/order');
 const Product = require('../models/product');
+const Cart = require('../models/cart');
 
 // 注文一覧の表示
 module.exports.index = async (req, res) => {
@@ -27,14 +27,21 @@ module.exports.index = async (req, res) => {
 // オーダーの作成処理
 module.exports.createOrder = async (req, res) => {
 
-    // ユーザー情報を取得
-    const user = await User.findById(req.user._id).populate('cart.productId');
+    // セッションからユーザーIDを取得
+    const userId = req.user._id;
+
+    // カート情報を取得
+    let cart = await Cart.findOne({ user: userId }).populate('items.productId');
+    if (!cart) {
+        cart = new Cart({ user: userId, items: [] });
+        await cart.save();
+    }
 
     // カートが空なら何もしない
-    if (user.cart.length === 0) return res.redirect('/cart');
+    if (cart.items.length === 0) return res.redirect('/cart');
 
     // アイテムの最大注文数チェック
-    for (let item of user.cart) {
+    for (let item of cart.items) {
         if (item.quantity > 10) {
             req.flash('error', '一度に購入できる数量は10個までです');
             return res.redirect('/cart');
@@ -45,7 +52,7 @@ module.exports.createOrder = async (req, res) => {
     const updatedProducts = [];
 
     try {
-        for (let item of user.cart) { 
+        for (let item of cart.items) { 
             const result = await Product.updateOne(
                 {
                     // 商品在庫が注文数以上という条件
@@ -78,7 +85,7 @@ module.exports.createOrder = async (req, res) => {
 
         // カート内のアイテム情報を取得する
         let total = 0;
-        const orderItems = user.cart.map(item => {
+        const orderItems = cart.items.map(item => {
             total += item.productId.price * item.quantity;
             return {
                 productId: item.productId._id,
@@ -90,7 +97,7 @@ module.exports.createOrder = async (req, res) => {
 
         // Orderを作成
         const order = new Order({
-            user: user._id,
+            user: userId,
             items: orderItems,
             totalPrice: total,
             isPaid: true,
@@ -100,8 +107,8 @@ module.exports.createOrder = async (req, res) => {
         await order.save();
 
         // カートを空にして保存
-        user.cart = [];
-        await user.save();
+        cart.items = [];
+        await cart.save();
 
         req.flash('success', '注文が完了しました');
         res.redirect(`/orders/success?orderId=${order._id}`);

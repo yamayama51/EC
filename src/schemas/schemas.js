@@ -11,12 +11,6 @@ module.exports.userSchema = Joi.object({
 	email: Joi.string().email().required().trim(),
 	password: Joi.string().required().min(8),
 	isAdmin: Joi.boolean().default(false),
-	cart: Joi.array().items(
-		Joi.object({
-			productId: Joi.string().required(),
-			quantity: Joi.number().integer().min(1).max(10).required(),
-		})
-	).default([])
 });
 
 // 商品スキーマのバリデーションルールを作成する
@@ -43,6 +37,14 @@ module.exports.reviewSchema = Joi.object({
 		rating: Joi.number().required().min(1).max(5),
 		title: Joi.string().required().max(30),
 		body: Joi.string().required(),
+	}).required()
+});
+
+// カートスキーマのバリデーションルールの作成
+module.exports.cartSchema = Joi.object({
+	cart: Joi.object({
+		productId: Joi.string().required(),
+		quantity: Joi.number().integer().min(1).max(10).required()
 	}).required()
 });
 

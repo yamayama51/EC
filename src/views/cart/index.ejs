@@ -8,8 +8,8 @@
 <div class="row g-lg-5">
     <%# カート内アイテム一覧 %>
     <div class="col-lg-8 mb-3">
-    <% if (user.cart.length > 0) { %>
-        <% user.cart.forEach(item => { %>
+    <% if (cart.items.length > 0) { %>
+        <% cart.items.forEach(item => { %>
             <%# アイテム1個分 %>
             <div class="d-flex align-items-center py-4 border-bottom position-relative">
 
@@ -72,7 +72,7 @@
     <%# 注文内容・注文操作 %>
     <div class="col-lg-4">
         <div class="card bg-white shadow-sm rounded-3 p-4 border-0">
-            <% if (user.cart.length > 0) { %>
+            <% if (cart.items.length > 0) { %>
                 <h2 class="h5 fw-bold text-dark mb-3">注文内容</h2>
 
                 <div class="d-flex justify-content-between mb-3">

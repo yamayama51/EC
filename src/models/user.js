@@ -19,20 +19,6 @@ const userSchema = new Schema({
 		type: Boolean,
 		default: false,
 	},
-	cart: [
-		{
-			productId: {
-				type: Schema.Types.ObjectId,
-				ref: 'Product',
-				required: [true, '商品IDは必須です'],
-			},
-			quantity: {
-				type: Number,
-				default: 1,
-				min: 1,
-			}
-		}
-	]
 }, {
 	timestamps: true
 });
