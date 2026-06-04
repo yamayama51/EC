@@ -10,14 +10,25 @@ FilePond.registerPlugin(
 
 document.addEventListener('DOMContentLoaded', () => {
 
-    // filepondのインプットを取得
+    // |ーーーーーーーーーーーーーーーーーーーーーーーーー
+    // | FilePondの初期設定
+    // |ーーーーーーーーーーーーーーーーーーーーーーーーー
+
+    // HTMLからfilepondのインプットを取得し、設定を行う
     const inputElement = document.querySelector('.filepond');
-    if (!inputElement) return;
+
+    // フォームの要素を取得
+    const form = document.querySelector('form');
+
+    if (!inputElement || !form) return;
+
+    // 既存画像格納用の変数
+    let initialFiles = [];
 
     // 既存の画像URLを読み取る
     const existingFilesData = inputElement.dataset.files;
-    let initialFiles = [];
 
+    // 編集時DB上の画像をFilePondで扱うための変換処理
     if (existingFilesData) {
         const urls = JSON.parse(existingFilesData);
         initialFiles = urls.map(item => {
@@ -29,9 +40,6 @@ document.addEventListener('DOMContentLoaded', () => {
             };
         });
     }
-
-    // プレビューに表示する画像の番号用の変数
-    let currentSelectedIndex = 0; 
 
     const pond = FilePond.create(inputElement, {
 
@@ -65,77 +73,41 @@ document.addEventListener('DOMContentLoaded', () => {
                     .catch(error);
             }
         },
-
     });
 
-    // プレビュー画像を更新する
-    function updateMainPreview(index) {
 
-        const files = pond.getFiles();
-        const mainImg = document.getElementById('mainPreview');
-        const placeholder = document.getElementById('mainPreviewPlaceholder');
+    // |ーーーーーーーーーーーーーーーーーーーーーーーーー
+    // | イベント
+    // |ーーーーーーーーーーーーーーーーーーーーーーーーー
 
-        // ファイルが空でなくインデックス指定がある場合
-        if (files.length > 0 && files[index]) {
-
-            // 現在のインデックスを更新
-            currentSelectedIndex = index;
-
-            // 画像のURLを取得し、プレビューのURLに追加する
-            // const imageUrl = URL.createObjectURL(files[index].file);
-            const imageUrl = files[index].file? URL.createObjectURL(files[index].file) : files[index].source;
-            mainImg.src = imageUrl;
-
-            // 画像を表示し、メッセージを非表示
-            mainImg.classList.remove('d-none');
-            placeholder.classList.add('d-none');
-
-        // 指定したインデックスがない場合
-        } else if (files.length > 0) {
-        
-            // 一枚目の画像をプレビューに表示
-            updateMainPreview(0);
-
-        // 画像が空っぽの場合
-        } else {
-            
-            // プレビューのURLを空に、画像を非表示し、メッセージを表示
-            mainImg.src = '';
-            mainImg.classList.add('d-none');
-            placeholder.classList.remove('d-none');
-        }
-    }
-
-    // ファイルの状態に変更があった時に1枚目を表示
+    // ファイルの状態に変更があった時のイベント
     pond.on('updatefiles', (files) => {
 
-        // 削除や追加時、現在の選択位置が破綻しないようにチェックして更新
-        if (currentSelectedIndex >= files.length) {
-            currentSelectedIndex = Math.max(0, files.length - 1);
-        }
-        updateMainPreview(currentSelectedIndex);
-    });
-
-    // 下のサムネイルをクリック時にプレビュー画像を切り替える
-    document.addEventListener('click', (e) => {
-      
-        const fileItemElement = e.target.closest('.filepond--item');
-        if (!fileItemElement) return;
-
-        const items = Array.from(document.querySelectorAll('.filepond--item'));
-        const clickedIndex = items.indexOf(fileItemElement);
-
-        if (clickedIndex !== -1) {
-            updateMainPreview(clickedIndex);
+        // ファイルが全部消えたらクリア
+        if (files.length === 0) {
+            updateMainPreview(null);
+        } else {
+            // 先頭を表示
+            updateMainPreview(files[0]);
         }
     });
 
+    // ファイルの並び替え確定時のイベント
+    pond.on('reorderfiles', (files) => {
+
+        // 並び順を入れるためのHTML要素を取得
+        const orderInput = document.getElementById('imageOrderInput');
+        
+        // FilePondに入れられたファイルの配列を作る
+        const currentOrder = files.map(file => file.file ? file.file.name : file.source);
+
+        // カンマ区切りの文字列に変換
+        if (orderInput) {
+            orderInput.value = currentOrder.join(',');
+        }
+    });
     
-    // FilePondの×ボタンに紐づけてデータを送るため
-    // フォームの要素を取得
-    const form = document.querySelector('form');
-
-    // FilePondで画像が削除ボタン押下時
+    // FilePondで画像が削除ボタン押下時 (FilePondの×ボタンに紐づけてデータを送るため)
     pond.on('removefile', (error, file) => {
         
         // もし×ボタンで消されたのが「既存の画像（URL文字列）」だった場合
@@ -156,7 +128,58 @@ document.addEventListener('DOMContentLoaded', () => {
             hiddenInput.value = cloudinaryFilename;
             
             form.appendChild(hiddenInput);
-            
         }
     });
+
+    // 下のサムネイルをクリック時にプレビュー画像を切り替える
+    form.addEventListener('mousedown', (event) => {
+      
+        const fileItemElement = event.target.closest('.filepond--item');
+        if (!fileItemElement) return;
+
+        // 要素のIDを取得
+        const fullId = fileItemElement.id;
+
+        // 本体のIDを取り出す
+        const itemId = fullId.replace('filepond--item-', '');
+
+        // ターゲットのファイルを取得
+        const targetFile = pond.getFile(itemId);
+
+        // ファイルをプレビューに表示
+        if (targetFile) {
+            updateMainPreview(targetFile);
+        }
+    });
+
+    
+    // |ーーーーーーーーーーーーーーーーーーーーーーーーー
+    // | 関数
+    // |ーーーーーーーーーーーーーーーーーーーーーーーーー
+
+    // 受け取ったファイルをプレビューに表示する
+    function updateMainPreview(file) {
+
+        // プレビューを表示する要素を取得
+        const mainImage = document.getElementById('mainPreview');
+        const placeholder = document.getElementById('mainPreviewPlaceholder');
+
+        // ファイルの中身を確認
+        if (!file) {
+            mainImage.src = '';
+            mainImage.classList.add('d-none');
+            placeholder.classList.remove('d-none');
+            return;
+        }
+
+        // 画像のURLを取得
+        const imageUrl = file.file ? URL.createObjectURL(file.file) : file.source;
+
+        // プレビューに表示
+        mainImage.src = imageUrl;
+
+        // 表示の切り替え
+        mainImage.classList.remove('d-none');
+        placeholder.classList.add('d-none');
+    }
 });

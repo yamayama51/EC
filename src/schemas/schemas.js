@@ -23,12 +23,14 @@ module.exports.productSchema = Joi.object({
 			Joi.object({
 				url: Joi.string().required(),
 				filename: Joi.string().required(),
+				originalName: Joi.string().optional(),
 			})
 		).optional(),
         category: Joi.string().valid(...Object.values(PRODUCT_CATEGORIES)).required(),
         stock: Joi.number().required().min(0).max(100000),
     }).required(),
-	deleteImages: Joi.array()
+	deleteImages: Joi.array(),
+	imageOrder: Joi.string().allow('', null),
 });
 
 // レビュースキーマのバリデーションルールを作成する

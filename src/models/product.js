@@ -17,7 +17,11 @@ const imageSchema = new Schema({
     filename: {
         type: String,
         required: true,
-    }
+    },
+    originalName: {
+        type: String,
+        required: true,
+    },
 });
 
 // 画像スキーマに仮想のプロパティを追加

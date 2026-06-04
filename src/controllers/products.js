@@ -96,7 +96,16 @@ module.exports.createProduct = async (req, res) => {
     const product = new Product(req.body.product);
 
     // 画像をループし格納
-    product.images = req.files.map(f => ({ url: f.path, filename: f.filename }));
+    product.images = req.files.map(file => { 
+
+        const decodedName = Buffer.from(file.originalname, 'latin1').toString('utf8');
+        
+        return {
+            url: file.path, 
+            filename: file.filename,
+            originalName: decodedName,
+        }
+    });
 
     // DBに登録
     await product.save();
@@ -112,14 +121,24 @@ module.exports.updateProduct = async (req, res) => {
     // URLからIDを取得
     const { id } = req.params;
 
-    // IDに一致するデータを入力内容に書き換える
-    const product = await Product.findByIdAndUpdate(id, {...req.body.product});
+    // 商品データの画像以外を一度更新する
+    await Product.findByIdAndUpdate(id, 
+        {
+            name: req.body.product.title,
+            price: req.body.product.price,
+            description: req.body.product.description,
+            category: req.body.product.category,
+            stock: req.body.product.stock,
+            reviews: req.body.product.reviews
+        }
+    );
 
-    // 画像をループし格納
-    const imgs = req.files.map(f => ({ url: f.path, filename: f.filename }));
-    product.images.push(...imgs);
-
-    await product.save();
+    // 画像更新用に商品データを取得する
+    const product = await Product.findById(id);
+    if (!product) {
+        req.flash('error', '商品が見つかりませんでした');
+        return res.redirect('/products');
+    }
 
     // 画像削除がある場合、DB・Cloudinaryの両方から削除する
     if (req.body.deleteImages) {
@@ -131,9 +150,74 @@ module.exports.updateProduct = async (req, res) => {
             }
         }
 
-        // DB上から削除する
-        await Product.findByIdAndUpdate(id, {$pull: {images: {filename: {$in: req.body.deleteImages}}}});
+        // メモリ上から削除する
+        product.images = product.images.filter(img => !req.body.deleteImages.includes(img.filename));
     }
+
+    // 新しく追加した画像を取得
+    const newImages = req.files.map(file => {
+
+        const decodedName = Buffer.from(file.originalname, 'latin1').toString('utf8');
+
+        return { 
+            url: file.path, 
+            filename: file.filename,
+            originalName: decodedName,
+        };
+    });
+
+    // 既存の画像と新規画像を一つにまとめる
+    const allImagesPool = [...product.images, ...newImages];
+
+    // リクエスト内のImageOrderを配列に変換　※中身は送られた全ファイル名の羅列
+    const imageOrder = req.body.imageOrder ? req.body.imageOrder.split(',') : [];
+
+    if (imageOrder.length > 0) {
+
+        // ソート用の配列を作成
+        const sortedImages = []
+
+        // リクエストのImageOrder順にループを回す
+        for (let imageFileName of imageOrder) {
+
+            // プール内からURLまたはファイル名が一致する画像を探す
+            const foundImage = allImagesPool.find(img => {
+
+                // Multerで登録されるファイル名 : EC/(ファイルID)
+                // FilePondを使用してリクエストを送る際のファイル名 : (ファイルID).拡張子
+                // ファイルID部分で比較し、一致する場合に画像を配列にプッシュする
+
+                // imageFileNameからファイルIDだけを取り出す
+                const imageFileId = imageFileName.split('.').shift();
+            
+                // allImagesPoolのfilenameからファイルIDだけを取り出す
+                let dbFileId = '';
+                if (img.filename) {
+                    dbFileId = img.filename.split('/').pop();
+                }
+
+                if (imageFileId === dbFileId) return true;
+                if (imageFileName === img.originalName) return true;
+
+                return false;
+            });
+
+            // 見つかった場合、ソート済み配列にプッシュ
+            if (foundImage) {
+                sortedImages.push(foundImage);
+            }
+        }
+
+        // 画像の並び順を上書きする
+        product.images = sortedImages;
+    } else {
+
+        // imageOrderがない場合は後ろに追加
+        product.images = allImagesPool;
+    }
+
+    // 保存処理
+    await product.save();
 
     req.flash('success', '商品を更新しました');
 
