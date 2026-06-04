@@ -3,36 +3,47 @@
 
 <% layout('layouts/boilerplate') %>
 
-<div class="row">
-<% for(product of products) { %>
-    <div class="col-6 col-sm-6 col-md-4 col-lg-3 mb-4">
-        <div class="card shadow-sm border-0 position-relative product-card">
-            <a href="/products/<%= product._id %>" class="text-muted text-decoration-none">
-                <%# 画像部分 %>
-                <% if (product.images && product.images.length) { %>
-                    <div class="ratio ratio-1x1 overflow-hidden">
-                        <img src="<%= product.images[0].url %>" class="card-img-top object-fit-cover" alt="product-img">
-                    </div>
-                <% } else { %>
-                    <div class="ratio ratio-1x1 overflow-hidden">
-                        <img src="/images/no-image.png" class="card-img-top object-fit-cover" alt="no-img">
-                    </div>
-                <% } %>
+<h1 class="h3 fw-bold mb-5">商品一覧</h1>
 
-                <%# 商品情報 %>
-                <div class="card-body position-relative">
-                    <%# 在庫切れの場合のバッジ %>
-                    <% if (product.stock <= 0) { %>
-                        <span class="badge bg-danger position-absolute top-0 end-0 m-2 p-2">
-                            SOLD OUT
-                        </span>
-                    <% } %>
-                    <p class="text-secondary small mb-1"><%= product.category %></p>
-                    <p class="card-title h5 fw-bold mb-1 text-dark"><%= product.name %></p>
-                    <p class="card-text fw-bold text-dark">\ <%= product.price.toLocaleString() %></p>
-                </div>
-            </a>
+<div class="row">
+
+    <%# 商品が登録されていない場合 %>
+    <% if (products.length === 0) { %>
+        <div col-md-4>
+            <p class="h4 text-muted fw-bold mb-5">現在販売中のアイテムがありません</p>
+            <a href="/" class="btn btn-dark px-5 py-3">ホームへ</a>
         </div>
-    </div>
-<% } %>
+    <% } %>
+
+    <% for(product of products) { %>
+        <div class="col-6 col-sm-6 col-md-4 col-lg-3 mb-4">
+            <div class="card shadow-sm border-0 position-relative product-card">
+                <a href="/products/<%= product._id %>" class="text-muted text-decoration-none">
+                    <%# 画像部分 %>
+                    <% if (product.images && product.images.length) { %>
+                        <div class="ratio ratio-1x1 overflow-hidden">
+                            <img src="<%= product.images[0].url %>" class="card-img-top object-fit-cover" alt="product-img">
+                        </div>
+                    <% } else { %>
+                        <div class="ratio ratio-1x1 overflow-hidden">
+                            <img src="/images/no-image.png" class="card-img-top object-fit-cover" alt="no-img">
+                        </div>
+                    <% } %>
+
+                    <%# 商品情報 %>
+                    <div class="card-body position-relative">
+                        <%# 在庫切れの場合のバッジ %>
+                        <% if (product.stock <= 0) { %>
+                            <span class="badge bg-danger position-absolute top-0 end-0 m-2 p-2">
+                                SOLD OUT
+                            </span>
+                        <% } %>
+                        <p class="text-secondary small mb-1"><%= product.category %></p>
+                        <p class="card-title h5 fw-bold mb-1 text-dark"><%= product.name %></p>
+                        <p class="card-text fw-bold text-dark">\ <%= product.price.toLocaleString() %></p>
+                    </div>
+                </a>
+            </div>
+        </div>
+    <% } %>
 </div>
