@@ -12,10 +12,20 @@ const Review = require('../models/review');
 // 商品一覧の表示
 module.exports.index = async (req, res) => {
     
-    // DBから商品一覧を取得
-    const products = await Product.find({});
+    // クエリストリングを取得
+    const category = req.query._category;
 
-    res.render('products/index', { products });
+    if (category) {
+
+        // カテゴリーに一致する商品だけを取得する
+        const products = await Product.find({ category: category });
+        res.render('products/index', { products });
+    } else {
+
+        // DBから商品一覧を取得
+        const products = await Product.find({});
+        res.render('products/index', { products });
+    }
 };
 
 // 商品登録画面表示
