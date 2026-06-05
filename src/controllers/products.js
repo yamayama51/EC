@@ -180,7 +180,7 @@ module.exports.updateProduct = async (req, res) => {
     const allImagesPool = [...product.images, ...newImages];
 
     // リクエスト内のImageOrderを配列に変換　※中身は送られた全ファイル名の羅列
-    const imageOrder = req.body.imageOrder ? req.body.imageOrder.split(',') : [];
+    const imageOrder = req.body.imageOrder ? JSON.parse(req.body.imageOrder) : [];
 
     if (imageOrder.length > 0) {
 

@@ -103,7 +103,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // カンマ区切りの文字列に変換
         if (orderInput) {
-            orderInput.value = currentOrder.join(',');
+            orderInput.value = JSON.stringify(currentOrder);
         }
     });
     
