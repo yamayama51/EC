@@ -2,7 +2,7 @@
 <%# 商品登録画面 %>
 
 <% layout('layouts/boilerplate') %>
-<%- include('../partials/filepond-css') %>
+<%- include('../../partials/filepond-css') %>
 <link rel="stylesheet" href="/stylesheets/product-form.css">
 
 <div class="row justify-content-center">
@@ -13,7 +13,7 @@
             <p class="text-secondary small text-center mb-4">商品情報を入力してください</p>
         </div>
 
-        <form action="/products" method="post" class="validated-form" novalidate enctype="multipart/form-data">
+        <form action="/admin/products" method="post" class="validated-form" novalidate enctype="multipart/form-data">
 
             <div class="row g-4">
 
@@ -86,5 +86,5 @@
     </div>
 </div>
 
-<%- include('../partials/filepond-js') %>
+<%- include('../../partials/filepond-js') %>
 <script src="/javascripts/filepond-init.js"></script>

@@ -3,6 +3,7 @@
 // | ユーザーのDB処理・htmlの表示等(処理系)
 // |ーーーーーーーーーーーーーーーーーーーーーーーーー
 
+const user = require('../models/user');
 const User = require('../models/user');
 
 // ユーザー登録画面表示
@@ -46,7 +47,12 @@ module.exports.renderLogin = (req, res) => {
 module.exports.login = (req, res) => {
 
     req.flash('success', 'おかえりなさい');
-    res.redirect('/products');
+
+    if (req.user.isAdmin) {
+        res.redirect('/admin/products');
+    } else {
+        res.redirect('/products');
+    }
 }
 
 // ログアウト処理

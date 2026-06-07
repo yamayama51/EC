@@ -1,0 +1,97 @@
+
+<%# 管理者用商品一覧画面 %>
+
+<% layout('layouts/boilerplate') %>
+
+<div class="d-flex justify-content-between align-items-center mb-5">
+    <h2>商品管理一覧</h2>
+    <a href="/admin/products/new" class="btn btn-primary">+ 新規商品登録</a>
+</div>
+
+<% if (products.length === 0) { %>
+    <div col-md-4>
+        <p class="h4 text-muted fw-bold mb-5">登録中のアイテムがありません</p>
+    </div>
+<% } else { %>
+
+    <table class="table table-hover align-middle">
+        <thead class="table-light">
+            <tr>
+                <th class="col-img">商品画像</th>
+                <th class="col-name">商品名</th>
+                <th class="col-category">カテゴリー</th>
+                <th class="col-price">価格</th>
+                <th class="col-stock">在庫数</th>
+                <th class="col-action">操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% for(let product of products) { %>
+            <tr>
+                <td>
+                    <div class="ratio ratio-1x1 bg-white rounded-3 shadow-sm overflow-hidden img-thumbnail">
+                        <a href="/products/<%= product._id %>" class="text-decoration-none">
+                            <% if (product.images.length > 0) { %>
+                                <img src="<%= product.images[0].thumbnail %>" class="object-fit-cover" alt="product-img">
+                            <% } else { %>
+                                <img src="/images/no-image.png" class="object-fit-cover" alt="no-img">
+                            <% } %>
+                        </a>
+                    </div>
+                </td>
+                <td><%= product.name %></td>
+                <td><%= product.category %></td>
+                <td>¥<%= product.price.toLocaleString() %></td>
+
+                <%# 在庫が10個以下なら強調表示 %>
+                <td class="<%= product.stock <= 10 ? 'text-low-stock' : '' %>">
+                    <%= product.stock %>
+                </td>
+                <td>
+                    <a href="/admin/products/<%= product.id %>/edit" class="btn btn-sm btn-outline-secondary mx-2">編集</a>
+                    <button class="btn btn-sm btn-danger" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#deleteModal" 
+                            data-product-id="<%= product._id %>" 
+                            data-product-name="<%= product.name %>"> 
+                            
+                        削除
+                    </button>
+                </td>
+            </tr>
+            <% } %>
+        </tbody>
+    </table>
+
+    <%# 削除ボタン押下時の確認モーダル %>
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-md modal-dialog-centered">
+            <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
+            
+                <div class="modal-body p-4 text-center">
+                    <div class="text-danger mb-3">
+                    <i class="bi bi-exclamation-triangle-fill fs-1"></i>
+                    </div>
+                    
+                    <h5 class="fw-bold text-dark mb-3" id="deleteModalLabel">商品を削除しますか？</h5>
+
+                    <h6 class="fw-bold text-dark mb-3">
+                        対象アイテム : <span id="productName"></span>
+                    </h6>
+                    
+                    <p class="text-muted small mb-0">この操作は取り消せません。<br>本当に削除してもよろしいですか？</p>
+                </div>
+                
+                <div class="modal-footer border-0 p-3 pt-0 d-flex gap-2">
+                    <button type="button" class="btn btn-outline-secondary fw-bold flex-grow-1 py-2 rounded-3" data-bs-dismiss="modal">閉じる</button>
+                    
+                    <form action="" id="deleteForm" method="post" class="flex-grow-1 m-0">
+                        <button type="submit" class="btn btn-danger fw-bold w-100 py-2 rounded-3">削除する</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+<% } %>
+
+<script src="/javascripts/product-delete.js"></script>

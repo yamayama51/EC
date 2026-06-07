@@ -1,8 +1,8 @@
+
 // |ーーーーーーーーーーーーーーーーーーーーーーーーー
 // | カートのDB処理・htmlの表示等(処理系)
 // |ーーーーーーーーーーーーーーーーーーーーーーーーー
 
-// const User = require('../models/user');
 const Product = require('../models/product');
 const Cart = require('../models/cart');
 

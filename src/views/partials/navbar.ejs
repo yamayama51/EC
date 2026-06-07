@@ -16,33 +16,47 @@
             Category
           </a>
           <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="/products">All Items</a></li>
-            <% Object.values(categories).forEach(category => { %>
-            <li><a class="dropdown-item" href="/products?_category=<%= category %>"><%= category %></a></li>
-            <% }) %>
+            <% if (currentUser && currentUser.isAdmin) { %>
+              <li><a class="dropdown-item" href="/admin/products">All Items</a></li>
+              <% Object.values(categories).forEach(category => { %>
+              <li><a class="dropdown-item" href="/admin/products?_category=<%= category %>"><%= category %></a></li>
+              <% }) %>
+            <% } else{ %>
+              <li><a class="dropdown-item" href="/products">All Items</a></li>
+              <% Object.values(categories).forEach(category => { %>
+              <li><a class="dropdown-item" href="/products?_category=<%= category %>"><%= category %></a></li>
+              <% }) %>
+            <% } %>
           </ul>
         </li>
       </ul>
       <ul class="navbar-nav ms-auto">
-        <% if (currentUser && currentUser.isAdmin) { %>
-        <li class="nav-item">
-          <a class="nav-link" href="/products/new">Add Item</a>
-        </li>
-        <% } %>
+        <%# ログインしていない場合 %>
         <% if (!currentUser) { %>
         <li class="nav-item">
           <a class="nav-link" href="/login">Login</a>
         </li>
         <% } else { %>
+          <%# 管理者の場合 %>
+          <% if (currentUser.isAdmin) { %>
+            <li class="nav-item">
+              <a class="nav-link" href="/admin/products">All Items</a>
+            </li>  
+            <li class="nav-item">
+              <a class="nav-link" href="/admin/products/new">Add Item</a>
+            </li>           
+          <%# 非管理者の場合 %>
+          <% } else { %>
+            <li class="nav-item">
+            <a class="nav-link" href="/cart">Cart</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/orders">Orders</a>
+            </li>
+          <% } %>
           <li class="nav-item">
-          <a class="nav-link" href="/cart">Cart</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/orders">Orders</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/logout">Logout</a>
-        </li>
+            <a class="nav-link" href="/logout">Logout</a>
+          </li>
         <% } %>
       </ul>
     </div>
