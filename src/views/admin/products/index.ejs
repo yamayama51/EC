@@ -14,7 +14,7 @@
     </div>
 <% } else { %>
 
-    <table class="table table-hover align-middle">
+    <table class="table table-hover align-middle mb-5">
         <thead class="table-light">
             <tr>
                 <th class="col-img">商品画像</th>
@@ -29,17 +29,17 @@
             <% for(let product of products) { %>
             <tr>
                 <td>
-                    <div class="ratio ratio-1x1 bg-white rounded-3 shadow-sm overflow-hidden img-thumbnail">
-                        <a href="/products/<%= product._id %>" class="text-decoration-none">
+                    <a href="/products/<%= product._id %>" class="text-decoration-none">
+                        <div class="ratio ratio-1x1 bg-white rounded-3 shadow-sm overflow-hidden img-thumbnail">
                             <% if (product.images.length > 0) { %>
                                 <img src="<%= product.images[0].thumbnail %>" class="object-fit-cover" alt="product-img">
                             <% } else { %>
                                 <img src="/images/no-image.png" class="object-fit-cover" alt="no-img">
                             <% } %>
-                        </a>
-                    </div>
+                        </div>
+                    </a>
                 </td>
-                <td><%= product.name %></td>
+                <td><a href="/products/<%= product._id %>" class="text-decoration-none text-dark"><%= product.name %></a></td>
                 <td><%= product.category %></td>
                 <td>¥<%= product.price.toLocaleString() %></td>
 
@@ -63,6 +63,30 @@
         </tbody>
     </table>
 
+    <%# ページングナビ %>
+    <div class="d-flex flex-column align-items-center mb-5"> 
+        <% if (totalPages !== 1) { %>
+            <nav aria-label="Page navigation" class="d-flex justify-content-center mb-1">
+                <ul class="pagination">
+                    <% for (let item of finalDisplay) { %>
+                        <% if (item === '...') { %>
+                            <li class="page-item disabled">
+                                <p class="page-link"><%= item %></p>
+                            </li>
+                        <% } else { %>
+                            <li class="page-item <%= currentPage === item ? 'active' : '' %>">
+                                <a class="page-link" href="/admin/products?page=<%= item %>"><%= item %></a>
+                            </li>
+                        <% } %>
+                    <% } %>
+                </ul>
+            </nav>
+        <% } %>
+        <div class="text-muted">
+            全<span class="fw-bold"><%= totalProductsCount %></span>件中 <span class="fw-bold"><%= from %> - <%= to %></span> 件を表示
+        </div>
+    </div>
+    
     <%# 削除ボタン押下時の確認モーダル %>
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
         <div class="modal-dialog modal-md modal-dialog-centered">

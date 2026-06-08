@@ -114,3 +114,28 @@
     padding: 2px 6px;
     border-radius: 4px;
 }
+
+/* ページングのスタイル */
+.pagination .page-link {
+    color: #4a4a4a;
+    background-color: #ffffff;
+    border: 1px solid #e0e0e0;
+    margin: 0 4px; 
+    border-radius: 6px !important;
+    transition: all 0.3s ease;
+}
+
+/* ホバー時 */
+.pagination .page-link:hover {
+    background-color: #f0f0f0;
+    border-color: #cccccc;
+    color: #000000;
+}
+
+/* アクティブ（現在地）のスタイル：暗めのモノトーン */
+.pagination .page-item.active .page-link {
+    background-color: #333333;
+    border-color: #333333;
+    color: #ffffff;
+    font-weight: bold;
+}

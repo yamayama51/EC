@@ -19,12 +19,12 @@
             <% if (currentUser && currentUser.isAdmin) { %>
               <li><a class="dropdown-item" href="/admin/products">All Items</a></li>
               <% Object.values(categories).forEach(category => { %>
-              <li><a class="dropdown-item" href="/admin/products?_category=<%= category %>"><%= category %></a></li>
+              <li><a class="dropdown-item" href="/admin/products?category=<%= category %>"><%= category %></a></li>
               <% }) %>
             <% } else{ %>
               <li><a class="dropdown-item" href="/products">All Items</a></li>
               <% Object.values(categories).forEach(category => { %>
-              <li><a class="dropdown-item" href="/products?_category=<%= category %>"><%= category %></a></li>
+              <li><a class="dropdown-item" href="/products?category=<%= category %>"><%= category %></a></li>
               <% }) %>
             <% } %>
           </ul>

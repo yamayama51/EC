@@ -3,28 +3,47 @@
 // | 管理者用のDB処理・htmlの表示等(処理系)
 // |ーーーーーーーーーーーーーーーーーーーーーーーーー
 
+const { array } = require('joi');
 const { cloudinary } = require('../cloudinary');
 
 const Product = require('../models/product');
 const Review = require('../models/review');
 
+const { generatePageRange } = require('../helpers/pagination');
+
 // 商品一覧表示
 module.exports.index = async (req, res) => {
 
-    // クエリストリングを取得
-    const category = req.query._category;
+    // 指定されたページ番号・表示件数を定義
+    const page = parseInt(req.query.page) || 1;
+    const limit = 20;
 
-    if (category) {
+    // 検索条件を追加 (カテゴリーのフィルターを適用)
+    const category = req.query.category;
+    const query = category ? { category } : {};
 
-        // カテゴリーに一致する商品だけを取得する
-        const products = await Product.find({ category: category });
-        res.render('admin/products/index', { products });
-    } else {
+    // 商品データの総数とページの総数を取得
+    const totalProductsCount = await Product.countDocuments(query);
+    const totalPages = Math.ceil(totalProductsCount / limit);
 
-        // DBから商品一覧を取得
-        const products = await Product.find({});
-        res.render('admin/products/index', { products });
-    }
+    // ページ数からlimit件分の商品データを取得
+    const products = await Product.find(query).skip((page - 1) * limit).limit(limit);
+
+    // 表示するページを取得
+    const finalDisplay = generatePageRange(page, totalPages);
+
+    res.render('admin/products/index',
+        {
+            products,
+            category,
+            totalProductsCount,
+            currentPage: page,
+            from: (page - 1) * limit + 1,
+            to: Math.min(page * limit, totalProductsCount),
+            totalPages,
+            finalDisplay 
+        }
+    );
 }
 
 // 商品登録画面表示
