@@ -3,7 +3,6 @@
 // | ユーザーのDB処理・htmlの表示等(処理系)
 // |ーーーーーーーーーーーーーーーーーーーーーーーーー
 
-const user = require('../models/user');
 const User = require('../models/user');
 
 // ユーザー登録画面表示
