@@ -7,14 +7,33 @@
   'use strict'
 
   // Fetch all the forms we want to apply custom Bootstrap validation styles to
-  const forms = document.querySelectorAll('.validated-form')
+  const forms = document.querySelectorAll('form');
 
   // Loop over them and prevent submission
   Array.from(forms).forEach(form => {
     form.addEventListener('submit', event => {
-      if (!form.checkValidity()) {
-        event.preventDefault()
-        event.stopPropagation()
+
+      const button = form.querySelector('button[type="submit"]');
+      const isValidatedForm = form.classList.contains('validated-form');
+      const originalText = button ? button.innerText : '送信';
+
+      // バリデーションチェック
+      if (isValidatedForm && !form.checkValidity()) {
+        event.preventDefault();
+        event.stopPropagation();
+        form.classList.add('was-validated');
+
+        if (button) {
+          button.disabled = false;
+          button.innerText = originalText;
+        }
+        return;
+      }
+
+      // 送信OKなのでボタンを無効化
+      if (button) {
+        button.disabled = true;
+        button.innerText = '処理中...';
       }
 
       form.classList.add('was-validated')
