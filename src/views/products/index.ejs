@@ -14,7 +14,7 @@
     <% } %>
 
     <% for(product of products) { %>
-        <div class="col-6 col-sm-6 col-md-4 col-lg-3 mb-4">
+        <div class="col-6 col-sm-6 col-md-4 col-lg-3 mb-5">
             <div class="card shadow-sm border-0 position-relative product-card">
                 <a href="/products/<%= product._id %>" class="text-muted text-decoration-none">
                     <%# 画像部分 %>
@@ -44,4 +44,28 @@
             </div>
         </div>
     <% } %>
+
+    <%# ページングナビ %>
+    <div class="d-flex flex-column align-items-center mb-5"> 
+        <% if (totalPages !== 1) { %>
+            <nav aria-label="Page navigation" class="d-flex justify-content-center mb-1">
+                <ul class="pagination">
+                    <% for (let item of finalDisplay) { %>
+                        <% if (item === '...') { %>
+                            <li class="page-item disabled">
+                                <p class="page-link"><%= item %></p>
+                            </li>
+                        <% } else { %>
+                            <li class="page-item <%= currentPage === item ? 'active' : '' %>">
+                                <a class="page-link" href="/products?page=<%= item %>"><%= item %></a>
+                            </li>
+                        <% } %>
+                    <% } %>
+                </ul>
+            </nav>
+        <% } %>
+        <div class="text-muted">
+            全<span class="fw-bold"><%= totalProductsCount %></span>件中 <span class="fw-bold"><%= from %> - <%= to %></span> 件を表示
+        </div>
+    </div>
 </div>
