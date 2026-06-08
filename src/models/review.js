@@ -32,7 +32,6 @@ const reviewSchema = new Schema({
 	body: {
 		type: String,
 		required: [true, '本文は必須です'],
-		trim: true,
 	}
 }, { 
 	timestamps: true 

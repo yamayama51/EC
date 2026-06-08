@@ -43,6 +43,10 @@
     white-space: pre-wrap;
 }
 
+.review-body {
+    white-space: pre-wrap;
+}
+
 /* flashのレイアウト調整 */
 .alert.alert-dismissible {
     position: fixed;
