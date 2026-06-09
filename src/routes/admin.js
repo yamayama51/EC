@@ -11,7 +11,7 @@ const { storage } = require('../cloudinary');
 const upload = multer({ storage });
 
 const admin = require('../controllers/admin');
-const { productSchema } = require('../schemas/schemas');
+const { productSchema, categorySchema } = require('../schemas/schemas');
 
 const { validate, isAdmin } = require('../middlewares/middlewares');
 const catchAsync = require('../helpers/catchAsync');
@@ -21,21 +21,36 @@ router.use(isAdmin);
 
 // 商品一覧
 router.route('/products')
-    .get(catchAsync(admin.index))
+    .get(catchAsync(admin.productIndex))
     .post(upload.array('product[images]'), validate(productSchema), catchAsync(admin.createProduct))
 
-// 新規登録
+// 商品新規登録
 router.route('/products/new')
-    .get(admin.renderNewForm)
+    .get(admin.renderProductNewForm)
 
-// 詳細
+// 商品詳細
 router.route('/products/:id')
     .get(catchAsync(admin.renderShowForm))
     .put(upload.array('product[images]'), validate(productSchema), catchAsync(admin.updateProduct))
     .delete(catchAsync(admin.deleteProduct))
 
-// 編集
+// 商品編集
 router.route('/products/:id/edit')
-    .get(catchAsync(admin.renderEditForm))
+    .get(catchAsync(admin.renderProductEditForm))
+
+// 定数管理
+// カテゴリー一覧
+router.route('/categories')
+    .get(catchAsync(admin.categoryIndex))
+    .post(validate(categorySchema), catchAsync(admin.createCategory))
+
+// カテゴリー詳細
+router.route('/categories/:id')
+    .put(validate(categorySchema), catchAsync(admin.updateCategory))
+    .delete(catchAsync(admin.deleteCategory))
+
+// カテゴリー編集
+router.route('/categories/:id/edit')
+    .get(catchAsync(admin.renderCategoryEditForm))
 
 module.exports = router;

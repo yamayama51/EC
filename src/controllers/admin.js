@@ -8,11 +8,16 @@ const { cloudinary } = require('../cloudinary');
 
 const Product = require('../models/product');
 const Review = require('../models/review');
+const Category = require('../models/category');
 
 const { generatePageRange } = require('../helpers/pagination');
 
+// |ーーーーーーーーーーーーーーーーーーーーーーーーー
+// | 商品のCRUD等
+// |ーーーーーーーーーーーーーーーーーーーーーーーーー
+
 // 商品一覧表示
-module.exports.index = async (req, res) => {
+module.exports.productIndex = async (req, res) => {
 
     // 指定されたページ番号・表示件数を定義
     const page = parseInt(req.query.page) || 1;
@@ -47,13 +52,13 @@ module.exports.index = async (req, res) => {
 }
 
 // 商品登録画面表示
-module.exports.renderNewForm = (req, res) => {
+module.exports.renderProductNewForm = (req, res) => {
 
     res.render('admin/products/new');
 }
 
 // 商品編集画面表示
-module.exports.renderEditForm = async (req, res) => {
+module.exports.renderProductEditForm = async (req, res) => {
 
     // URLからIDを取得
     const { id } = req.params;
@@ -64,7 +69,7 @@ module.exports.renderEditForm = async (req, res) => {
     // 商品が見つからなければ一覧画面へ遷移
     if (!product) {
         req.flash('error', '商品が見つかりませんでした');
-        return res.redirect('/products');
+        return res.redirect('/admin/products');
     }
 
     res.render('admin/products/edit', { product });
@@ -105,7 +110,7 @@ module.exports.updateProduct = async (req, res) => {
     // 商品データの画像以外を一度更新する
     await Product.findByIdAndUpdate(id, 
         {
-            name: req.body.product.title,
+            name: req.body.product.name,
             price: req.body.product.price,
             description: req.body.product.description,
             category: req.body.product.category,
@@ -118,7 +123,7 @@ module.exports.updateProduct = async (req, res) => {
     const product = await Product.findById(id);
     if (!product) {
         req.flash('error', '商品が見つかりませんでした');
-        return res.redirect('/products');
+        return res.redirect('/admin/products');
     }
 
     // 画像削除がある場合、DB・Cloudinaryの両方から削除する
@@ -217,7 +222,7 @@ module.exports.deleteProduct = async (req, res) => {
     // 商品が見つからない場合は、商品一覧へ戻る
     if (!product) {
         req.flash('error', '対象の商品が見つかりません');
-        return res.redirect('/products');
+        return res.redirect('/admin/products');
     }
 
     // 商品に紐づくレビューをすべて削除する
@@ -236,4 +241,90 @@ module.exports.deleteProduct = async (req, res) => {
     req.flash('success', '商品を削除しました');
 
     res.redirect('/admin/products');
+}
+
+
+// |ーーーーーーーーーーーーーーーーーーーーーーーーー
+// | カテゴリーのCRUD
+// |ーーーーーーーーーーーーーーーーーーーーーーーーー
+
+// カテゴリー一覧取得
+module.exports.categoryIndex = async (req, res) => {
+
+    // カテゴリー一覧を取得
+    const categories = await Category.find({});
+
+    res.render('admin/categories/index', { categories });
+}
+
+// カテゴリー編集画面取得
+module.exports.renderCategoryEditForm = async (req, res) => {
+
+    // URLからIDを取得
+    const { id } = req.params;
+    
+    // IDからカテゴリーを一件取得
+    const category = await Category.findById(id);
+    if (!category) {
+        req.flash('error', '対象のカテゴリーが見つかりません');
+        return res.redirect('/admin/categories');
+    }
+
+    res.render('admin/categories/edit', { category });
+}
+
+// カテゴリー作成処理
+module.exports.createCategory = async (req, res) => {
+
+    // リクエストからcategoryを作成
+    const category = new Category(req.body.category);
+
+    // categoryをDBに保存
+    await category.save();
+
+    req.flash('success', 'カテゴリーを追加しました');
+    res.redirect('/admin/categories');
+}
+
+// カテゴリー編集
+module.exports.updateCategory = async (req, res) => {
+
+    // URLからIDを取得
+    const { id } = req.params;
+
+    // 対象カテゴリーを更新する
+    const category = await Category.findByIdAndUpdate(id, { name: req.body.category.name });
+    if (!category) {
+        req.flash('error', '対象のカテゴリーが見つかりません');
+        return res.redirect('/admin/categories');
+    }
+
+    req.flash('success', 'カテゴリーを更新しました');
+    res.redirect('/admin/categories');
+}
+
+// カテゴリー削除
+module.exports.deleteCategory = async (req, res) => {
+
+    // URLからIDを取得
+    const { id } = req.params;
+
+    // 対象カテゴリーに紐づく商品の有無を調べる
+    const productCount = await Product.countDocuments({ category: id });
+
+    // 1件でもあれば削除不可
+    if (productCount > 0) {
+        req.flash('error', '対象のカテゴリーは使用されているため削除できません');
+        return res.redirect('/admin/categories');
+    }
+
+    // 対象カテゴリーを削除する
+    const category = await Category.findByIdAndDelete(id);
+    if (!category) {
+        req.flash('error', '対象のカテゴリーが見つかりません');
+        return res.redirect('/admin/categories');
+    }
+
+    req.flash('success', 'カテゴリーを削除しました');
+    res.redirect('/admin/categories');
 }

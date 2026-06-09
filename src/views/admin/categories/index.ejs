@@ -1,0 +1,62 @@
+
+<%# カテゴリー一覧画面 %>
+
+<% layout('layouts/boilerplate') %>
+
+<div class="d-flex justify-content-between align-items-center mb-5">
+    <h2>カテゴリー一覧</h2>
+</div>
+
+<div class="container mt-4">
+
+    <form action="/admin/categories" method="POST" class="validated-form mb-5 p-3 border rounded d-flex align-items-center" novalidate>
+        <div class="row g-3">
+            <div class="col-md-8">
+                <input type="text" id="floatingName" name="category[name]" class="form-control" placeholder="カテゴリー名" required>
+            </div>
+            <div class="col-auto">
+                <button type="submit" class="btn btn-primary">+ 作成</button>
+            </div>
+        </div>
+    </form>
+
+    <% if (categories.length === 0) { %>
+        <div col-md-4>
+            <p class="h4 text-muted fw-bold mb-5">現在、カテゴリーがありません</p>
+        </div>
+    <% } else { %>
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>カテゴリー名</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% for(let category of categories) { %>
+                    <tr>
+                        <td class="align-middle"><%= category.name %></td>
+                        <td>
+                            <div class="py-3">
+                                <a href="/admin/categories/<%= category._id %>/edit" class="btn btn-sm btn-outline-secondary mx-2">編集</a>
+                                <button type="submit" class="btn btn-sm btn-danger" 
+                                        data-bs-toggle="modal" 
+                                        data-bs-target="#deleteModal" 
+                                        data-id="<%= category._id %>" 
+                                        data-name="<%= category.name %>"
+                                        data-url="/admin/categories/<%= category._id %>?_method=DELETE"> 
+                                    削除
+                                </button>
+                            </div>
+                        </td>
+                    </tr>                    
+                <% } %>
+            </tbody>
+        </table>
+    <% } %>
+</div>
+
+<%# 削除ボタン押下時の確認モーダル %>
+<%- include('../../partials/deleteModal') %>
+
+<script src="/javascripts/target-delete.js"></script>

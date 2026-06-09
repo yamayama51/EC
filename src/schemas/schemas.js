@@ -26,11 +26,19 @@ module.exports.productSchema = Joi.object({
 				originalName: Joi.string().optional(),
 			})
 		).optional(),
+		// FIX : categoryは修正するよ
         category: Joi.string().valid(...Object.values(PRODUCT_CATEGORIES)).required(),
         stock: Joi.number().required().min(0).max(100000),
     }).required(),
 	deleteImages: Joi.array(),
 	imageOrder: Joi.string().allow('', null),
+});
+
+// カテゴリースキーマのバリデーションルールを作成
+module.exports.categorySchema = Joi.object({
+	category: Joi.object({
+		name: Joi.string().required().max(20),
+	}).required(),
 });
 
 // レビュースキーマのバリデーションルールを作成する

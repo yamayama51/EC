@@ -6,7 +6,6 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 const { PRODUCT_CATEGORIES } = require('../constants');
-const { required } = require('joi');
 
 // 画像のスキーマ定義
 const imageSchema = new Schema({
@@ -54,6 +53,11 @@ const productSchema = new Schema({
         required: [true, 'カテゴリーは必須です'],
         enum: Object.values(PRODUCT_CATEGORIES),
     },
+    // category: {
+    //     type: Schema.Types.ObjectId,
+    //     ref: 'Category',
+    //     required: [true, 'カテゴリーは必須です']
+    // },
     stock: {
         type: Number,
         required: [true, '在庫数は必須です'],

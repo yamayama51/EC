@@ -52,9 +52,9 @@
                     <button type="submit" class="btn btn-sm btn-danger" 
                             data-bs-toggle="modal" 
                             data-bs-target="#deleteModal" 
-                            data-product-id="<%= product._id %>" 
-                            data-product-name="<%= product.name %>"> 
-                            
+                            data-id="<%= product._id %>" 
+                            data-name="<%= product.name %>"
+                            data-url="/admin/products/<%= product._id %>?_method=DELETE"> 
                         削除
                     </button>
                 </td>
@@ -86,36 +86,9 @@
             全<span class="fw-bold"><%= totalProductsCount %></span>件中 <span class="fw-bold"><%= from %> - <%= to %></span> 件を表示
         </div>
     </div>
-    
-    <%# 削除ボタン押下時の確認モーダル %>
-    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-        <div class="modal-dialog modal-md modal-dialog-centered">
-            <div class="modal-content border-0 shadow-lg rounded-4 overflow-hidden">
-            
-                <div class="modal-body p-4 text-center">
-                    <div class="text-danger mb-3">
-                    <i class="bi bi-exclamation-triangle-fill fs-1"></i>
-                    </div>
-                    
-                    <h5 class="fw-bold text-dark mb-3" id="deleteModalLabel">商品を削除しますか？</h5>
-
-                    <h6 class="fw-bold text-dark mb-3">
-                        対象アイテム : <span id="productName"></span>
-                    </h6>
-                    
-                    <p class="text-muted small mb-0">この操作は取り消せません。<br>本当に削除してもよろしいですか？</p>
-                </div>
-                
-                <div class="modal-footer border-0 p-3 pt-0 d-flex gap-2">
-                    <button type="button" class="btn btn-outline-secondary fw-bold flex-grow-1 py-2 rounded-3" data-bs-dismiss="modal">閉じる</button>
-                    
-                    <form action="" id="deleteForm" method="post" class="flex-grow-1 m-0">
-                        <button type="submit" class="btn btn-danger fw-bold w-100 py-2 rounded-3">削除する</button>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
 <% } %>
 
-<script src="/javascripts/product-delete.js"></script>
+<%# 削除ボタン押下時の確認モーダル %>
+<%- include('../../partials/deleteModal') %>
+
+<script src="/javascripts/target-delete.js"></script>
