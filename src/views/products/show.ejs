@@ -7,8 +7,8 @@
 <%# 商品編集ボタン：ログイン済みかつ管理者ユーザの時のみ表示 %>
 <% if (currentUser && currentUser.isAdmin) { %>
     <div class="mb-3">
-        <a href="/admin/products/<%= product._id %>/edit" class="btn btn-primary mx-3">編集</a>
-        <button type="submit" class="btn btn-danger" 
+        <a href="/admin/products/<%= product._id %>/edit" class="btn btn-sm btn-primary mx-3">編集</a>
+        <button type="submit" class="btn btn-sm btn-danger" 
                 data-bs-toggle="modal" 
                 data-bs-target="#deleteModal" 
                 data-id="<%= product._id %>" 
@@ -71,7 +71,8 @@
 
             <%# 商品メイン情報 %>
             <div class="mt-2 mb-5">
-                <p class="text-muted small mb-2">My-Style</p>
+                <p class="text-muted fw-bold small mb-2">My-Style</p>
+                <p class="text-muted fw-bold h5 mb-2"><%= product.category.name %></p>
                 <p class="h2 fw-bold mb-2"><%= product.name %></p>
                 <p class="h4 fw-light mb-1">\ <%= product.price.toLocaleString() %> <span class="h6 fw-normal text-muted">(税込み)</span></p>
             </div>
@@ -79,9 +80,9 @@
             <hr class="my-4 opacity-10">
 
             <%# 商品補足情報 %>
-            <div class="mb-5">
-                <p class="text-muted small mb-1">商品説明</p>
-                <p class="h6 lh-lg fw-normal product-description"><%= product.description %></p>
+            <div class="mb-5 px-3">
+                <p class="text-muted fw-bold small mb-1">商品説明</p>
+                <p class="small lh-lg fw-normal product-description"><%= product.description %></p>
             </div>
             <% if (product.stock <= 0) { %>
                 <p class="text-danger fw-bold h5 mb-3">Sold Out</p>

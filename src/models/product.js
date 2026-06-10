@@ -49,15 +49,10 @@ const productSchema = new Schema({
         type: [imageSchema],
     },
     category: {
-        type: String,
-        required: [true, 'カテゴリーは必須です'],
-        enum: Object.values(PRODUCT_CATEGORIES),
+        type: Schema.Types.ObjectId,
+        ref: 'Category',
+        required: [true, 'カテゴリーは必須です']
     },
-    // category: {
-    //     type: Schema.Types.ObjectId,
-    //     ref: 'Category',
-    //     required: [true, 'カテゴリーは必須です']
-    // },
     stock: {
         type: Number,
         required: [true, '在庫数は必須です'],

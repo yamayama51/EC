@@ -4,7 +4,9 @@
 // |ーーーーーーーーーーーーーーーーーーーーーーーーー
 
 const ExpressError = require('../exceptions/ExpressError');
+
 const Review = require('../models/review');
+const Category = require('../models/category');
 
 // ログイン状態を確認
 module.exports.isLoggedIn = (req, res, next) => {
@@ -37,6 +39,22 @@ module.exports.isReviewAuthor = async (req, res, next) => {
         req.flash('error', 'そのアクションの権限がありません');
         return res.redirect(`/products/${productId}`);
     }
+    next();
+}
+
+// res.locals に値をセットする
+module.exports.setLocals = async (req, res, next) => {
+
+    // flashの設定
+    res.locals.success = req.flash('success');
+    res.locals.error = req.flash('error');
+
+    // ユーザー情報を利用可能にする
+    res.locals.currentUser = req.user;
+
+    // カテゴリーの設定
+    res.locals.categories = await Category.find({});
+
     next();
 }
 

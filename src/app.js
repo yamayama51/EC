@@ -16,10 +16,12 @@ const passport = require('passport');
 const LocalStrategy = require('passport-local');
 
 const ExpressError = require('./exceptions/ExpressError');
-const { PRODUCT_CATEGORIES } = require('./constants/index');
 
 // モデルの読み込み
 const User = require('./models/user');
+
+// ミドルウェアの読み込み
+const { setLocals } = require('./middlewares/middlewares');
 
 // ルートの読み込み
 const userRoutes = require('./routes/users');
@@ -79,18 +81,7 @@ passport.deserializeUser(User.deserializeUser());
 app.use(flash());
 
 // ejs内で変数を利用できるようにする
-app.use((req, res, next) => {
-
-    res.locals.success = req.flash('success');
-    res.locals.error = req.flash('error');
-
-    // ユーザー情報を利用可能にする
-    res.locals.currentUser = req.user;
-
-    res.locals.categories = PRODUCT_CATEGORIES;
-
-    next();
-});
+app.use(setLocals);
 
 // トップページのルーティング
 app.get('/', (req, res) => {

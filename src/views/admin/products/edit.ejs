@@ -51,8 +51,8 @@
                         <div class="form-floating mb-3">
                             <select id="category" name="product[category]" class="form-select mb-3" required>
                                 <% Object.values(categories).forEach(category => { %>
-                                <option value="<%= category %>" <%= product.category === category ? 'selected' : '' %>>
-                                    <%= category %>
+                                <option value="<%= category._id %>" <%= product.category.name === category.name ? 'selected' : '' %>>
+                                    <%= category.name %>
                                 </option>
                                 <% }) %>
                             </select>

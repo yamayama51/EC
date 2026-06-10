@@ -3,11 +3,20 @@
 
 <% layout('layouts/boilerplate') %>
 
-<div class="row">
+<div class="mb-3">
+    <% if (categoryName) { %>
+        <h4 class="mb-3">「<%= categoryName %>」の商品</h4>
+        <a href="/products" class="btn btn-sm btn-outline-secondary">フィルターを解除</a>
+    <% } else { %>
+        <h4>すべての商品</h4>
+    <% } %>
+</div>
+
+<div class="row mt-5">
 
     <%# 商品が登録されていない場合 %>
     <% if (products.length === 0) { %>
-        <div col-md-4>
+        <div class="col-md-4">
             <p class="h4 text-muted fw-bold mb-5">現在販売中のアイテムがありません</p>
             <a href="/" class="btn btn-dark px-5 py-3">ホームへ</a>
         </div>
@@ -36,7 +45,7 @@
                                 SOLD OUT
                             </span>
                         <% } %>
-                        <p class="text-secondary small mb-1"><%= product.category %></p>
+                        <p class="text-secondary small mb-1"><%= product.category.name %></p>
                         <p class="card-title h5 fw-bold mb-1 text-dark"><%= product.name %></p>
                         <p class="card-text fw-bold text-dark">\ <%= product.price.toLocaleString() %></p>
                     </div>

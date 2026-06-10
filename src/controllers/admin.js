@@ -24,15 +24,29 @@ module.exports.productIndex = async (req, res) => {
     const limit = 20;
 
     // 検索条件を追加 (カテゴリーのフィルターを適用)
-    const category = req.query.category;
-    const query = category ? { category } : {};
+    const categoryName = req.query.category;
+    let query = {};
+
+    // カテゴリーのフィルターを適用
+    if (categoryName) {
+
+        // 名前からカテゴリーを検索
+        const categoryDoc = await Category.findOne({ name: categoryName });
+
+        // カテゴリーが存在すればIDで絞り込む
+        if (categoryDoc) {
+            query = { category: categoryDoc._id };
+        } else {
+            query = {};
+        }
+    }
 
     // 商品データの総数とページの総数を取得
     const totalProductsCount = await Product.countDocuments(query);
     const totalPages = Math.ceil(totalProductsCount / limit);
 
     // ページ数からlimit件分の商品データを取得
-    const products = await Product.find(query).skip((page - 1) * limit).limit(limit);
+    const products = await Product.find(query).populate('category').skip((page - 1) * limit).limit(limit);
 
     // 表示するページを取得
     const finalDisplay = generatePageRange(page, totalPages);
@@ -40,7 +54,7 @@ module.exports.productIndex = async (req, res) => {
     res.render('admin/products/index',
         {
             products,
-            category,
+            categoryName,
             totalProductsCount,
             currentPage: page,
             from: (page - 1) * limit + 1,
@@ -64,7 +78,7 @@ module.exports.renderProductEditForm = async (req, res) => {
     const { id } = req.params;
 
     // DBから商品を取得
-    const product = await Product.findById(id);
+    const product = await Product.findById(id).populate('category');
 
     // 商品が見つからなければ一覧画面へ遷移
     if (!product) {

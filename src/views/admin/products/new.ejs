@@ -48,7 +48,7 @@
                         <div class="form-floating mb-3">
                             <select id="category" name="product[category]" class="form-select mb-3" required>
                                 <% Object.values(categories).forEach(category => { %>
-                                <option value="<%= category %>"><%= category %></option>
+                                <option value="<%= category._id %>"><%= category.name %></option>
                                 <% }) %>
                             </select>
                             <label for="category" class="form-label text-muted">カテゴリー</label>

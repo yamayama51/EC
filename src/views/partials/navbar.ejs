@@ -16,15 +16,21 @@
             Category
           </a>
           <ul class="dropdown-menu">
+            <%# 管理者の場合 %>
             <% if (currentUser && currentUser.isAdmin) { %>
-              <li><a class="dropdown-item" href="/admin/products">All Items</a></li>
+              <li><a class="dropdown-item fw-bold" href="/admin/products">All Items</a></li>
               <% Object.values(categories).forEach(category => { %>
-              <li><a class="dropdown-item" href="/admin/products?category=<%= category %>"><%= category %></a></li>
+                <li><a class="dropdown-item" href="/admin/products?category=<%= category.name %>">
+                  <%= category.name %>
+                </a></li>
               <% }) %>
+              <%# 非管理者の場合 %>
             <% } else{ %>
-              <li><a class="dropdown-item" href="/products">All Items</a></li>
+              <li><a class="dropdown-item fw-bold" href="/products">All Items</a></li>
               <% Object.values(categories).forEach(category => { %>
-              <li><a class="dropdown-item" href="/products?category=<%= category %>"><%= category %></a></li>
+                <li><a class="dropdown-item" href="/products?category=<%= category.name %>">
+                  <%= category.name %>
+                </a></li>
               <% }) %>
             <% } %>
           </ul>

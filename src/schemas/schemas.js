@@ -26,8 +26,7 @@ module.exports.productSchema = Joi.object({
 				originalName: Joi.string().optional(),
 			})
 		).optional(),
-		// FIX : categoryは修正するよ
-        category: Joi.string().valid(...Object.values(PRODUCT_CATEGORIES)).required(),
+		category: Joi.string().required(),
         stock: Joi.number().required().min(0).max(100000),
     }).required(),
 	deleteImages: Joi.array(),
