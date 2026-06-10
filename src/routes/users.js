@@ -9,7 +9,7 @@ const passport = require('passport');
 const users = require('../controllers/users');
 const { userSchema } = require('../schemas/schemas');
 
-const { validate } = require('../middlewares/middlewares');
+const { storeReturnTo, validate } = require('../middlewares/middlewares');
 
 // ユーザー登録
 router.route('/register')
@@ -19,7 +19,7 @@ router.route('/register')
 // ログイン
 router.route('/login')
     .get(users.renderLogin)
-    .post(passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }), users.login)
+    .post(storeReturnTo, passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }), users.login)
 
 // ログアウト
 router.route('/logout')

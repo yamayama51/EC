@@ -12,8 +12,18 @@ const Category = require('../models/category');
 module.exports.isLoggedIn = (req, res, next) => {
     
     if (!req.isAuthenticated()) {
+        req.session.returnTo = req.originalUrl;
         console.log('ログインしてください');
         return res.redirect('/login');
+    }
+    next();
+}
+
+// 未ログインユーザーがログインユーザーしか使用できない機能を触ろうとした用
+// 現在のURLを一時的に保存する
+module.exports.storeReturnTo = (req, res, next) => {
+    if (req.session.returnTo) {
+        res.locals.returnTo = req.session.returnTo;
     }
     next();
 }
@@ -102,3 +112,4 @@ module.exports.validate = (schema) => {
         }
     }
 }
+

@@ -47,11 +47,11 @@ module.exports.login = (req, res) => {
 
     req.flash('success', 'おかえりなさい');
 
-    if (req.user.isAdmin) {
-        res.redirect('/admin/products');
-    } else {
-        res.redirect('/products');
-    }
+    // リダイレクト先を変更
+    const redirectUrl = res.locals.returnTo || 'products';
+    delete res.locals.returnTo;
+
+    res.redirect(redirectUrl);
 }
 
 // ログアウト処理
