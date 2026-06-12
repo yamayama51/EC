@@ -31,7 +31,6 @@
                 <th class="col-name">商品名</th>
                 <th class="col-category">カテゴリー</th>
                 <th class="col-price">価格</th>
-                <th class="col-stock">在庫数</th>
                 <th class="col-action">操作</th>
             </tr>
         </thead>
@@ -53,10 +52,6 @@
                 <td><%= product.category.name %></td>
                 <td>¥<%= product.price.toLocaleString() %></td>
 
-                <%# 在庫が10個以下なら強調表示 %>
-                <td class="<%= product.stock <= 10 ? 'text-low-stock' : '' %>">
-                    <%= product.stock %>
-                </td>
                 <td>
                     <a href="/admin/products/<%= product.id %>/edit" class="btn btn-sm btn-outline-secondary mx-2">編集</a>
                     <button type="submit" class="btn btn-sm btn-danger" 

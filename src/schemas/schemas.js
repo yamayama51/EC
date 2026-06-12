@@ -27,7 +27,6 @@ module.exports.productSchema = Joi.object({
 			})
 		).optional(),
 		category: Joi.string().required(),
-        stock: Joi.number().required().min(0).max(100000),
     }).required(),
 	deleteImages: Joi.array(),
 	imageOrder: Joi.string().allow('', null),

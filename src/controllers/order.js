@@ -48,83 +48,36 @@ module.exports.createOrder = async (req, res) => {
         }
     }
 
-    // 在庫の減算に成功した商品を追跡するための一時保管場所
-    const updatedProducts = [];
-
-    try {
-        for (let item of cart.items) { 
-            const result = await Product.updateOne(
-                {
-                    // 商品在庫が注文数以上という条件
-                    _id: item.productId._id,
-                    stock: { $gte: item.quantity }
-                },
-                { 
-                    // 在庫をその場で減産する
-                    $inc: { stock: -item.quantity }
-                }
-            );
-
-            // 変更されたドキュメント数が0の場合、在庫不在
-            if (result.modifiedCount === 0) {
-                req.flash('error', `${item.productId.name}の在庫が不足しています`);
-
-                // 途中まで商品在庫を減らしていた場合、元に戻す(ロールバック)　
-                // ※カート内の商品で一つでも欠品していたら注文を確定させない
-                for (let rolledBackItem of updatedProducts) {
-                    await Product.findByIdAndUpdate(rolledBackItem.id, {
-                        $inc: { stock: rolledBackItem.qty }
-                    });
-                }
-                return res.redirect('/cart');
-            }
-
-            // 成功したらロールバック用に配列に格納
-            updatedProducts.push({ id: item.productId._id, qty: item.quantity });
+    // カート内のアイテム情報を取得する
+    let total = 0;
+    const orderItems = cart.items.map(item => {
+        total += item.productId.price * item.quantity;
+        return {
+            productId: item.productId._id,
+            name: item.productId.name,
+            quantity: item.quantity,
+            priceAtPurchase: item.productId.price,
         }
+    });
 
-        // カート内のアイテム情報を取得する
-        let total = 0;
-        const orderItems = cart.items.map(item => {
-            total += item.productId.price * item.quantity;
-            return {
-                productId: item.productId._id,
-                name: item.productId.name,
-                quantity: item.quantity,
-                priceAtPurchase: item.productId.price,
-            }
-        });
+    // Orderを作成
+    const order = new Order({
+        user: userId,
+        items: orderItems,
+        totalPrice: total,
+        isPaid: true,
+    });
 
-        // Orderを作成
-        const order = new Order({
-            user: userId,
-            items: orderItems,
-            totalPrice: total,
-            isPaid: true,
-        });
+    // Orderを保存
+    await order.save();
 
-        // Orderを保存
-        await order.save();
+    // カートを空にして保存
+    cart.items = [];
+    await cart.save();
 
-        // カートを空にして保存
-        cart.items = [];
-        await cart.save();
+    req.flash('success', '注文が完了しました');
+    res.redirect(`/orders/success?orderId=${order._id}`);
 
-        req.flash('success', '注文が完了しました');
-        res.redirect(`/orders/success?orderId=${order._id}`);
-
-    } catch (err) {
-
-        // システムエラーやDBエラーなどの場合も在庫を復元する
-        for (let rolledBackItem of updatedProducts) {
-            await Product.findByIdAndUpdate(rolledBackItem.id, {
-                $inc: { stock: rolledBackItem.qty }
-            });
-        }
-
-        req.flash('error', '注文処理中に予期せぬエラーが発生しました');
-        res.redirect('/cart');
-    }
 }
 
 // 注文詳細画面の表示

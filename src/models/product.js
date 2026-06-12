@@ -53,11 +53,6 @@ const productSchema = new Schema({
         ref: 'Category',
         required: [true, 'カテゴリーは必須です']
     },
-    stock: {
-        type: Number,
-        required: [true, '在庫数は必須です'],
-        min: 0,
-    },
     reviews: [
         {
             type: Schema.Types.ObjectId,

@@ -128,7 +128,6 @@ module.exports.updateProduct = async (req, res) => {
             price: req.body.product.price,
             description: req.body.product.description,
             category: req.body.product.category,
-            stock: req.body.product.stock,
             reviews: req.body.product.reviews
         }
     );

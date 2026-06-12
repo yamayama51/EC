@@ -20,7 +20,6 @@ module.exports.index = async (req, res) => {
 
     // 商品の合計金額を計算する
     let total = 0;
-    // for (let item of user.cart) {
     for (let item of cart.items) {
         total += item.productId.price * item.quantity; 
     }
