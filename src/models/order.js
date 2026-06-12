@@ -6,6 +6,8 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
+const { ORDER_STATUS } = require('../constants/index');
+
 // オーダースキーマの定義
 const orderSchema = new Schema({
 
@@ -40,9 +42,10 @@ const orderSchema = new Schema({
 		type: Number,
 		required: [true, '合計金額は必須です'],
 	},
-	isPaid: {
-		type: Boolean,
-		default: true,
+	orderStatus: {
+		type: String,
+		enum: Object.values(ORDER_STATUS),
+		default: ORDER_STATUS.PENDING,
 	}
 }, {
 	timestamps: true,

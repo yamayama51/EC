@@ -65,7 +65,6 @@ module.exports.createOrder = async (req, res) => {
         user: userId,
         items: orderItems,
         totalPrice: total,
-        isPaid: true,
     });
 
     // Orderを保存
