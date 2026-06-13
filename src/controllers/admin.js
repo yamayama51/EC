@@ -5,12 +5,15 @@
 
 const { array } = require('joi');
 const { cloudinary } = require('../cloudinary');
+const { format } = require('date-fns');
 
 const Product = require('../models/product');
 const Review = require('../models/review');
 const Category = require('../models/category');
+const Order = require('../models/order');
 
 const { generatePageRange } = require('../helpers/pagination');
+const { ORDER_STATUS } = require('../constants/index');
 
 // |ーーーーーーーーーーーーーーーーーーーーーーーーー
 // | 商品のCRUD等
@@ -341,3 +344,22 @@ module.exports.deleteCategory = async (req, res) => {
     req.flash('success', 'カテゴリーを削除しました');
     res.redirect('/admin/categories');
 }
+
+
+// |ーーーーーーーーーーーーーーーーーーーーーーーーー
+// | 注文管理
+// |ーーーーーーーーーーーーーーーーーーーーーーーーー
+
+// 注文一覧を表示
+module.exports.ordersIndex = async (req, res) => {
+
+    // オーダーの一覧を取得
+    const orders = await Order.find({})
+        .populate('items.productId')
+        .populate('user')
+        .sort({ createdAt: -1 }
+    );
+
+    res.render('admin/orders/index', { ORDER_STATUS, orders, format });
+}
+

@@ -42,13 +42,18 @@ const orderSchema = new Schema({
 		type: Number,
 		required: [true, '合計金額は必須です'],
 	},
-	orderStatus: {
+	status: {
 		type: String,
 		enum: Object.values(ORDER_STATUS),
 		default: ORDER_STATUS.PENDING,
 	}
 }, {
 	timestamps: true,
+});
+
+// 注文の支払期限を追加
+orderSchema.virtual('paymentDeadline').get(function() {
+	return new Date(this.createdAt.getTime() + 30 * 60 * 1000);
 });
 
 module.exports = mongoose.model('Order', orderSchema);

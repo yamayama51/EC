@@ -19,6 +19,10 @@ const catchAsync = require('../helpers/catchAsync');
 // 全てのルートにisAdminを適用
 router.use(isAdmin);
 
+// |ーーーーーーーーーーーーーーーーーーーーーーーーー
+// | 商品管理
+// |ーーーーーーーーーーーーーーーーーーーーーーーーー
+
 // 商品一覧
 router.route('/products')
     .get(catchAsync(admin.productIndex))
@@ -38,7 +42,11 @@ router.route('/products/:id')
 router.route('/products/:id/edit')
     .get(catchAsync(admin.renderProductEditForm))
 
-// 定数管理
+
+// |ーーーーーーーーーーーーーーーーーーーーーーーーー
+// | 定数管理
+// |ーーーーーーーーーーーーーーーーーーーーーーーーー
+
 // カテゴリー一覧
 router.route('/categories')
     .get(catchAsync(admin.categoryIndex))
@@ -52,5 +60,14 @@ router.route('/categories/:id')
 // カテゴリー編集
 router.route('/categories/:id/edit')
     .get(catchAsync(admin.renderCategoryEditForm))
+
+
+// |ーーーーーーーーーーーーーーーーーーーーーーーーー
+// | 注文管理
+// |ーーーーーーーーーーーーーーーーーーーーーーーーー
+
+// 注文一覧の取得
+router.route('/orders')
+    .get(catchAsync(admin.ordersIndex))
 
 module.exports = router;
