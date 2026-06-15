@@ -363,3 +363,27 @@ module.exports.ordersIndex = async (req, res) => {
     res.render('admin/orders/index', { ORDER_STATUS, orders, format });
 }
 
+// 注文ステータスの変更
+module.exports.updateOrderStatus = async (req, res) => {
+
+    // URLからオーダーIDを取得
+    const { orderId } = req.params;
+
+    // 入力値を取得
+    const { status } = req.body;
+
+    // 許可されたステータスを取得
+    const validStatues = Object.values(ORDER_STATUS);
+
+    // 許可されたステータス以外ならエラー
+    if (!validStatues.includes(status)) {
+        req.flash('error', '無効なステータスです');
+        return res.redirect('/admin/orders');
+    }
+
+    // 対象オーダーのステータスを更新
+    await Order.findByIdAndUpdate(orderId, { status: status });
+
+    req.flash('success', '注文ステータスを更新しました');
+    res.redirect('/admin/orders');
+}

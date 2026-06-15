@@ -70,4 +70,8 @@ router.route('/categories/:id/edit')
 router.route('/orders')
     .get(catchAsync(admin.ordersIndex))
 
+// 注文ステータスの変更
+router.route('/orders/:orderId/update-status')
+    .put(catchAsync(admin.updateOrderStatus))
+
 module.exports = router;

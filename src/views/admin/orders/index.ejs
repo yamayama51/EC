@@ -10,7 +10,7 @@
 <div class="container mt-4">
     <% if (orders.length === 0) { %>
         <div class="col-md-6">
-            <p class="h4 text-muted fw-bold mb-5">現在、注文はありません</p>
+            <p class="h4 text-muted fw-bold mb-5">まだ注文はありません。</p>
         </div>
     <% } else { %>
             <table class="table table-hover align-middle">
@@ -19,51 +19,50 @@
                         <th>注文ID</th>
                         <th>注文日時</th>
                         <th>支払期限</th>
-                        <th>連絡先 (Email)</th>
-                        <th>状態</th>
-                        <th>操作</th>
+                        <th>連絡先 (E-mail)</th>
+                        <th>ステータス</th>
                     </tr>
                 </thead>
                 <tbody>
                     <% for(let order of orders) { %>
-                        <form action="/admin/orders/<%= order._id %>/status-update?_method=PUT" method="POST"></form>
-                            <tr>
-                                <%# 注文ID %>
-                                <td>
-                                    <div class="my-3">
-                                    <a href="/orders/<%= order._id %>" class="fw-bold text-decoration-none">
+                        <tr class="<%= order.status === 'cancelled' ? 'text-decoration-line-through text-muted' : '' %>">
+                            <%# 注文ID %>
+                            <td>
+                                <div class="my-3">
+                                    <a href="/orders/<%= order._id %>" class="fw-bold text-decoration-none 
+                                        <%= order.status === 'cancelled' ? 'text-decoration-line-through text-muted' : '' %>">
                                         <%= order._id %>
                                     </a>
-                                    </div>
-                                </td>
+                                </div>
+                            </td>
 
-                                <%# 注文日時 %>
-                                <td><%= format(order.createdAt, 'yyyy/MM/dd hh:mm') %></td>
+                            <%# 注文日時 %>
+                            <td>
+                                <%= format(order.createdAt, 'yyyy/MM/dd HH:mm') %>
+                            </td>
 
-                                <%# 支払期限 %>
-                                <td class="<%= (new Date() > order.paymentDeadline && order.status === 'pending') ? 'text-danger fw-bold' : '' %>">
-                                    <%= format(order.paymentDeadline, 'yyyy/MM/dd hh:mm') %>
-                                </td>
+                            <%# 支払期限 %>
+                            <td class="<%= (new Date() > order.paymentDeadline && order.status === 'pending') ? 'text-danger fw-bold' : '' %>">
+                                <%= format(order.paymentDeadline, 'yyyy/MM/dd HH:mm') %>
+                            </td>
 
-                                <%# 注文者メールアドレス %>
-                                <td><%= order.user.email %></td>
+                            <%# 注文者メールアドレス %>
+                            <td><%= order.user.email %></td>
 
-                                <%# 注文ステータス %>
-                                <td>
-                                    <select name="status" id="order-status" class="form-select">
+                            <%# 注文ステータス %>
+                            <td colspan="2">
+                                <form action="/admin/orders/<%= order._id %>/update-status?_method=PUT" method="POST" class="d-flex align-items-center">
+                                    <select name="status" class="form-select form-select-sm me-3 w-auto">
                                         <% Object.values(ORDER_STATUS).forEach(status => { %>
                                             <option value="<%= status %>" <%= order.status === status ? 'selected' : '' %>>
                                                 <%= status.toUpperCase() %>
                                             </option>
                                         <% }) %>
                                     </select>
-                                </td>
-
-                                <td>
-                                    <button class="btn btn-sm btn-success mx-2">ステータス更新</button>
-                                </td>
-                            </tr>
-                        </form>
+                                    <button type="submit" class="btn btn-sm btn-success">更新</button>
+                                </form>
+                            </td>
+                        </tr>
                     <% } %>
                 </tbody>
             </table>
