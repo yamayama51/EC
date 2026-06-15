@@ -86,8 +86,8 @@ module.exports.renderShowForm = async (req, res) => {
     const { id } = req.params;
     const order = await Order.findById(id).populate('items.productId');
 
-    // orderを取得できない場合、
-    if (!order || !order.user.equals(req.user._id)) {
+    // orderを取得できない場合、注文者本人でない場合、管理者でない場合(管理者であれば閲覧可能)
+    if (!order || (!order.user.equals(req.user._id)) && !req.user.isAdmin) {
         req.flash('error', '注文が見つかりませんでした');
         return res.redirect('/orders');
     }

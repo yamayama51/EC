@@ -16,23 +16,12 @@
             Category
           </a>
           <ul class="dropdown-menu">
-            <%# 管理者の場合 %>
-            <% if (currentUser && currentUser.isAdmin) { %>
-              <li><a class="dropdown-item fw-bold" href="/admin/products">All Items</a></li>
-              <% Object.values(categories).forEach(category => { %>
-                <li><a class="dropdown-item" href="/admin/products?category=<%= category.name %>">
-                  <%= category.name %>
-                </a></li>
-              <% }) %>
-              <%# 非管理者の場合 %>
-            <% } else{ %>
-              <li><a class="dropdown-item fw-bold" href="/products">All Items</a></li>
-              <% Object.values(categories).forEach(category => { %>
-                <li><a class="dropdown-item" href="/products?category=<%= category.name %>">
-                  <%= category.name %>
-                </a></li>
-              <% }) %>
-            <% } %>
+            <li><a class="dropdown-item fw-bold" href="/products">All Items</a></li>
+            <% Object.values(categories).forEach(category => { %>
+              <li><a class="dropdown-item" href="/products?category=<%= category.name %>">
+                <%= category.name %>
+              </a></li>
+            <% }) %>
           </ul>
         </li>
       </ul>
@@ -46,23 +35,16 @@
           <%# 管理者の場合 %>
           <% if (currentUser.isAdmin) { %>
             <li class="nav-item">
-              <a class="nav-link" href="/admin/products">All Items</a>
-            </li>  
-            <li class="nav-item">
-              <a class="nav-link" href="/admin/products/new">Add Item</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/admin/categories">Category Mng</a>
+              <a class="nav-link fw-bold text-warning" href="/admin/dashboard">Dashboard</a>
             </li>    
           <%# 非管理者の場合 %>
-          <% } else { %>
-            <li class="nav-item">
-            <a class="nav-link" href="/cart">Cart</a>
-            </li>
-            <li class="nav-item">
-              <a class="nav-link" href="/orders">Orders</a>
-            </li>
           <% } %>
+          <li class="nav-item">
+          <a class="nav-link" href="/cart">Cart</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/orders">Orders</a>
+          </li>
           <li class="nav-item">
             <a class="nav-link" href="/logout">Logout</a>
           </li>

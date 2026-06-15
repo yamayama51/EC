@@ -16,6 +16,13 @@ const { generatePageRange } = require('../helpers/pagination');
 const { ORDER_STATUS } = require('../constants/index');
 
 // |ーーーーーーーーーーーーーーーーーーーーーーーーー
+// | 管理者ダッシュボードの表示
+// |ーーーーーーーーーーーーーーーーーーーーーーーーー
+module.exports.dashboard = (req, res) => {
+    res.render('admin/dashboard');
+}
+
+// |ーーーーーーーーーーーーーーーーーーーーーーーーー
 // | 商品のCRUD等
 // |ーーーーーーーーーーーーーーーーーーーーーーーーー
 

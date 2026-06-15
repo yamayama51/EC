@@ -20,6 +20,12 @@ const catchAsync = require('../helpers/catchAsync');
 router.use(isAdmin);
 
 // |ーーーーーーーーーーーーーーーーーーーーーーーーー
+// | 管理者ダッシュボード
+// |ーーーーーーーーーーーーーーーーーーーーーーーーー
+router.route('/dashboard')
+    .get(admin.dashboard)
+
+// |ーーーーーーーーーーーーーーーーーーーーーーーーー
 // | 商品管理
 // |ーーーーーーーーーーーーーーーーーーーーーーーーー
 
