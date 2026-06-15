@@ -11,6 +11,7 @@ const ORDER_STATUS = Object.freeze({
     PENDING: 'pending',
     PAID: 'paid',
     ARRIVED: 'arrived',
+    DELIVERED: 'delivered',
     CANCELLED: 'cancelled'
 });
 
