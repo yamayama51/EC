@@ -360,14 +360,38 @@ module.exports.deleteCategory = async (req, res) => {
 // 注文一覧を表示
 module.exports.ordersIndex = async (req, res) => {
 
-    // オーダーの一覧を取得
-    const orders = await Order.find({})
-        .populate('items.productId')
-        .populate('user')
-        .sort({ createdAt: -1 }
-    );
+    // 指定されたページ番号・表示件数を定義
+    const page = parseInt(req.query.page) || 1;
+    const limit = 20;
 
-    res.render('admin/orders/index', { ORDER_STATUS, orders, format });
+    // フィルター条件を取得
+    const statusFilter = req.query.status;
+
+    // ステータスがあればクエリを組み立てる
+    const query = statusFilter ? { status: statusFilter } : {};
+
+    // 商品データの総数とページの総数を取得
+    const totalOrdersCount = await Order.countDocuments(query);
+    const totalPages = Math.ceil(totalOrdersCount / limit);
+
+    // ページ数からlimit件分の注文データを取得
+    const orders = await Order.find(query).populate('items.productId').populate('user').skip((page - 1) * limit).limit(limit).sort({ createdAt: -1});
+
+    // 表示するページを取得
+    const finalDisplay = generatePageRange(page, totalPages);
+
+    res.render('admin/orders/index', { 
+        ORDER_STATUS,
+        currentStatus: statusFilter,
+        orders,
+        format,
+        totalOrdersCount,
+        currentPage: page,
+        from: (page - 1) * limit + 1,
+        to: Math.min(page * limit, totalOrdersCount),
+        totalPages,
+        finalDisplay
+    });
 }
 
 // 注文ステータスの変更
