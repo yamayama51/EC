@@ -12,7 +12,7 @@ const Review = require('../models/review');
 const Category = require('../models/category');
 const Order = require('../models/order');
 
-const { generatePageRange } = require('../helpers/pagination');
+const { getPaginationData } = require('../helpers/pagination');
 const { ORDER_STATUS } = require('../constants/index');
 
 // |ーーーーーーーーーーーーーーーーーーーーーーーーー
@@ -29,10 +29,7 @@ module.exports.dashboard = (req, res) => {
 // 商品一覧表示
 module.exports.productIndex = async (req, res) => {
 
-    // 指定されたページ番号・表示件数を定義
-    const page = parseInt(req.query.page) || 1;
-    const limit = 20;
-
+    // フィルター適用
     // 検索条件を追加 (カテゴリーのフィルターを適用)
     const categoryName = req.query.category;
     let query = {};
@@ -52,25 +49,26 @@ module.exports.productIndex = async (req, res) => {
     }
 
     // 商品データの総数とページの総数を取得
-    const totalProductsCount = await Product.countDocuments(query);
-    const totalPages = Math.ceil(totalProductsCount / limit);
+    const totalItemsCount = await Product.countDocuments(query);
 
+    // ページングに必要なデータを集める
+    const pagination = getPaginationData(req.query.page, totalItemsCount);
+
+    // DB検索
     // ページ数からlimit件分の商品データを取得
-    const products = await Product.find(query).populate('category').skip((page - 1) * limit).limit(limit);
-
-    // 表示するページを取得
-    const finalDisplay = generatePageRange(page, totalPages);
+    const products = await Product.find(query)
+        .populate('category')
+        .skip((pagination.currentPage - 1) * pagination.LIMIT)
+        .limit(pagination.LIMIT)
+    ;
 
     res.render('admin/products/index',
         {
             products,
             categoryName,
-            totalProductsCount,
-            currentPage: page,
-            from: (page - 1) * limit + 1,
-            to: Math.min(page * limit, totalProductsCount),
-            totalPages,
-            finalDisplay 
+            pagination,
+            baseUrl: 'products',
+            queryParams: categoryName ? `&category=${encodeURIComponent(categoryName)}` : ''
         }
     );
 }
@@ -360,37 +358,35 @@ module.exports.deleteCategory = async (req, res) => {
 // 注文一覧を表示
 module.exports.ordersIndex = async (req, res) => {
 
-    // 指定されたページ番号・表示件数を定義
-    const page = parseInt(req.query.page) || 1;
-    const limit = 20;
-
     // フィルター条件を取得
     const statusFilter = req.query.status;
 
     // ステータスがあればクエリを組み立てる
     const query = statusFilter ? { status: statusFilter } : {};
 
-    // 商品データの総数とページの総数を取得
-    const totalOrdersCount = await Order.countDocuments(query);
-    const totalPages = Math.ceil(totalOrdersCount / limit);
+    // 注文の総数を取得
+    const totalItemsCount = await Order.countDocuments(query);
+
+    // ページングに必要なデータを集める
+    const pagination = getPaginationData(req.query.page, totalItemsCount);
 
     // ページ数からlimit件分の注文データを取得
-    const orders = await Order.find(query).populate('items.productId').populate('user').skip((page - 1) * limit).limit(limit).sort({ createdAt: -1});
-
-    // 表示するページを取得
-    const finalDisplay = generatePageRange(page, totalPages);
+    const orders = await Order.find(query)
+        .populate('items.productId')
+        .populate('user')
+        .skip((pagination.currentPage - 1) * pagination.LIMIT)
+        .limit(pagination.LIMIT)
+        .sort({ createdAt: -1})
+    ;
 
     res.render('admin/orders/index', { 
         ORDER_STATUS,
         currentStatus: statusFilter,
         orders,
         format,
-        totalOrdersCount,
-        currentPage: page,
-        from: (page - 1) * limit + 1,
-        to: Math.min(page * limit, totalOrdersCount),
-        totalPages,
-        finalDisplay
+        pagination,
+        baseUrl: 'orders',
+        queryParams: statusFilter ? `&status=${statusFilter}` : ''
     });
 }
 

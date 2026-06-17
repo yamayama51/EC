@@ -55,26 +55,5 @@
     <% } %>
 
     <%# ページングナビ %>
-    <div class="d-flex flex-column align-items-center mb-5"> 
-        <% if (totalPages !== 1) { %>
-            <nav aria-label="Page navigation" class="d-flex justify-content-center mb-1">
-                <ul class="pagination">
-                    <% for (let item of finalDisplay) { %>
-                        <% if (item === '...') { %>
-                            <li class="page-item disabled">
-                                <p class="page-link"><%= item %></p>
-                            </li>
-                        <% } else { %>
-                            <li class="page-item <%= currentPage === item ? 'active' : '' %>">
-                                <a class="page-link" href="/products?page=<%= item %>"><%= item %></a>
-                            </li>
-                        <% } %>
-                    <% } %>
-                </ul>
-            </nav>
-        <% } %>
-        <div class="text-muted">
-            全<span class="fw-bold"><%= totalProductsCount %></span>件中 <span class="fw-bold"><%= from %> - <%= to %></span> 件を表示
-        </div>
-    </div>
+    <%- include('../partials/pagination') %>
 </div>

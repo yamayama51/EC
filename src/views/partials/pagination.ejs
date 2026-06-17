@@ -1,0 +1,32 @@
+
+<%# ページングリンク %>
+
+<div class="d-flex flex-column align-items-center mt-5 mb-5"> 
+    <% if (pagination.totalPages !== 1) { %>
+        
+        <%# リンク部分 %>
+        <nav aria-label="Page navigation" class="d-flex justify-content-center mb-1">
+            <ul class="pagination">
+                <% for (let item of pagination.finalDisplay) { %>
+                    <% if (item === '...') { %>
+                        <li class="page-item disabled">
+                            <p class="page-link"><%= item %></p>
+                        </li>
+                    <% } else { %>
+                        <li class="page-item <%= pagination.currentPage === item ? 'active' : '' %>">
+                            <a class="page-link" href="<%= baseUrl %>?page=<%= item %><%= queryParams %>">
+                                <%= item %>
+                            </a>
+                        </li>
+                    <% } %>
+                <% } %>
+            </ul>
+        </nav>
+    <% } %>
+
+    <%# 件数表示部分 %>
+    <div class="text-muted">
+        全 <span class="fw-bold"><%= pagination.totalItemsCount %></span> 件中 
+        <span class="fw-bold"> <%= pagination.from %> - <%= pagination.to %> </span> 件を表示
+    </div>
+</div>

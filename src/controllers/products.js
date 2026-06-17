@@ -10,14 +10,10 @@ const Category = require('../models/category');
 const Order = require('../models/order');
 const Review = require('../models/review');
 
-const { generatePageRange } = require('../helpers/pagination');
+const { getPaginationData } = require('../helpers/pagination');
 
 // 商品一覧の表示
 module.exports.index = async (req, res) => {
-    
-    // 指定されたページ番号・表示件数を定義
-    const page = parseInt(req.query.page) || 1; 
-    const limit = 20;
 
     // 検索条件を追加 (カテゴリーのフィルターを適用)
     const categoryName = req.query.category;
@@ -38,25 +34,26 @@ module.exports.index = async (req, res) => {
     }
 
     // 商品データの総数とページの総数を取得
-    const totalProductsCount = await Product.countDocuments(query);
-    const totalPages = Math.ceil(totalProductsCount / limit);
+    const totalItemsCount = await Product.countDocuments(query);
 
+    // ページングに必要なデータを集める
+    const pagination = getPaginationData(req.query.page, totalItemsCount);
+
+    // DB検索
     // ページ数からlimit件分の商品データを取得
-    const products = await Product.find(query).populate('category').skip((page - 1) * limit).limit(limit);
-
-    // 表示するページを取得
-    const finalDisplay = generatePageRange(page, totalPages);
+    const products = await Product.find(query)
+        .populate('category')
+        .skip((pagination.currentPage - 1) * pagination.LIMIT)
+        .limit(pagination.LIMIT)
+    ;
 
     res.render('products/index',
         {
             products,
             categoryName,
-            totalProductsCount,
-            currentPage: page,
-            from: (page - 1) * limit + 1,
-            to: Math.min(page * limit, totalProductsCount),
-            totalPages,
-            finalDisplay 
+            pagination,
+            baseUrl: 'products',
+            queryParams: categoryName ? `&category=${encodeURIComponent(categoryName)}` : ''
         }
     );
 };

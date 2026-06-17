@@ -1,8 +1,30 @@
 
 // |ーーーーーーーーーーーーーーーーーーーーーーーーー
-// | ページングで表示する対象を作成するロジック
+// | ページング関連の処理
 // |ーーーーーーーーーーーーーーーーーーーーーーーーー
 
+// 1ページの表示件数
+const LIMIT = 20;
+
+// ページングのデータを返す処理
+module.exports.getPaginationData = (pageParam, totalItemsCount) => {
+
+    // 指定されたページ数と最大ページ数を取得
+    const page = parseInt(pageParam) || 1;
+    const totalPages = Math.ceil(totalItemsCount / LIMIT);
+
+    return {
+        currentPage: page,
+        totalPages,
+        totalItemsCount,
+        from: (page - 1) * LIMIT + 1,
+        to: Math.min(page + LIMIT, totalItemsCount),
+        finalDisplay: this.generatePageRange(page, totalPages),
+        LIMIT
+    }
+}
+
+// ページングで表示する対象を作成するロジック
 module.exports.generatePageRange = (page, totalPages) => {
 
     // 範囲の候補を格納する(Setは重複を自動で消す)
