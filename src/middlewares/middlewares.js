@@ -8,6 +8,8 @@ const ExpressError = require('../exceptions/ExpressError');
 const Review = require('../models/review');
 const Category = require('../models/category');
 
+const { getStatusBadge } = require('../helpers/viewHelpers');
+
 // ログイン状態を確認
 module.exports.isLoggedIn = (req, res, next) => {
     
@@ -64,6 +66,9 @@ module.exports.setLocals = async (req, res, next) => {
 
     // カテゴリーの設定
     res.locals.categories = await Category.find({});
+
+    // ejsで動的にクラスを変更するための処理の設定
+    res.locals.getStatusBadge = getStatusBadge;
 
     next();
 }

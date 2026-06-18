@@ -3,20 +3,6 @@
 
 <% layout('layouts/boilerplate') %>
 
-<%
-  // 注文ステータスで当てえるクラスを変える
-  const getStatusBadge = (status) => {
-    const statusMap = {
-      pending: 'bg-warning text-dark',
-      paid: 'bg-primary text-white',
-      arrived: 'bg-success text-white',
-      delivered: 'bg-secondary text-white',
-      cancelled: 'bg-danger text-white'
-    };
-    return statusMap[status] || 'bg-secondary';
-  };
-%>
-
 <h1 class="h3 fw-bold mb-5">注文履歴</h1>
 
 <div class="mb-3">
