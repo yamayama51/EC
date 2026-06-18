@@ -64,6 +64,7 @@ module.exports.productIndex = async (req, res) => {
 
     res.render('admin/products/index',
         {
+            categories: await Category.find({}),
             products,
             categoryName,
             pagination,
