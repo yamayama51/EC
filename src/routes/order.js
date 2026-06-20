@@ -16,10 +16,9 @@ router.route('/')
     .post(isLoggedIn, catchAsync(order.createOrder))
 
 router.route('/success')
-    .get(isLoggedIn, order.renderSuccessForm);
+    .get(isLoggedIn, order.renderSuccessForm)
 
 router.route('/:id')
-    .get(isLoggedIn, order.renderShowForm)
-
+    .get(isLoggedIn, catchAsync(order.renderShowForm))
 
 module.exports = router;

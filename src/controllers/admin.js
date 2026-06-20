@@ -13,6 +13,8 @@ const Category = require('../models/category');
 const Order = require('../models/order');
 
 const { getPaginationData } = require('../helpers/pagination');
+const { sendEmail } = require('../helpers/mailer');
+const templates = require('../config/mailTemplate');
 const { ORDER_STATUS } = require('../constants/index');
 
 // |ーーーーーーーーーーーーーーーーーーーーーーーーー
@@ -410,7 +412,23 @@ module.exports.updateOrderStatus = async (req, res) => {
     }
 
     // 対象オーダーのステータスを更新
-    await Order.findByIdAndUpdate(orderId, { status: status });
+    await Order.findByIdAndUpdate(orderId, { status: status }, { new: true });
+
+    if (!templates[status]) {
+        console.error(`Error: Template for status "${status}" not found.`);
+        throw new Error(`ステータス "${status}" に対応するメールテンプレートが見つかりません`);
+    }
+
+    // メール用のデータを取得
+    const data = {
+        orderId: orderId,
+    }
+
+    // 注文確定のメールフォーマットを取得
+    const template = templates[status](data);
+
+    // 注文完了メールを送信する
+    await sendEmail(req.user.email, template.subject, template.body);
 
     req.flash('success', '注文ステータスを更新しました');
     res.redirect('/admin/orders');

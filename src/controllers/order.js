@@ -9,6 +9,9 @@ const Order = require('../models/order');
 const Product = require('../models/product');
 const Cart = require('../models/cart');
 
+const { sendEmail } = require('../helpers/mailer');
+const templates = require('../config/mailTemplate');
+
 // 注文一覧の表示
 module.exports.index = async (req, res) => {
 
@@ -74,6 +77,18 @@ module.exports.createOrder = async (req, res) => {
     cart.items = [];
     await cart.save();
 
+    // メール用のデータを取得
+    const data = {
+        orderId: order._id,
+        amount : order.totalPrice,
+    }
+
+    // 注文確定のメールフォーマットを取得
+    const template = templates.placed(data);
+
+    // 注文完了メールを送信する
+    await sendEmail('req.user.email', template.subject, template.body);
+
     req.flash('success', '注文が完了しました');
     res.redirect(`/orders/success?orderId=${order._id}`);
 
@@ -99,7 +114,7 @@ module.exports.renderShowForm = async (req, res) => {
 module.exports.renderSuccessForm = (req, res) => {
 
     // URLからorderIdを取得
-    const { orderId } = req.query;
+    const { orderId } = req.query; 
 
     // queryがない場合、一覧画面へ遷移
     if (!orderId) {
