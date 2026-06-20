@@ -16,6 +16,10 @@ const orderSchema = new Schema({
 		ref: 'User',
 		required: [true, 'ユーザーIDは必須です'],
 	},
+	orderNumber: {
+		type: String,
+		unique: true
+	},
 	items: [
 		{
 			productId: {
@@ -54,6 +58,34 @@ const orderSchema = new Schema({
 // 注文の支払期限を追加
 orderSchema.virtual('paymentDeadline').get(function() {
 	return new Date(this.createdAt.getTime() + 30 * 60 * 1000);
+});
+
+// 注文番号の自動採番
+orderSchema.pre('save', async function() {
+
+	// 新規の場合のみ発番をする
+	if (!this.isNew) return;
+
+	try {
+		// 日付の文字列を作成
+		const date = new Date();
+		const dateStr = date.toISOString().slice(0, 10).replace(/-/g, '');
+
+		// 同日付の連番を取得
+		const count = await mongoose.model('Order').countDocuments({
+			createdAt: {
+				$gte: new Date(date.setHours(0,0,0,0)),
+				$lt: new Date(24,0,0,0)
+			}
+		});
+
+		// 連番を4桁にする
+		const sequence = (count + 1).toString().padStart(4, '0');
+
+		this.orderNumber = `faze-${dateStr}-${sequence}`;
+	} catch (err) {
+		console.log('採番エラー');
+	}
 });
 
 module.exports = mongoose.model('Order', orderSchema);

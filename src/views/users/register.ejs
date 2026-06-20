@@ -8,13 +8,21 @@
         
         <h1 class="h3 fw-bold mb-2 text-dark text-center mb-5">新規アカウント登録</h1>
 
-        <form action="/register" method="POST">
+        <form action="/register" method="POST" class="validated-form mb-5" novalidate>
 
-            <div class="form-floating mb-3">
+            <%# ユーザー名 %>
+            <div class="form-floating mb-4">
+                <input type="text" name="username" class="form-control rounded-3" id="floatingPasswordReg" placeholder="Username" required>
+                <label for="floatingUsernameReg" class="text-muted small">ユーザー名（2～20文字）</label>
+            </div>
+
+            <%# メールアドレス %>
+            <div class="form-floating mb-4">
                 <input type="email" name="email" class="form-control rounded-3" id="floatingEmailReg" placeholder="name@example.com" required>
                 <label for="floatingEmailReg" class="text-muted small">メールアドレス</label>
             </div>
 
+            <%# パスワード %>
             <div class="form-floating mb-4">
                 <input type="password" name="password" class="form-control rounded-3" id="floatingPasswordReg" placeholder="Password" required>
                 <label for="floatingPasswordReg" class="text-muted small">パスワード（8文字以上）</label>

@@ -10,6 +10,7 @@ const { PRODUCT_CATEGORIES } = require('../constants/index');
 module.exports.userSchema = Joi.object({
 	email: Joi.string().email().required().trim(),
 	password: Joi.string().required().min(8),
+	username: Joi.string().required().min(2).max(20),
 	isAdmin: Joi.boolean().default(false),
 });
 
@@ -60,6 +61,7 @@ module.exports.cartSchema = Joi.object({
 module.exports.orderSchema = Joi.object({
 	order: Joi.object({
 		user: Joi.string().required(),
+		orderNumber: Joi.string().required(),
 		items: Joi.array().items(
 			Joi.object({
 				productId: Joi.string().required(),

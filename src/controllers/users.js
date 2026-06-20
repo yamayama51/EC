@@ -16,10 +16,10 @@ module.exports.register = async (req, res, next) => {
 
     try{
         // ユーザー情報を取得
-        const { email, password } = req.body;
+        const { email, password, username } = req.body;
 
         // ユーザーを作成
-        const user = new User({ email });
+        const user = new User({ email, username });
 
         // 登録処理
         const registeredUser = await User.register(user, password);

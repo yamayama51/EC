@@ -15,6 +15,10 @@ const userSchema = new Schema({
 		required: [true, 'メールアドレスは必須です'],
 		unique: true,
 	},
+	username: {
+		type: String,
+		required: [true, 'ユーザー名は必須です']
+	},
 	isAdmin: {
 		type: Boolean,
 		default: false,
