@@ -75,7 +75,7 @@ orderSchema.pre('save', async function() {
 		const count = await mongoose.model('Order').countDocuments({
 			createdAt: {
 				$gte: new Date(date.setHours(0,0,0,0)),
-				$lt: new Date(24,0,0,0)
+				$lt: new Date(date.setHours(24,0,0,0))
 			}
 		});
 
@@ -83,6 +83,7 @@ orderSchema.pre('save', async function() {
 		const sequence = (count + 1).toString().padStart(4, '0');
 
 		this.orderNumber = `faze-${dateStr}-${sequence}`;
+		
 	} catch (err) {
 		console.log('採番エラー');
 	}
