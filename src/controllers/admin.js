@@ -412,7 +412,7 @@ module.exports.updateOrderStatus = async (req, res) => {
     }
 
     // 対象オーダーのステータスを更新
-    await Order.findByIdAndUpdate(orderId, { status: status }, { new: true });
+    const order = await Order.findByIdAndUpdate(orderId, { status: status }, { new: true });
 
     if (!templates[status]) {
         console.error(`Error: Template for status "${status}" not found.`);
@@ -421,7 +421,8 @@ module.exports.updateOrderStatus = async (req, res) => {
 
     // メール用のデータを取得
     const data = {
-        orderId: orderId,
+        username: req.user.username,
+        orderNumber: order.orderNumber,
     }
 
     // 注文確定のメールフォーマットを取得

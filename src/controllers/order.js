@@ -79,7 +79,8 @@ module.exports.createOrder = async (req, res) => {
 
     // メール用のデータを取得
     const data = {
-        orderId: order._id,
+        username: req.user.username,
+        orderNumber: order.orderNumber,
         amount : order.totalPrice,
     }
 

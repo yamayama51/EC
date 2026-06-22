@@ -27,7 +27,7 @@ module.exports.register = async (req, res, next) => {
         // ログイン処理
         req.login(registeredUser, err => {
             if (err) return next(err);
-            req.flash('success', 'My-Styleへようこそ');
+            req.flash('success', 'FAZE. へようこそ');
             res.redirect('/products');
         });
     } catch (e) {
