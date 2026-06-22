@@ -4,7 +4,7 @@
 <% layout('layouts/boilerplate') %>
 
 <div class="row justify-content-center mt-5">
-    <div class="col-md-6 bg-white p-5 rounded-4 shadow-sm border border-light">
+    <div class="col-md-6 faze-card">
         
         <h1 class="h3 fw-bold mb-2 text-dark text-center mb-5">新規アカウント登録</h1>
 
@@ -26,6 +26,33 @@
             <div class="form-floating mb-4">
                 <input type="password" name="password" class="form-control rounded-3" id="floatingPasswordReg" placeholder="Password" required>
                 <label for="floatingPasswordReg" class="text-muted small">パスワード（8文字以上）</label>
+            </div>
+
+            <%# 個人情報の取り扱いについて %>
+            <div class="terms-box border p-3 rounded-3 mb-3">
+                <h5 class="text-danger text-center">必読</h5>
+                <h6 class="fw-bold text-dark">個人情報の取り扱いおよび免責事項</h6>
+                <p>当サイトのご利用にあたり、以下の事項について必ずご確認・ご了承をお願いいたします。</p>
+                
+                <p class="fw-bold text-dark">1. 個人情報の取り扱いについて</p>
+                <p>当サイトは個人情報保護法等の法令を遵守いたしません。お客様からお預かりした個人情報の管理には十分注意を払いますが、厳格な法的・専門的な保護基準に基づいた運用は行っておりません。</p>
+                
+                <p class="fw-bold text-dark">2. セキュリティと免責事項</p>
+                <p>当サイトは駆け出しエンジニアが個人で運営しております。セキュリティ対策には最大限の注意を払っておりますが、技術的な脆弱性や想定外の事態により、情報が漏洩・流出するリスクがゼロではないことをご理解ください。<br>
+                万が一、いかなる理由であれ個人情報の漏洩や損失が生じた場合であっても、当サイト運営者は一切の法的責任を負いかねます。当サイトのご利用は、お客様自身の責任において行ってください。</p>
+                
+                <p class="fw-bold text-dark">3. 推奨されるアカウント設定</p>
+                <p>当サイトのセキュリティレベルを考慮し、<strong class="text-danger">普段他のサービスで使用している「メールアドレス」や「パスワード」は絶対に使用しないでください。</strong> 万が一の流出に備え、当サイト専用の、流出しても被害が出ない設定での登録を強く推奨いたします。</p>
+            </div>
+
+            <%# 同意ボタン %>
+            <div class="mb-4 d-flex justify-content-center">
+                <div class="form-check">
+                    <input type="checkbox" name="terms" class="form-check-input" id="termsCheck" required>
+                    <label class="form-check-label small text-muted" for="termsCheck">
+                        <p class="text-dark fw-bold">上記の内容に同意します。</p>
+                    </label>
+                </div>
             </div>
 
             <div class="d-grid gap-3 mb-4">
