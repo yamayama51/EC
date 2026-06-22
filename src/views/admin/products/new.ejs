@@ -5,8 +5,8 @@
 <%- include('../../partials/filepond-css') %>
 <link rel="stylesheet" href="/stylesheets/product-form.css">
 
-<div class="row justify-content-center">
-    <div class="card col-md-12 p-5 rounded-4 shadow-sm border border-light">
+<div class="row justify-content-center faze-card">
+    <div class="card col-md-12 p-5">
 
         <div class="mb-3">
             <h1 class="text-center mb-3 h3 fw-bold ">商品登録</h1>
@@ -73,7 +73,7 @@
 
             <%# 操作系 %>
             <div class="d-flex justify-content-end align-items-center gap-2">
-                <a href="/products" class="btn btn-link text-decoration-none text-muted me-2">商品一覧へ戻る</a>
+                <a href="/admin/products" class="btn btn-link text-decoration-none text-muted me-2">商品一覧へ戻る</a>
                 <button type="submit" class="btn btn-primary px-4 py-2 rounded-3 fw-bold shadow-sm">商品を登録する</button>
             </div>
         </form>

@@ -3,95 +3,103 @@
 
 <% layout('layouts/boilerplate') %>
 
-<h1 class="h3 fw-bold mb-5">注文履歴</h1>
+<div class="faze-card">
 
-<div class="mb-3">
-    <%# 注文履歴がない場合 %>
-    <% if (orders.length === 0) { %>
-        <p class="h4 text-muted fw-bold mb-5">注文履歴がありません</p>
-        <a href="/products" class="btn btn-dark px-5 py-3">買い物を続ける</a>
-    <% } %>
-        
-    <%# 注文履歴がある場合 %>
-    <% for (order of orders) { %>
-        <div class="card mb-3 rounded-3">
-            <%# 注文固有の詳細 %>
-            <div class="shadow-sm p-3 px-md-4 d-flex flex-wrap justify-content-between align-items-center bg-light">
-                <div class="d-flex gap-4">
-                    <div>
-                        <p class="small text-muted mb-1">注文日</p>
-                        <p class="small fw-bold"><%= format(order.createdAt, 'yyyy年MM月dd日') %></p>
-                    </div>
-                    <div>
-                        <p class="small text-muted mb-1">合計金額</p>
-                        <p class="small fw-bold">\ <%= order.totalPrice.toLocaleString() %></p>
-                    </div>
-                    <div>
-                        <p class="small text-muted mb-1">注文ID</p>
-                        <p class="small text-muted"><%= order._id %></p>
-                    </div>
-                    <div>
-                        <p class="small text-muted mb-1">注文ステータス</p>
-                        <span class="badge <%= getStatusBadge(order.status) %>">
-                            <%= order.status.toUpperCase() %>
-                        </span>
-                    </div>
-                    
-                </div>
-                <div>
-                    <a href="/orders/<%= order._id %>" class="btn btn-outline-dark btn-sm rounded-3">注文詳細を見る</a>
-                </div>
+    <%# ページタイトル %>
+    <div class="faze-page-title">
+        <h2>注文履歴</h2>
+    </div>
+
+    <div class="mb-3">
+        <%# 注文履歴がない場合 %>
+        <% if (orders.length === 0) { %>
+            <div class="d-flex justify-content-between align-items-center">
+                <p class="h4 text-muted fw-bold mb-5">注文履歴がありません</p>
+                <a href="/products" class="btn btn-dark px-5 py-3">買い物を続ける</a>
             </div>
-
-            <%# 注文アイテム一覧 %>
-            <div class="list-group list-group-flush">
-                <% for (item of order.items) { %>
-                    <% if (item.productId) { %>
+        <% } %>
+            
+        <%# 注文履歴がある場合 %>
+        <% for (order of orders) { %>
+            <div class="card mb-3 rounded-3">
+                <%# 注文固有の詳細 %>
+                <div class="shadow-sm p-3 px-md-4 d-flex flex-wrap justify-content-between align-items-center bg-light">
+                    <div class="d-flex gap-4">
+                        <div>
+                            <p class="small text-muted mb-1">注文日</p>
+                            <p class="small fw-bold"><%= format(order.createdAt, 'yyyy年MM月dd日') %></p>
+                        </div>
+                        <div>
+                            <p class="small text-muted mb-1">合計金額</p>
+                            <p class="small fw-bold">\ <%= order.totalPrice.toLocaleString() %></p>
+                        </div>
+                        <div>
+                            <p class="small text-muted mb-1">注文ID</p>
+                            <p class="small text-muted"><%= order.orderNumber %></p>
+                        </div>
+                        <div>
+                            <p class="small text-muted mb-1">注文ステータス</p>
+                            <span class="badge <%= getStatusBadge(order.status) %>">
+                                <%= order.status.toUpperCase() %>
+                            </span>
+                        </div>
                         
-                        <div class="list-group-item d-flex align-items-center justify-content-between py-3 px-3 bg-transparent">
-                            <div class="d-flex align-items-center">
-                                <a href="/products/<%= item.productId._id %>" class="me-3">
-                                    <div class="ratio ratio-1x1 bg-white rounded-3 shadow-sm overflow-hidden img-thumbnail">
-                                        <% if (item.productId.images.length > 0) { %>
-                                            <img src="<%= item.productId.images[0].url %>" class="object-fit-cover" alt="product-img">
-                                        <% } else { %>
-                                            <img src="/images/no-image.png" class="object-fit-cover" alt="no-img">
-                                        <% } %>
-                                    </div>
-                                </a>
-                                <div>
-                                    <a href="/products/<%= item.productId._id %>" class="text-decoration-none text-dark fw-bold mb-1">
-                                        <%= item.productId.name %>
-                                    </a>
-                                    <p class="small text-muted mb-0">数量: <%= item.quantity %></p>
-                                </div>
-                            </div>
-                            <div>
-                                <p class="fw-bold mb-0">\ <%= item.priceAtPurchase.toLocaleString() %></p>
-                            </div>
-                        </div>
+                    </div>
+                    <div>
+                        <a href="/orders/<%= order._id %>" class="btn btn-outline-dark btn-sm rounded-3">注文詳細を見る</a>
+                    </div>
+                </div>
 
-                    <%# アイテムが削除されている場合の表示 %>
-                    <% } else { %>
-                        <div class="list-group-item d-flex align-items-center justify-content-between py-3 px-3 bg-transparent">
-                            <div class="d-flex align-items-center">
-                                <div class="ratio ratio-1x1 bg-white rounded-3 shadow-sm overflow-hidden me-3 img-thumbnail">
-                                    <img src="/images/no-image.png" class="object-fit-cover" alt="no-img">
+                <%# 注文アイテム一覧 %>
+                <div class="list-group list-group-flush">
+                    <% for (item of order.items) { %>
+                        <% if (item.productId) { %>
+                            
+                            <div class="list-group-item d-flex align-items-center justify-content-between py-3 px-3 bg-transparent">
+                                <div class="d-flex align-items-center">
+                                    <a href="/products/<%= item.productId._id %>" class="me-3">
+                                        <div class="ratio ratio-1x1 bg-white rounded-3 shadow-sm overflow-hidden img-thumbnail">
+                                            <% if (item.productId.images.length > 0) { %>
+                                                <img src="<%= item.productId.images[0].url %>" class="object-fit-cover" alt="product-img">
+                                            <% } else { %>
+                                                <img src="/images/no-image.png" class="object-fit-cover" alt="no-img">
+                                            <% } %>
+                                        </div>
+                                    </a>
+                                    <div>
+                                        <a href="/products/<%= item.productId._id %>" class="text-decoration-none text-dark fw-bold mb-1">
+                                            <%= item.productId.name %>
+                                        </a>
+                                        <p class="small text-muted mb-0">数量: <%= item.quantity %></p>
+                                    </div>
                                 </div>
                                 <div>
-                                    <p class="text-decoration-none text-dark fw-bold mb-1">
-                                        <%= item.name %>
-                                    </p>
-                                    <p class="small text-muted mb-0">数量: <%= item.quantity %>  (※現在は販売を終了しています)</p>
+                                    <p class="fw-bold mb-0">\ <%= item.priceAtPurchase.toLocaleString() %></p>
                                 </div>
                             </div>
-                            <div>
-                                <p class="fw-bold mb-0">\ <%= item.priceAtPurchase.toLocaleString() %></p>
+
+                        <%# アイテムが削除されている場合の表示 %>
+                        <% } else { %>
+                            <div class="list-group-item d-flex align-items-center justify-content-between py-3 px-3 bg-transparent">
+                                <div class="d-flex align-items-center">
+                                    <div class="ratio ratio-1x1 bg-white rounded-3 shadow-sm overflow-hidden me-3 img-thumbnail">
+                                        <img src="/images/no-image.png" class="object-fit-cover" alt="no-img">
+                                    </div>
+                                    <div>
+                                        <p class="text-decoration-none text-dark fw-bold mb-1">
+                                            <%= item.name %>
+                                        </p>
+                                        <p class="small text-muted mb-0">数量: <%= item.quantity %>  (※現在は販売を終了しています)</p>
+                                    </div>
+                                </div>
+                                <div>
+                                    <p class="fw-bold mb-0">\ <%= item.priceAtPurchase.toLocaleString() %></p>
+                                </div>
                             </div>
-                        </div>
+                        <% } %>
                     <% } %>
-                <% } %>
+                </div>
             </div>
-        </div>
-    <% } %>
+        <% } %>
+    </div>
 </div>

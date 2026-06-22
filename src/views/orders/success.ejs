@@ -14,17 +14,17 @@
         </div>
 
         <%# サンクスメッセージ %>
-        <h1 class="h3 fw-bold mb-3 text-dark">ご注文ありがとうございました</h1>
+        <h1 class="h3 fw-bold mb-3 text-dark">ご注文ありがとうございます</h1>
         <p class="text-secondary small mb-5">
-            注文手続きが正常に完了いたしました。<br>
-            ご登録のメールアドレスに、注文確認メールを自動送信しましたのでご確認ください。
+            注文はまだ完了していません。<br>
+            お支払い方法のご案内をメールで送付しました。入金確認後に発送準備を開始します。
         </p>
 
         <%# 注文情報 %>
         <div class="bg-light p-4 rounded-3 text-start mb-5">
             <div class="d-flex justify-content-between mb-2">
                 <span class="text-muted small">注文番号</span>
-                <span class="fw-bold text-dark small"><%= orderId %></span>
+                <span class="fw-bold text-dark small"><%= order.orderNumber %></span>
             </div>
             <div class="d-flex justify-content-between">
                 <span class="text-muted small">配送料金</span>

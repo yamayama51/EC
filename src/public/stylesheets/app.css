@@ -17,6 +17,29 @@
     background-color: rgb(99, 99, 99);
 }
 
+.faze-card {
+    background: #ffffff;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.faze-bg-gray {
+    background-color: #f8f8f8;
+}
+
+/* メイン見出し */
+.faze-page-title {
+    font-size: 1.5rem;
+    font-weight: bold;
+    margin-bottom: 1.5rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid #333;
+    color: #222;
+}
+
 /* 商品一覧カードの調整 */
 .product-card {
     transition: transform 0.3s ease, box-shadow 0.3s ease;

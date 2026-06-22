@@ -16,7 +16,7 @@ router.route('/')
     .post(isLoggedIn, catchAsync(order.createOrder))
 
 router.route('/success')
-    .get(isLoggedIn, order.renderSuccessForm)
+    .get(isLoggedIn, catchAsync(order.renderSuccessForm))
 
 router.route('/:id')
     .get(isLoggedIn, catchAsync(order.renderShowForm))

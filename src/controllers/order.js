@@ -111,7 +111,7 @@ module.exports.renderShowForm = async (req, res) => {
 }
 
 // 注文完了画面の表示
-module.exports.renderSuccessForm = (req, res) => {
+module.exports.renderSuccessForm = async (req, res) => {
 
     // URLからorderIdを取得
     const { orderId } = req.query; 
@@ -121,5 +121,8 @@ module.exports.renderSuccessForm = (req, res) => {
         return res.redirect('/products');
     }
 
-    res.render('orders/success', { orderId });
+    // IDからオーダーを取得
+    const order = await Order.findById(orderId);
+
+    res.render('orders/success', { order });
 }

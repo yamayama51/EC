@@ -3,69 +3,74 @@
 
 <% layout('layouts/boilerplate') %>
 
-<div class="d-flex justify-content-between align-items-center mb-4">
-    <h2>注文詳細</h2>
-    <a href="<%= currentUser.isAdmin ? '/admin/orders' : '/orders' %>" class="btn btn-outline-secondary btn-sm">注文一覧へ戻る</a>
-</div>
+<a href="<%= currentUser.isAdmin ? '/admin/orders' : '/orders' %>" class="btn btn-outline-secondary btn-sm mb-3">注文一覧へ戻る</a>
 
-<div class="row">
+<div class="faze-card">
 
-    <%# 注文アイテム詳細 %>
-    <div class="col-md-8">
-        <div class="card shadow-sm mb-4">
-            <div class="card-header bg-white fw-bold">購入商品</div>
-            <div class="card-body">
-                <table class="table align-middle">
-                    <thead>
-                        <tr>
-                            <th>商品名</th>
-                            <th class="text-end">数量</th>
-                            <th class="text-end">価格</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <% for (let item of order.items) { %>
-                            <tr>
-                                <td class="py-3">
-                                    <% if (item.productId) { %>
-                                        <a href="/products/<%= item.productId._id %>" class="text-decoration-none"><%= item.productId.name %></a>
-                                    <% } else { %>
-                                        <span class="text-muted">削除済み商品</span>
-                                    <% } %>
-                                </td>
-                                <td class="text-end"><%= item.quantity %></td>
-                                <td class="text-end">¥<%= (item.productId ? item.productId.price * item.quantity : 0).toLocaleString() %></td>
-                            </tr>
-                        <% } %>
-                    </tbody>
-                </table>
-            </div>
-        </div>
+    <%# ページタイトル %>
+    <div class="faze-page-title">
+        <h2>注文詳細</h2>
     </div>
 
-    <%# 注文情報 %>
-    <div class="col-md-4">
-        <div class="card shadow-sm">
-            <div class="card-header bg-white fw-bold">注文情報</div>
-            <div class="card-body">
-                <dl class="row mb-0">
-                    <dt class="col-sm-5 text-muted">注文番号</dt>
-                    <dd class="col-sm-7"><small><%= order._id %></small></dd>
+    <div class="row">
 
-                    <dt class="col-sm-5 text-muted">注文日時</dt>
-                    <dd class="col-sm-7"><%= format(order.createdAt, 'yyyy/MM/dd HH:mm') %></dd>
+        <%# 注文アイテム詳細 %>
+        <div class="col-md-8">
+            <div class="card shadow-sm mb-4">
+                <div class="card-header bg-white fw-bold">購入商品</div>
+                <div class="card-body">
+                    <table class="table align-middle">
+                        <thead>
+                            <tr>
+                                <th>商品名</th>
+                                <th class="text-end">数量</th>
+                                <th class="text-end">価格</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% for (let item of order.items) { %>
+                                <tr>
+                                    <td class="py-3">
+                                        <% if (item.productId) { %>
+                                            <a href="/products/<%= item.productId._id %>" class="text-decoration-none"><%= item.productId.name %></a>
+                                        <% } else { %>
+                                            <span class="text-muted">削除済み商品</span>
+                                        <% } %>
+                                    </td>
+                                    <td class="text-end"><%= item.quantity %></td>
+                                    <td class="text-end">¥<%= (item.productId ? item.productId.price * item.quantity : 0).toLocaleString() %></td>
+                                </tr>
+                            <% } %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
 
-                    <dt class="col-sm-5 text-muted">ステータス</dt>
-                    <dd class="col-sm-7">
-                        <span class="badge <%= getStatusBadge(order.status) %>">
-                            <%= order.status.toUpperCase() %>
-                        </span>
-                    </dd>
-                </dl>
-                <hr>
-                <div class="d-flex justify-content-between align-items-center">
-                    <span class="h5 mb-0">合計金額</span>
-                    <span class="h4 mb-0 fw-bold">¥<%= order.totalPrice.toLocaleString() %></span>
+        <%# 注文情報 %>
+        <div class="col-md-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white fw-bold">注文情報</div>
+                <div class="card-body">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-5 text-muted">注文番号</dt>
+                        <dd class="col-sm-7"><small><%= order.orderNumber %></small></dd>
+
+                        <dt class="col-sm-5 text-muted">注文日時</dt>
+                        <dd class="col-sm-7"><%= format(order.createdAt, 'yyyy/MM/dd HH:mm') %></dd>
+
+                        <dt class="col-sm-5 text-muted">ステータス</dt>
+                        <dd class="col-sm-7">
+                            <span class="badge <%= getStatusBadge(order.status) %>">
+                                <%= order.status.toUpperCase() %>
+                            </span>
+                        </dd>
+                    </dl>
+                    <hr>
+                    <div class="d-flex justify-content-between align-items-center">
+                        <span class="h5 mb-0">合計金額</span>
+                        <span class="h4 mb-0 fw-bold">¥<%= order.totalPrice.toLocaleString() %></span>
+                    </div>
                 </div>
             </div>
         </div>

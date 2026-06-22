@@ -3,33 +3,40 @@
 
 <% layout('layouts/boilerplate') %>
 
-<div class="container mt-5">
-    <h2 class="mb-4">管理者ダッシュボード</h2>
-    <div class="row row-cols-1 row-cols-md-3 g-4">
-        <div class="col">
-            <div class="card h-100 shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">注文管理</h5>
-                    <p class="card-text">新規注文の確認やステータス更新を行います。</p>
-                    <a href="/admin/orders" class="btn btn-outline-secondary">注文管理へ</a>
+<div class="faze-card">
+    
+    <%# ページタイトル %>
+    <div class="faze-page-title">
+        <h2>ダッシュボード</h2>
+    </div>
+
+    <div class="container mt-5">
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">注文管理</h5>
+                        <p class="card-text">新規注文の確認やステータス更新を行います。</p>
+                        <a href="/admin/orders" class="btn btn-outline-secondary">注文管理へ</a>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col">
-            <div class="card h-100 shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">商品管理</h5>
-                    <p class="card-text">商品の登録、編集、削除を行います。</p>
-                    <a href="/admin/products" class="btn btn-outline-secondary">商品管理へ</a>
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">商品管理</h5>
+                        <p class="card-text">商品の登録、編集、削除を行います。</p>
+                        <a href="/admin/products" class="btn btn-outline-secondary">商品管理へ</a>
+                    </div>
                 </div>
             </div>
-        </div>
-        <div class="col">
-            <div class="card h-100 shadow-sm">
-                <div class="card-body">
-                    <h5 class="card-title">カテゴリー管理</h5>
-                    <p class="card-text">商品のカテゴリーを整理します。</p>
-                    <a href="/admin/categories" class="btn btn-outline-secondary">カテゴリー管理へ</a>
+            <div class="col">
+                <div class="card h-100 shadow-sm">
+                    <div class="card-body">
+                        <h5 class="card-title">カテゴリー管理</h5>
+                        <p class="card-text">商品のカテゴリーを整理します。</p>
+                        <a href="/admin/categories" class="btn btn-outline-secondary">カテゴリー管理へ</a>
+                    </div>
                 </div>
             </div>
         </div>
