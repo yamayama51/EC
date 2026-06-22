@@ -19,187 +19,185 @@
     </div>
 <% } %>
 
-<div class="faze-card">
+<div class="mb-3">
+    <div class="row g-lg-5">
 
-    <div class="mb-3">
-        <div class="row g-lg-5">
+        <%# 右半分 %>
+        <div class="col-lg-6 mb-5">
 
-            <%# 右半分 %>
-            <div class="col-md-6 mb-5">
-
-                <%# 商品画像表示：カルーセルあり %>
-                <div id="productCarousel" class="carousel slide">
-                    <div class="carousel-indicators">
+            <%# 商品画像表示：カルーセルあり %>
+            <div id="productCarousel" class="carousel slide">
+                <div class="carousel-indicators">
+                    <% product.images.forEach((img, i) => { %>
+                    <button
+                        type="button" 
+                        data-bs-target="#productCarousel" 
+                        data-bs-slide-to="<%= i %>" 
+                        class="<%= i === 0 ? 'active' : '' %>" 
+                        aria-current="<%= i === 0 ? 'true' : 'false' %>" 
+                        aria-label="Slide 1">
+                    </button>
+                    <% }) %>
+                </div>
+                <div class="carousel-inner shadow-sm">
+                    <% if (product.images && product.images.length) { %>
                         <% product.images.forEach((img, i) => { %>
-                        <button
-                            type="button" 
-                            data-bs-target="#productCarousel" 
-                            data-bs-slide-to="<%= i %>" 
-                            class="<%= i === 0 ? 'active' : '' %>" 
-                            aria-current="<%= i === 0 ? 'true' : 'false' %>" 
-                            aria-label="Slide 1">
-                        </button>
-                        <% }) %>
-                    </div>
-                    <div class="carousel-inner shadow-sm">
-                        <% if (product.images && product.images.length) { %>
-                            <% product.images.forEach((img, i) => { %>
-                                <div class="ratio ratio-1x1 overflow-hidden rounded-3 carousel-item <%= i === 0 ? 'active' : '' %>">
-                                    <img src="<%= img.url %>" class="card-img-top object-fit-cover" alt="product-img">
-                                </div>
-                            <% }) %>
-                        <% } else { %>
-                            <div class="ratio ratio-1x1 overflow-hidden rounded-3 carousel-item active">
-                                <img src="/images/no-image.png" class="card-img-top object-fit-cover" alt="no-img">
+                            <div class="ratio ratio-1x1 overflow-hidden rounded-3 carousel-item <%= i === 0 ? 'active' : '' %>">
+                                <img src="<%= img.url %>" class="card-img-top object-fit-cover" alt="product-img">
                             </div>
-                        <% } %>
-                    </div>
-
-                    <% if (product.images.length > 1) { %>
-                    <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
-                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Previous</span>
-                    </button>
-                    <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
-                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
-                    </button>
+                        <% }) %>
+                    <% } else { %>
+                        <div class="ratio ratio-1x1 overflow-hidden rounded-3 carousel-item active">
+                            <img src="/images/no-image.png" class="card-img-top object-fit-cover" alt="no-img">
+                        </div>
                     <% } %>
                 </div>
+
+                <% if (product.images.length > 1) { %>
+                <button class="carousel-control-prev" type="button" data-bs-target="#productCarousel" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Previous</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#productCarousel" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Next</span>
+                </button>
+                <% } %>
+            </div>
+        </div>
+
+        <%# 左半分 %>
+        <div class="col-lg-6 position-relative">
+
+            <%# 商品メイン情報 %>
+            <div class="mt-2 mb-5">
+                <p class="text-muted h6 mb-2"><%= product.category.name %></p>
+                <p class="h4 fw-bold mb-2"><%= product.name %></p>
+                <p class="h4 fw-light mb-1">\ <%= product.price.toLocaleString() %> <span class="h6 fw-normal text-muted">(税込み)</span></p>
             </div>
 
-            <%# 左半分 %>
-            <div class="col-md-6 position-relative">
+            <hr class="my-4 opacity-10">
 
-                <%# 商品メイン情報 %>
-                <div class="mt-2 mb-5">
-                    <p class="text-muted fw-bold h5 mb-2"><%= product.category.name %></p>
-                    <p class="h2 fw-bold mb-2"><%= product.name %></p>
-                    <p class="h4 fw-light mb-1">\ <%= product.price.toLocaleString() %> <span class="h6 fw-normal text-muted">(税込み)</span></p>
-                </div>
+            <%# 商品補足情報 %>
+            <div class="mb-5 px-3 faze-card bg-light">
+                <p class="text-muted fw-bold small mb-1">商品説明</p>
+                <p class="small lh-lg fw-normal product-description"><%= product.description %></p>
+            </div>
 
-                <hr class="my-4 opacity-10">
+            <%# 操作ボタンカード %>
+            <div class="card border-0 shadow-sm bg-white p-4 rounded-3 mb-5">
+                <form action="/cart" method="post" class="mb-3">
+                    <input type="hidden" name="cart[productId]" value="<%= product._id %>">
 
-                <%# 商品補足情報 %>
-                <div class="mb-5 px-3 faze-card faze-bg-gray">
-                    <p class="text-muted fw-bold small mb-1">商品説明</p>
-                    <p class="small lh-lg fw-normal product-description"><%= product.description %></p>
-                </div>
-
-                <%# 操作ボタンカード %>
-                <div class="card border-0 shadow-sm bg-white p-4 rounded-3 mb-5">
-                    <form action="/cart" method="post" class="mb-3">
-                        <input type="hidden" name="cart[productId]" value="<%= product._id %>">
-
-                        <div class="row mb-3 align-items-center">
-                            <label for="quantity" class="col-3 fw-bold">数量</label>
-                            <div class="col-9">
-                                <select name="cart[quantity]" id="quantity" class="form-select border-0 bg-light shadow-sm">
-                                    <% for (let i = 1; i <= 10; i++) { %>
-                                    <option value="<%= i %>"><%= i %></option>
-                                    <% } %>
-                                </select>
-                            </div>
+                    <div class="row mb-3 align-items-center">
+                        <label for="quantity" class="col-3 fw-bold">数量</label>
+                        <div class="col-9">
+                            <select name="cart[quantity]" id="quantity" class="form-select border-0 bg-light shadow-sm">
+                                <% for (let i = 1; i <= 10; i++) { %>
+                                <option value="<%= i %>"><%= i %></option>
+                                <% } %>
+                            </select>
                         </div>
-                        <div class="d-grid gap-2">
-                            <% if (product.stock <= 0) { %>
-                            <button class="btn btn-dark py-3 fw-bold mb-3 disabled">現在購入できません</button>
-                            <% } else { %>
-                            <button type="submit" class="btn btn-dark py-3 fw-bold mb-3">カートに入れる</button>
-                            <% } %>
-                            <a href="/products" class="btn text-muted">商品一覧に戻る</a>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <% if (product.stock <= 0) { %>
+                        <button class="btn btn-dark py-3 fw-bold mb-3 disabled">現在購入できません</button>
+                        <% } else { %>
+                        <button type="submit" class="btn btn-dark py-3 fw-bold mb-3">カートに入れる</button>
+                        <% } %>
+                        <a href="/products" class="btn text-muted">商品一覧に戻る</a>
+                    </div>
+                </form>
+            </div>
+
+            <hr class="my-4 opacity-10">
+
+            <%# レビュー投稿欄 %>
+            <%# この商品の購入歴がある人かつレビュー未投稿者のみに表示 %>
+            <% if (currentUser && canWriteReview) { %>
+            <div class="row my-5 justify-content-center">
+                <div class="col-md-10">
+                    <h3 class="h4 fw-bold mb-4">この商品のレビューを投稿する</h3>
+                    <form action="/products/<%= product._id %>/reviews" method="POST" class="validated-form" novalidate>
+
+                        <%# レビューレーティング %>
+                        <div class="">
+                            <label class="form-label fw-bold small text-muted" for="rating">評価 (5段階)</label>
+                            <fieldset class="starability-basic">
+                                <input type="radio" id="first-rate1" name="review[rating]" value="1" checked/>
+                                <label for="first-rate1" title="1">評価：1</label>
+                                <input type="radio" id="first-rate2" name="review[rating]" value="2" />
+                                <label for="first-rate2" title="2">評価：2</label>
+                                <input type="radio" id="first-rate3" name="review[rating]" value="3" />
+                                <label for="first-rate3" title="3">評価：3</label>
+                                <input type="radio" id="first-rate4" name="review[rating]" value="4" />
+                                <label for="first-rate4" title="4">評価：4</label>
+                                <input type="radio" id="first-rate5" name="review[rating]" value="5" />
+                                <label for="first-rate5" title="5">評価：5</label>
+                            </fieldset>
+                        </div>
+
+                        <%# レビュータイトル %>
+                        <div class="mb-3">
+                            <label for="title" class="form-label fw-bold small text-muted">タイトル</label>
+                            <input type="text" name="review[title]" id="title" class="form-control" maxlength="30" placeholder="レビュータイトルを記入してください" required>
+                        </div>
+
+                        <%# レビュー本文 %>
+                        <div class="mb-3">
+                            <label for="body" class="form-label fw-bold small text-muted">レビュー本文</label>
+                            <textarea 
+                                class="form-control" 
+                                name="review[body]" 
+                                id="body"
+                                rows="5" 
+                                placeholder="商品の感想や良かった点、気になった点などを自由に記入してください" 
+                                required></textarea>
+                        </div>
+                        <div class="d-flex justify-content-end mt-3">
+                            <button type="submit" class="btn btn-dark">レビューを投稿する</button>
                         </div>
                     </form>
                 </div>
+            </div>
 
-                <hr class="my-4 opacity-10">
+            <hr class="my-4 opacity-10">
+            <% } %>
 
-                <%# レビュー投稿欄 %>
-                <%# この商品の購入歴がある人かつレビュー未投稿者のみに表示 %>
-                <% if (currentUser && canWriteReview) { %>
-                <div class="row my-5 justify-content-center">
-                    <div class="col-md-10">
-                        <h3 class="h4 fw-bold mb-4">この商品のレビューを投稿する</h3>
-                        <form action="/products/<%= product._id %>/reviews" method="POST" class="validated-form" novalidate>
-
-                            <%# レビューレーティング %>
-                            <div class="">
-                                <label class="form-label fw-bold small text-muted" for="rating">評価 (5段階)</label>
-                                <fieldset class="starability-basic">
-                                    <input type="radio" id="first-rate1" name="review[rating]" value="1" checked/>
-                                    <label for="first-rate1" title="1">評価：1</label>
-                                    <input type="radio" id="first-rate2" name="review[rating]" value="2" />
-                                    <label for="first-rate2" title="2">評価：2</label>
-                                    <input type="radio" id="first-rate3" name="review[rating]" value="3" />
-                                    <label for="first-rate3" title="3">評価：3</label>
-                                    <input type="radio" id="first-rate4" name="review[rating]" value="4" />
-                                    <label for="first-rate4" title="4">評価：4</label>
-                                    <input type="radio" id="first-rate5" name="review[rating]" value="5" />
-                                    <label for="first-rate5" title="5">評価：5</label>
-                                </fieldset>
-                            </div>
-
-                            <%# レビュータイトル %>
-                            <div class="mb-3">
-                                <label for="title" class="form-label fw-bold small text-muted">タイトル</label>
-                                <input type="text" name="review[title]" id="title" class="form-control" maxlength="30" placeholder="レビュータイトルを記入してください" required>
-                            </div>
-
-                            <%# レビュー本文 %>
-                            <div class="mb-3">
-                                <label for="body" class="form-label fw-bold small text-muted">レビュー本文</label>
-                                <textarea 
-                                    class="form-control" 
-                                    name="review[body]" 
-                                    id="body"
-                                    rows="5" 
-                                    placeholder="商品の感想や良かった点、気になった点などを自由に記入してください" 
-                                    required></textarea>
-                            </div>
-                            <div class="d-flex justify-content-end mt-3">
-                                <button type="submit" class="btn btn-dark">レビューを投稿する</button>
-                            </div>
-                        </form>
-                    </div>
-                </div>
-
-                <hr class="my-4 opacity-10">
-                <% } %>
-
-                <%# レビュー一覧 %>
-                <div class="row my-5 justify-content-center">
-                    <div class="col-md-10">
-                        <h3 class="h4 fw-bold mb-4">レビュー（<%= product.reviews.length %>件）</h3>
-                        
-                        <% for (let review of product.reviews) { %>
-                            <div class="mb-4 p-3 border-bottom d-flex justify-content-between">
-                                <%# レビューの本文 %>
-                                <div>
-                                    <div class="d-flex align-items-center mb-2">
-                                        <p class="starability-result m-0" data-rating="<%= review.rating %>">
-                                            評価：<%= review.rating %>
-                                        </p>
-                                    </div>
-
-                                    <p class="fw-bold mb-0 mt-2"><%= review.title %></p>
-                                    <p class="text-secondary review-body mb-0 mt-2"><%= review.body %></p>
+            <%# レビュー一覧 %>
+            <div class="row my-5 justify-content-center">
+                <div class="col-md-10">
+                    <h3 class="h4 fw-bold mb-4">レビュー（<%= product.reviews.length %>件）</h3>
+                    
+                    <% for (let review of product.reviews) { %>
+                        <div class="mb-4 p-3 border-bottom d-flex justify-content-between">
+                            <%# レビューの本文 %>
+                            <div>
+                                <p class="text-muted fw-bold mb-0 mt-2">投稿者 : <%= review.author.username %></p>
+                                <div class="d-flex align-items-center mb-2">
+                                    <p class="starability-result m-0" data-rating="<%= review.rating %>">
+                                        評価：<%= review.rating %>
+                                    </p>
                                 </div>
 
-                                <%# レビューの削除ボタン %>
-                                <% if (currentUser && review.author && review.author.equals(currentUser._id)) { %>
-                                <form action="/products/<%= product._id %>/reviews/<%= review._id %>?_method=DELETE" method="POST" class="flex-shrink-0 ms-3">
-                                    <button type="submit" class="btn btn-sm btn-outline-danger">
-                                        <i class="bi bi-trash"></i> 削除
-                                    </button>
-                                </form>
-                                <% } %>
+                                <p class="fw-bold mb-0 mt-2"><%= review.title %></p>
+                                <p class="text-secondary review-body mb-0 mt-2"><%= review.body %></p>
                             </div>
-                        <% } %>
-                        
-                        <% if (product.reviews.length === 0) { %>
-                            <p class="text-muted">まだレビューがありません。</p>
-                        <% } %>
-                    </div>
+
+                            <%# レビューの削除ボタン %>
+                            <% if (currentUser && review.author && review.author.equals(currentUser._id)) { %>
+                            <form action="/products/<%= product._id %>/reviews/<%= review._id %>?_method=DELETE" method="POST" class="flex-shrink-0 ms-3">
+                                <button type="submit" class="btn btn-sm btn-outline-danger">
+                                    <i class="bi bi-trash"></i> 削除
+                                </button>
+                            </form>
+                            <% } %>
+                        </div>
+                    <% } %>
+                    
+                    <% if (product.reviews.length === 0) { %>
+                        <p class="text-muted">まだレビューがありません。</p>
+                    <% } %>
                 </div>
             </div>
         </div>

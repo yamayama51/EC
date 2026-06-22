@@ -11,12 +11,13 @@
     </div>
 
     <div class="row g-lg-5">
+        
         <%# カート内アイテム一覧 %>
         <div class="col-lg-8 mb-3">
         <% if (cart.items.length > 0) { %>
             <% cart.items.forEach(item => { %>
                 <%# アイテム1個分 %>
-                <div class="d-flex align-items-center py-4 border-bottom position-relative">
+                <div class="d-flex align-items-center py-4 border-bottom">
 
                     <%# 画像部分 %>
                     <a href="/products/<%= item.productId._id %>" class="text-decoration-none">
@@ -31,38 +32,29 @@
 
                     <%# アイテム詳細 %>
                     <div class="flex-grow-1 ms-3 ms-md-4">
-                        <p class="text-muted small mb-1">My-Style</p>
-                        <p><a href="/products/<%= item.productId._id %>" class="h5 fw-bold text-dark text-decoration-none"><%= item.productId.name %></a></p>
-                        <p class="fw-bold">\ <%= item.productId.price.toLocaleString() %></p>
+                        <p><a href="/products/<%= item.productId._id %>" class="h6 text-decoration-none"><%= item.productId.name %></a></p>
+                        <p class="fw-light">\ <%= item.productId.price.toLocaleString() %></p>
                     </div>
 
                     <%# カート操作 %>
-                    <div class="position-absolute end-0 top-4 text-end d-flex flex-column align-items-end">
-                        <% if (item.productId.stock <= 0) { %>
-                            <p class="text-danger fw-bold h6">Sold Out</p>
-                        <% } else { %>
-                            <%# 残り在庫数が10個以下になったら表示 %>
-                            <% if (item.productId.stock <= 10) { %>
-                                <p class="text-danger fw-bold small">残り在庫数：<%= item.productId.stock %>点</p>
+                    <div class="text-end d-flex flex-column align-items-end">
+                        <ul class="pagination pagination-sm">
+                            <% if (item.quantity !== 1) { %>
+                                <li class="page-item">
+                                    <form action="/cart/<%= item.productId._id %>/reduce?_method=PATCH" method="POST">
+                                        <button class="page-link text-dark">-</button>
+                                    </form>
+                                </li>
                             <% } %>
-                            <ul class="pagination">
-                                <% if (item.quantity !== 1) { %>
-                                    <li class="page-item">
-                                        <form action="/cart/<%= item.productId._id %>/reduce?_method=PATCH" method="POST">
-                                            <button class="page-link text-dark">-</button>
-                                        </form>
-                                    </li>
-                                <% } %>
-                                <li class="page-item disabled"><p class="page-link"><%= item.quantity %></p></li>
-                                <% if (item.quantity < 10) { %>
-                                    <li class="page-item">
-                                        <form action="/cart/<%= item.productId._id %>/add?_method=PATCH" method="POST">
-                                            <button class="page-link text-dark">+</button>
-                                        </form>
-                                    </li>
-                                <% } %>
-                            </ul>
-                        <% } %>
+                            <li class="page-item disabled"><p class="page-link"><%= item.quantity %></p></li>
+                            <% if (item.quantity < 10) { %>
+                                <li class="page-item">
+                                    <form action="/cart/<%= item.productId._id %>/add?_method=PATCH" method="POST">
+                                        <button class="page-link text-dark">+</button>
+                                    </form>
+                                </li>
+                            <% } %>
+                        </ul>
                         <form action="/cart/<%= item.productId._id %>/delete?_method=PATCH" method="POST">
                             <button class="btn btn-link btn-sm text-muted text-decoration-none p-0 small">削除</button>
                         </form>
@@ -76,7 +68,7 @@
 
         <%# 注文内容・注文操作 %>
         <div class="col-lg-4">
-            <div class="card faze-bg-gray shadow-sm rounded-3 p-4 border-0">
+            <div class="card bg-light shadow-sm rounded-3 p-4 border-0">
                 <% if (cart.items.length > 0) { %>
                     <h2 class="h5 fw-bold text-dark mb-3">注文内容</h2>
 
