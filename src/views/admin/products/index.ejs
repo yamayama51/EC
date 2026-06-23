@@ -3,94 +3,91 @@
 
 <% layout('layouts/boilerplate') %>
 
-<div class="faze-card">
-
-    <%# ページタイトル %>
-    <div class="faze-page-title">
-        <h2>商品管理</h2>
-    </div>
-
-    <%# フィルター機能 %>
-    <form action="/admin/products" method="GET" class="d-flex justify-content-end align-items-end mb-3 p-3">
-        <div>
-            <label for="filter-category" class="text-muted small mb-2">カテゴリー</label>
-            <select name="category" id="filter-category" class="form-select form-select-sm me-3 w-auto">
-                <option value="">All</option>
-                <% categories.forEach(category => { %>
-                    <option value="<%= category.name %>" <%= categoryName === category.name ? 'selected' : '' %>>
-                        <%= category.name.toUpperCase() %>
-                    </option>
-                <% }) %>
-            </select>
-        </div>
-        <button type="submit" class="btn btn-sm btn-outline-primary mx-3">絞り込み</button>
-        <a href="/admin/products" class="btn btn-sm btn-outline-secondary">リセット</a>
-    </form>
-
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <% if (categoryName) { %>
-                <h4 class="mb-3">「<%= categoryName %>」カテゴリーの商品</h4>
-            <% } else { %>
-                <h4>すべての商品</h4>
-            <% } %>
-
-            <a href="/admin/products/new" class="btn btn-primary">+ 新規商品登録</a>
-        </div>
-
-        <% if (products.length === 0) { %>
-            <div class="col-md-4 mb-3 mt-5">
-                <p class="h4 text-muted fw-bold mb-5">現在登録中のアイテムがありません</p>
-            </div>
-        <% } else { %>
-
-            <table class="table table-hover align-middle mb-5">
-                <thead class="table-light">
-                    <tr>
-                        <th class="col-img">商品画像</th>
-                        <th class="col-name">商品名</th>
-                        <th class="col-category">カテゴリー</th>
-                        <th class="col-price">価格</th>
-                        <th class="col-action">操作</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <% for(let product of products) { %>
-                    <tr>
-                        <td>
-                            <a href="/products/<%= product._id %>" class="text-decoration-none">
-                                <div class="ratio ratio-1x1 bg-white rounded-3 shadow-sm overflow-hidden img-thumbnail">
-                                    <% if (product.images.length > 0) { %>
-                                        <img src="<%= product.images[0].thumbnail %>" class="object-fit-cover" alt="product-img">
-                                    <% } else { %>
-                                        <img src="/images/no-image.png" class="object-fit-cover" alt="no-img">
-                                    <% } %>
-                                </div>
-                            </a>
-                        </td>
-                        <td><a href="/products/<%= product._id %>" class="text-decoration-none text-dark"><%= product.name %></a></td>
-                        <td><%= product.category.name %></td>
-                        <td>¥<%= product.price.toLocaleString() %></td>
-
-                        <td>
-                            <a href="/admin/products/<%= product.id %>/edit" class="btn btn-sm btn-outline-secondary mx-2">編集</a>
-                            <button type="submit" class="btn btn-sm btn-danger" 
-                                    data-bs-toggle="modal" 
-                                    data-bs-target="#deleteModal" 
-                                    data-id="<%= product._id %>" 
-                                    data-name="<%= product.name %>"
-                                    data-url="/admin/products/<%= product._id %>?_method=DELETE"> 
-                                削除
-                            </button>
-                        </td>
-                    </tr>
-                    <% } %>
-                </tbody>
-            </table>
-
-            <%# ページングナビ %>
-            <%- include('../../partials/pagination') %>
-        <% } %>
+<%# ページタイトル %>
+<div class="faze-page-title">
+    <h2>商品管理</h2>
 </div>
+
+<%# フィルター機能 %>
+<form action="/admin/products" method="GET" class="d-flex justify-content-end align-items-end mb-3 p-3">
+    <div>
+        <label for="filter-category" class="text-muted small mb-2">カテゴリー</label>
+        <select name="category" id="filter-category" class="form-select form-select-sm me-3 w-auto">
+            <option value="">All</option>
+            <% categories.forEach(category => { %>
+                <option value="<%= category.name %>" <%= categoryName === category.name ? 'selected' : '' %>>
+                    <%= category.name.toUpperCase() %>
+                </option>
+            <% }) %>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-sm btn-outline-primary mx-3">絞り込み</button>
+    <a href="/admin/products" class="btn btn-sm btn-outline-secondary">リセット</a>
+</form>
+
+<div class="d-flex justify-content-between align-items-center mb-3">
+    <% if (categoryName) { %>
+        <h4 class="mb-3">「<%= categoryName %>」カテゴリーの商品</h4>
+    <% } else { %>
+        <h4>すべての商品</h4>
+    <% } %>
+
+    <a href="/admin/products/new" class="btn btn-primary">+ 新規商品登録</a>
+</div>
+
+<% if (products.length === 0) { %>
+    <div class="col-md-4 mb-3 mt-5">
+        <p class="h4 text-muted fw-bold mb-5">現在登録中のアイテムがありません</p>
+    </div>
+<% } else { %>
+
+    <table class="table table-hover align-middle mb-5">
+        <thead class="table-light">
+            <tr>
+                <th class="col-img">商品画像</th>
+                <th class="col-name">商品名</th>
+                <th class="col-category">カテゴリー</th>
+                <th class="col-price">価格</th>
+                <th class="col-action">操作</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% for(let product of products) { %>
+            <tr>
+                <td>
+                    <a href="/products/<%= product._id %>" class="text-decoration-none">
+                        <div class="ratio ratio-1x1 bg-white rounded-3 shadow-sm overflow-hidden img-thumbnail">
+                            <% if (product.images.length > 0) { %>
+                                <img src="<%= product.images[0].thumbnail %>" class="object-fit-cover" alt="product-img">
+                            <% } else { %>
+                                <img src="/images/no-image.png" class="object-fit-cover" alt="no-img">
+                            <% } %>
+                        </div>
+                    </a>
+                </td>
+                <td><a href="/products/<%= product._id %>" class="text-decoration-none text-dark"><%= product.name %></a></td>
+                <td><%= product.category.name %></td>
+                <td>¥<%= product.price.toLocaleString() %></td>
+
+                <td>
+                    <a href="/admin/products/<%= product.id %>/edit" class="btn btn-sm btn-outline-secondary mx-2">編集</a>
+                    <button type="submit" class="btn btn-sm btn-danger" 
+                            data-bs-toggle="modal" 
+                            data-bs-target="#deleteModal" 
+                            data-id="<%= product._id %>" 
+                            data-name="<%= product.name %>"
+                            data-url="/admin/products/<%= product._id %>?_method=DELETE"> 
+                        削除
+                    </button>
+                </td>
+            </tr>
+            <% } %>
+        </tbody>
+    </table>
+
+    <%# ページングナビ %>
+    <%- include('../../partials/pagination') %>
+<% } %>
 
 <%# 削除ボタン押下時の確認モーダル %>
 <%- include('../../partials/deleteModal') %>

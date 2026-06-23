@@ -85,7 +85,7 @@ app.use(setLocals);
 
 // トップページのルーティング
 app.get('/', (req, res) => {
-    res.send('トップページ');
+    res.render('pages/home');
 });
 
 // ルーティングの設定

@@ -3,7 +3,7 @@
 
 <% layout('layouts/boilerplate') %>
 
-<div class="faze-card">
+<div class="faze-container">
 
     <%# ページタイトル %>
     <div class="faze-page-title">
@@ -21,8 +21,8 @@
             
         <%# 注文履歴がある場合 %>
         <% for (order of orders) { %>
-            <div class="faze-card p-3 mb-3 shadow-sm rounded-3">
-    
+            <div class="faze-card p-3 mb-5 shadow-sm rounded-3">
+
                 <%# 注文ステータスと合計金額 %>
                 <div class="d-flex justify-content-between align-items-center mb-3">
                     <%# 注文ステータス %>
@@ -35,7 +35,7 @@
                     <%# 合計金額 %>
                     <div>
                         <p class="small text-muted mb-1">合計金額</p>
-                        <p class="h5 fw-bold">\ <%= order.totalPrice.toLocaleString() %></p>
+                        <p class="h5 fw-bold">&yen; <%= order.totalPrice.toLocaleString() %></p>
                     </div>
                 </div>
 
@@ -60,13 +60,13 @@
                                             <%= item.productId.name %>
                                         </a>
                                         <p>
-                                            <span class="h6 text-dark">\ <%= item.priceAtPurchase.toLocaleString() %></span>
+                                            <span class="h6 text-dark">&yen; <%= item.priceAtPurchase.toLocaleString() %></span>
                                             <span class="text-muted faze-small"> 税込み / 数量: <%= item.quantity %></span>
                                         </p>
                                     </div>
                                 </div>
                                 <div>
-                                   
+                                    
                                 </div>
                             </div>
 
@@ -82,7 +82,7 @@
                                             <%= item.name %>
                                         </p>
                                         <p>
-                                            <span class="h6 text-dark">\ <%= item.priceAtPurchase.toLocaleString() %></span>
+                                            <span class="h6 text-dark">&yen; <%= item.priceAtPurchase.toLocaleString() %></span>
                                             <span class="text-muted faze-small"> 税込み / 数量: <%= item.quantity %> (※現在は販売を終了しています)</span>
                                         </p>
                                     </div>
@@ -102,7 +102,7 @@
 
                 <%# 詳細ボタン %>
                 <div class="d-grid gap-2">
-                    <a href="/orders/<%= order._id %>" class="btn btn-outline-dark fw-bold py-2">
+                    <a href="/orders/<%= order._id %>" class="btn btn-outline-secondary py-2 mb-3">
                         注文詳細を見る
                     </a>
                 </div>

@@ -3,99 +3,96 @@
 
 <% layout('layouts/boilerplate') %>
 
-<div class="faze-card">
+<%# ページタイトル %>
+<div class="faze-page-title">
+    <h2>注文管理</h2>
+</div>
 
-    <%# ページタイトル %>
-    <div class="faze-page-title">
-        <h2>注文管理</h2>
+<%# フィルター機能 %>
+<form action="/admin/orders" method="GET" class="d-flex justify-content-end align-items-end mb-5">
+    <div>
+        <label for="filter-status" class="text-muted small mb-2">ステータス</label>
+        <select name="status" id="filter-status" class="form-select form-select-sm me-3 w-auto">
+            <option value="">All</option>
+            <% Object.values(ORDER_STATUS).forEach(status => { %>
+                <option value="<%= status %>" <%= currentStatus === status ? 'selected' : '' %>>
+                    <%= status.toUpperCase() %>
+                </option>
+            <% }) %>
+        </select>
     </div>
+    <button type="submit" class="btn btn-sm btn-outline-primary mx-3">絞り込み</button>
+    <a href="/admin/orders" class="btn btn-sm btn-outline-secondary">リセット</a>
+</form>
 
-    <%# フィルター機能 %>
-    <form action="/admin/orders" method="GET" class="d-flex justify-content-end align-items-end mb-5">
-        <div>
-            <label for="filter-status" class="text-muted small mb-2">ステータス</label>
-            <select name="status" id="filter-status" class="form-select form-select-sm me-3 w-auto">
-                <option value="">All</option>
-                <% Object.values(ORDER_STATUS).forEach(status => { %>
-                    <option value="<%= status %>" <%= currentStatus === status ? 'selected' : '' %>>
-                        <%= status.toUpperCase() %>
-                    </option>
-                <% }) %>
-            </select>
+<div class="">
+    <% if (orders.length === 0) { %>
+        <div class="col-md-6">
+            <p class="h4 text-muted fw-bold mb-5">まだ注文はありません。</p>
         </div>
-        <button type="submit" class="btn btn-sm btn-outline-primary mx-3">絞り込み</button>
-        <a href="/admin/orders" class="btn btn-sm btn-outline-secondary">リセット</a>
-    </form>
-
-    <div class="">
-        <% if (orders.length === 0) { %>
-            <div class="col-md-6">
-                <p class="h4 text-muted fw-bold mb-5">まだ注文はありません。</p>
-            </div>
-        <% } else { %>
-            <table class="table table-hover align-middle mb-5">
-                <thead>
+    <% } else { %>
+        <table class="table table-hover align-middle mb-5">
+            <thead>
+                <tr>
+                    <th>ステータス</th>
+                    <th>注文ID</th>
+                    <th>注文日時</th>
+                    <th>支払期限</th>
+                    <th>E-mail</th>
+                    <th>操作</th>
+                </tr>
+            </thead>
+            <tbody>
+                <% for(let order of orders) { %>
                     <tr>
-                        <th>ステータス</th>
-                        <th>注文ID</th>
-                        <th>注文日時</th>
-                        <th>支払期限</th>
-                        <th>E-mail</th>
-                        <th>操作</th>
+                        <%# ステータス %>
+                        <td class="">
+                            <span class="badge <%= getStatusBadge(order.status) %>">
+                                <%= order.status.toUpperCase() %>
+                            </span>
+                        </td>
+
+                        <%# 注文ID %>
+                        <td>
+                            <div class="my-3">
+                                <a href="/orders/<%= order._id %>" class="fw-bold text-decoration-none">
+                                    <%= order.orderNumber %>
+                                </a>
+                            </div>
+                        </td>
+
+                        <%# 注文日時 %>
+                        <td>
+                            <%= format(order.createdAt, 'yyyy/MM/dd HH:mm') %>
+                        </td>
+
+                        <%# 支払期限 %>
+                        <td class="<%= (new Date() > order.paymentDeadline && order.status === 'pending') ? 'text-danger fw-bold' : '' %>">
+                            <%= format(order.paymentDeadline, 'yyyy/MM/dd HH:mm') %>
+                        </td>
+
+                        <%# 注文者メールアドレス %>
+                        <td><%= order.user.email %></td>
+
+                        <%# 操作 %>
+                        <td colspan="2">
+                            <form action="/admin/orders/<%= order._id %>/update-status?_method=PUT" method="POST" class="d-flex align-items-center">
+                                <select name="status" class="form-select form-select-sm me-3 w-auto">
+                                    <% Object.values(ORDER_STATUS).forEach(status => { %>
+                                        <option value="<%= status %>" <%= order.status === status ? 'selected' : '' %>>
+                                            <%= status.toUpperCase() %>
+                                        </option>
+                                    <% }) %>
+                                </select>
+                                <button type="submit" class="btn btn-sm btn-success">更新</button>
+                            </form>
+                        </td>
                     </tr>
-                </thead>
-                <tbody>
-                    <% for(let order of orders) { %>
-                        <tr>
-                            <%# ステータス %>
-                            <td class="">
-                                <span class="badge <%= getStatusBadge(order.status) %>">
-                                    <%= order.status.toUpperCase() %>
-                                </span>
-                            </td>
+                <% } %>
+            </tbody>
+        </table>
 
-                            <%# 注文ID %>
-                            <td>
-                                <div class="my-3">
-                                    <a href="/orders/<%= order._id %>" class="fw-bold text-decoration-none">
-                                        <%= order.orderNumber %>
-                                    </a>
-                                </div>
-                            </td>
-
-                            <%# 注文日時 %>
-                            <td>
-                                <%= format(order.createdAt, 'yyyy/MM/dd HH:mm') %>
-                            </td>
-
-                            <%# 支払期限 %>
-                            <td class="<%= (new Date() > order.paymentDeadline && order.status === 'pending') ? 'text-danger fw-bold' : '' %>">
-                                <%= format(order.paymentDeadline, 'yyyy/MM/dd HH:mm') %>
-                            </td>
-
-                            <%# 注文者メールアドレス %>
-                            <td><%= order.user.email %></td>
-
-                            <%# 操作 %>
-                            <td colspan="2">
-                                <form action="/admin/orders/<%= order._id %>/update-status?_method=PUT" method="POST" class="d-flex align-items-center">
-                                    <select name="status" class="form-select form-select-sm me-3 w-auto">
-                                        <% Object.values(ORDER_STATUS).forEach(status => { %>
-                                            <option value="<%= status %>" <%= order.status === status ? 'selected' : '' %>>
-                                                <%= status.toUpperCase() %>
-                                            </option>
-                                        <% }) %>
-                                    </select>
-                                    <button type="submit" class="btn btn-sm btn-success">更新</button>
-                                </form>
-                            </td>
-                        </tr>
-                    <% } %>
-                </tbody>
-            </table>
-
-            <%# ページングナビ %>
-            <%- include('../../partials/pagination') %>
-        <% } %>
-    </div>
+        <%# ページングナビ %>
+        <%- include('../../partials/pagination') %>
+    <% } %>
 </div>

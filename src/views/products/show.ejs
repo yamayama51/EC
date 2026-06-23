@@ -4,23 +4,23 @@
 <% layout('layouts/boilerplate') %>
 <link rel="stylesheet" href="/stylesheets/stars.css">
 
-<%# 商品編集ボタン：ログイン済みかつ管理者ユーザの時のみ表示 %>
-<% if (currentUser && currentUser.isAdmin) { %>
-    <div class="mb-3">
-        <a href="/admin/products/<%= product._id %>/edit" class="btn btn-sm btn-primary mx-3">編集</a>
-        <button type="submit" class="btn btn-sm btn-danger" 
-                data-bs-toggle="modal" 
-                data-bs-target="#deleteModal" 
-                data-id="<%= product._id %>" 
-                data-name="<%= product.name %>"
-                data-url="/admin/products/<%= product._id %>?_method=DELETE"> 
-            削除
-        </button>
-    </div>
-<% } %>
-
 <div class="mb-3">
-    <div class="row g-lg-5">
+    <div class="row faze-container g-lg-5">
+
+        <%# 商品編集ボタン：ログイン済みかつ管理者ユーザの時のみ表示 %>
+        <% if (currentUser && currentUser.isAdmin) { %>
+            <div class="mb-3">
+                <a href="/admin/products/<%= product._id %>/edit" class="btn btn-sm btn-primary mx-3">編集</a>
+                <button type="submit" class="btn btn-sm btn-danger" 
+                        data-bs-toggle="modal" 
+                        data-bs-target="#deleteModal" 
+                        data-id="<%= product._id %>" 
+                        data-name="<%= product.name %>"
+                        data-url="/admin/products/<%= product._id %>?_method=DELETE"> 
+                    削除
+                </button>
+            </div>
+        <% } %>
 
         <%# 右半分 %>
         <div class="col-lg-6 mb-5">
@@ -70,26 +70,19 @@
         <div class="col-lg-6 position-relative">
 
             <%# 商品メイン情報 %>
-            <div class="mt-2 mb-5">
-                <p class="text-muted h6 mb-2"><%= product.category.name %></p>
-                <p class="h4 fw-bold mb-2"><%= product.name %></p>
-                <p class="h4 fw-light mb-1">\ <%= product.price.toLocaleString() %> <span class="h6 fw-normal text-muted">(税込み)</span></p>
+            <div class="mt-2">
+                <p class="h6 fw-normal mb-2"><%= product.name %></p>
+                <p class="h5 fw-bold text-muted mb-1">&yen; <%= product.price.toLocaleString() %> <span class="faze-small fw-normal">税込み</span></p>
             </div>
 
-            <hr class="my-4 opacity-10">
-
-            <%# 商品補足情報 %>
-            <div class="mb-5 px-3 faze-card bg-light">
-                <p class="text-muted fw-bold small mb-1">商品説明</p>
-                <p class="small lh-lg fw-normal product-description"><%= product.description %></p>
-            </div>
+            <hr class="my-5 opacity-10">
 
             <%# 操作ボタンカード %>
-            <div class="card border-0 shadow-sm bg-white p-4 rounded-3 mb-5">
+            <div class="card border-0 shadow-sm bg-white p-4 rounded-3">
                 <form action="/cart" method="post" class="mb-3">
                     <input type="hidden" name="cart[productId]" value="<%= product._id %>">
 
-                    <div class="row mb-3 align-items-center">
+                    <div class="row mb-5 align-items-center">
                         <label for="quantity" class="col-3 fw-bold">数量</label>
                         <div class="col-9">
                             <select name="cart[quantity]" id="quantity" class="form-select border-0 bg-light shadow-sm">
@@ -110,7 +103,14 @@
                 </form>
             </div>
 
-            <hr class="my-4 opacity-10">
+            <hr class="my-5 opacity-10">
+
+            <%# 商品補足情報 %>
+            <div class="mb-5 px-3 bg-light">
+                <p class="small lh-lg fw-normal product-description"><%= product.description %></p>
+            </div>
+
+            <hr class="my-5 opacity-10">
 
             <%# レビュー投稿欄 %>
             <%# この商品の購入歴がある人かつレビュー未投稿者のみに表示 %>

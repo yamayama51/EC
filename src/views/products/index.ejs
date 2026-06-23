@@ -3,16 +3,18 @@
 
 <% layout('layouts/boilerplate') %>
 
-<div class="mb-3">
-    <% if (categoryName) { %>
-        <h4 class="mb-3">「<%= categoryName %>」の商品</h4>
-        <a href="/products" class="btn btn-sm btn-outline-secondary">フィルターを解除</a>
-    <% } else { %>
-        <h4>すべての商品</h4>
-    <% } %>
-</div>
+<div class="row faze-container mb-3">
 
-<div class="row mb-3">
+    <h1 class="text-center my-5">FAZE.</h1>
+
+    <div class="mb-5">
+        <% if (categoryName) { %>
+            <h5 class="mb-5 fw-normal"><%= categoryName.toUpperCase() %></h5>
+        <% } else { %>
+            <h5 class="mb-5 fw-normal">ALL ITEM</h5>
+        <% } %>
+        <hr>
+    </div>
 
     <%# 商品が登録されていない場合 %>
     <% if (products.length === 0) { %>
@@ -23,8 +25,8 @@
     <% } %>
 
     <% for(product of products) { %>
-        <div class="col-6 col-md-4 col-lg-3 mb-5">
-            <div class="card h-100 shadow-sm border-0 product-card">
+        <div class="col-6 col-md-3 mb-5">
+            <div class="h-100 product-card">
                 <a href="/products/<%= product._id %>" class="text-muted text-decoration-none">
                     <%# 画像部分 %>
                     <% if (product.images && product.images.length) { %>
@@ -38,9 +40,9 @@
                     <% } %>
 
                     <%# 商品情報 %>
-                    <div class="card-body">
-                        <p class="card-title text-dark fw-bold mb-1"><%= product.name %></p>
-                        <p class="card-text text-dark fw-light">\ <%= product.price.toLocaleString() %></p>
+                    <div class="card-body product-card-body text-center">
+                        <p class="card-title text-dark mb-1"><%= product.name %></p>
+                        <p class="card-text text-dark fw-light">&yen; <%= product.price.toLocaleString() %></p>
                     </div>
                 </a>
             </div>

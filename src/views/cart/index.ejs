@@ -3,7 +3,7 @@
 
 <% layout('layouts/boilerplate') %>
 
-<div class="faze-card">
+<div class="faze-container">
 
     <%# ページタイトル %>
     <div class="faze-page-title">
@@ -32,8 +32,8 @@
 
                     <%# アイテム詳細 %>
                     <div class="flex-grow-1 ms-3 ms-md-4">
-                        <p><a href="/products/<%= item.productId._id %>" class="h6 text-decoration-none"><%= item.productId.name %></a></p>
-                        <p class="fw-light">\ <%= item.productId.price.toLocaleString() %></p>
+                        <a href="/products/<%= item.productId._id %>" class="h6 text-decoration-none"><%= item.productId.name %></a>
+                        <p class="h6 text-dark">&yen; <%= item.productId.price.toLocaleString() %></p>
                     </div>
 
                     <%# カート操作 %>
@@ -74,7 +74,7 @@
 
                     <div class="d-flex justify-content-between mb-3">
                         <span class="text-secondary small">商品合計</span>
-                        <span class="fw-bold text-dark small">\ <%= total.toLocaleString() %></span>
+                        <span class="fw-bold text-dark small">&yen; <%= total.toLocaleString() %></span>
                     </div>
 
                     <div class="d-flex justify-content-between mb-3">
@@ -86,7 +86,7 @@
 
                     <div class="d-flex justify-content-between mb-3">
                         <span class="text-dark fw-bold">合計金額</span>
-                        <span class="h4 text-dark fw-bold">\ <%= total.toLocaleString() %></span>
+                        <span class="h4 text-dark fw-bold">&yen; <%= total.toLocaleString() %></span>
                     </div>
 
                     <form action="/orders" method="post">
@@ -94,7 +94,8 @@
                             <% if (hasSoldOut) { %>
                                 <button class="btn btn-dark btn-lg py-3 fw-bold shadow-sm disabled">売り切れの商品が含まれています</button>
                             <% } else { %>
-                                <button type="submit" class="btn btn-dark btn-lg py-3 fw-bold shadow-sm">注文する</button>
+                                <button type="submit" class="btn btn-dark btn-lg py-2 fw-bold shadow-sm mb-3">注文する</button>
+                                <a href="/products" class="btn text-muted">買い物を続ける</a>
                             <% } %>
                         </div>
                     </form>

@@ -1,7 +1,20 @@
 
+/* フォント */
+body {
+    font-family: 'Roboto', 'Noto Sans JP', sans-serif;
+    line-height: 1.6;
+    color: #333;
+    -webkit-font-smoothing: antialiased;
+}
+
 /* PCサイズ（デフォルト） */
 html {
     font-size: 16px; 
+}
+
+.faze-navbar {
+    padding-right: 30px;
+    padding-left: 30px;
 }
 
 /* タブレットサイズ */
@@ -9,12 +22,20 @@ html {
     html {
         font-size: 14px;
     }
+    .faze-navbar {
+        padding-right: 0px;
+        padding-left: 0px;
+    }
 }
 
 /* スマホサイズ */
 @media (max-width: 768px) {
     html {
         font-size: 12px;
+    }
+    .container {
+        padding-left: 1.5rem !important;
+        padding-right: 1.5rem !important;
     }
 }
 
@@ -53,6 +74,22 @@ html {
     background-color: rgb(99, 99, 99);
 }
 
+.navbar-toggler {
+    border: none !important;
+    outline: none !important;
+    box-shadow: none !important;
+}
+
+.faze-toggler {
+    font-size: 0.8rem;
+    letter-spacing: 0.1rem;
+}
+
+.faze-container {
+    max-width: 1000px;
+    margin: 0 auto;
+}
+
 .faze-card {
     background: #ffffff;
     border: 1px solid #e0e0e0;
@@ -73,25 +110,24 @@ html {
 }
 
 /* 商品一覧カードの調整 */
-.product-card {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    cursor: pointer;
-}
-
-.product-card:hover {
-    transform: translate(-5px);
-    box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.12) !important;
-}
-
 .product-card:hover img {
-    transform: scale(1.05);
-    transition: transform 0.3s ease;
+    transition: opacity 0.5s ease;
+    cursor: pointer;
+    opacity: 1;
 }
 
-.btn-like:hover {
-    color: #ff6b6b !important;
-    transform: scale(1.2);
-    transition: transform 0.2s ease;
+.product-card:hover img:hover {
+    opacity: 0.7;
+}
+
+.product-card-body {
+    opacity: 1;
+}
+
+.product-card-body:hover {
+    transition: opacity 0.5s ease;
+    cursor: pointer;
+    opacity: 0.7;
 }
 
 .product-description {
