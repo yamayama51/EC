@@ -5,6 +5,10 @@
 
 const User = require('../models/user');
 
+// ログ出力用
+const logger = require('../helpers/logger');
+const logMsg = require('../constants/logMessage');
+
 // ユーザー登録画面表示
 module.exports.renderRegister = (req, res) => {
 
@@ -15,6 +19,13 @@ module.exports.renderRegister = (req, res) => {
 module.exports.register = async (req, res, next) => {
 
     try{
+
+        logger.info(logMsg.USER.CREATE_START,
+            { 
+                path: req.path,
+            }
+        );
+
         // ユーザー情報を取得
         const { email, password, username } = req.body;
 
@@ -23,6 +34,14 @@ module.exports.register = async (req, res, next) => {
 
         // 登録処理
         const registeredUser = await User.register(user, password);
+
+        logger.info(logMsg.USER.CREATE_END,
+            { 
+                path: req.path,
+                userId: registeredUser._id,
+                username: registeredUser.username
+            }
+        );
 
         // ログイン処理
         req.login(registeredUser, err => {
@@ -45,6 +64,16 @@ module.exports.renderLogin = (req, res) => {
 // ログイン処理
 module.exports.login = (req, res) => {
 
+    logger.info(logMsg.USER.LOGIN,
+        { 
+            path: req.path,
+            userId: req.user._id,
+            username: req.user.username,
+            ip: req.ip,
+            userAgent: req.headers['user-agent']
+        }
+    );
+        
     req.flash('success', 'おかえりなさい');
 
     // リダイレクト先を変更
@@ -56,6 +85,14 @@ module.exports.login = (req, res) => {
 
 // ログアウト処理
 module.exports.logout = (req, res) => {
+
+    logger.info(logMsg.USER.LOGOUT,
+        { 
+            path: req.path,
+            userId: req.user._id,
+            username: req.user.username,
+        }
+    );
 
     req.logout((err) => {
         if (err) {

@@ -12,6 +12,10 @@ const Cart = require('../models/cart');
 const { sendEmail } = require('../helpers/mailer');
 const templates = require('../config/mailTemplate');
 
+// ログ出力用
+const logger = require('../helpers/logger');
+const logMsg = require('../constants/logMessage');
+
 // 注文一覧の表示
 module.exports.index = async (req, res) => {
 
@@ -29,6 +33,14 @@ module.exports.index = async (req, res) => {
 
 // オーダーの作成処理
 module.exports.createOrder = async (req, res) => {
+
+    logger.info(logMsg.USER_ORDER.CREATE_SATRT,
+        { 
+            path: req.path,
+            userId: req.user._id,
+            username: req.user.username
+        }
+    );
 
     // セッションからユーザーIDを取得
     const userId = req.user._id;
@@ -76,6 +88,23 @@ module.exports.createOrder = async (req, res) => {
     // カートを空にして保存
     cart.items = [];
     await cart.save();
+
+    logger.info(logMsg.USER_ORDER.CREATE_END,
+        { 
+            path: req.path,
+            userId: req.user._id,
+            username: req.user.username,
+            orderId: order._id
+        }
+    );
+
+    // 注文ログ
+    logger.order(logMsg.USER_ORDER.ORDER_INFO, 
+        {
+            userId: req.user._id,
+            order: order.toObject()
+        }
+    );
 
     // メール用のデータを取得
     const data = {

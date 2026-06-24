@@ -17,6 +17,10 @@ const { sendEmail } = require('../helpers/mailer');
 const templates = require('../config/mailTemplate');
 const { ORDER_STATUS } = require('../constants/index');
 
+// ログ出力用
+const logger = require('../helpers/logger');
+const logMsg = require('../constants/logMessage');
+
 // |ーーーーーーーーーーーーーーーーーーーーーーーーー
 // | 管理者ダッシュボードの表示
 // |ーーーーーーーーーーーーーーーーーーーーーーーーー
@@ -103,6 +107,14 @@ module.exports.renderProductEditForm = async (req, res) => {
 // 商品登録処理
 module.exports.createProduct = async (req, res) => {
 
+    logger.info(logMsg.ADMIN_PRODUCT.CREATE_SATRT,
+        { 
+            path: req.path,
+            userId: req.user._id,
+            username: req.user.username
+        }
+    );
+
     // リクエストから入力内容を取得
     const product = new Product(req.body.product);
 
@@ -121,6 +133,15 @@ module.exports.createProduct = async (req, res) => {
     // DBに登録
     await product.save();
 
+    logger.info(logMsg.ADMIN_PRODUCT.CREATE_END,
+        { 
+            path: req.path, 
+            userId: req.user._id, 
+            username: req.user.username,
+            productId: product._id 
+        }
+    );
+
     req.flash('success', '商品を登録しました');
 
     res.redirect(`/products/${product._id}`);
@@ -131,6 +152,16 @@ module.exports.updateProduct = async (req, res) => {
 
     // URLからIDを取得
     const { id } = req.params;
+    let product = await Product.findById(id);
+
+    logger.info(logMsg.ADMIN_PRODUCT.UPDATE_SATRT,
+        { 
+            path: req.path,
+            userId: req.user._id,
+            username: req.user.username,
+            productId: product._id
+         }
+    );
 
     // 商品データの画像以外を一度更新する
     await Product.findByIdAndUpdate(id, 
@@ -144,7 +175,7 @@ module.exports.updateProduct = async (req, res) => {
     );
 
     // 画像更新用に商品データを取得する
-    const product = await Product.findById(id);
+    product = await Product.findById(id);
     if (!product) {
         req.flash('error', '商品が見つかりませんでした');
         return res.redirect('/admin/products');
@@ -229,6 +260,15 @@ module.exports.updateProduct = async (req, res) => {
     // 保存処理
     await product.save();
 
+    logger.info(logMsg.ADMIN_PRODUCT.UPDATE_END,
+        { 
+            path: req.path, 
+            userId: req.user._id, 
+            username: req.user.username,
+            productId: product._id 
+        }
+    );
+
     req.flash('success', '商品を更新しました');
 
     res.redirect(`/products/${product._id}`);
@@ -242,6 +282,15 @@ module.exports.deleteProduct = async (req, res) => {
 
     // 商品データを取得
     const product = await Product.findById(id);
+
+    logger.info(logMsg.ADMIN_PRODUCT.DELETE_START,
+        { 
+            path: req.path, 
+            userId: req.user._id, 
+            username: req.user.username,
+            productId: product._id 
+        }
+    );
 
     // 商品が見つからない場合は、商品一覧へ戻る
     if (!product) {
@@ -261,6 +310,15 @@ module.exports.deleteProduct = async (req, res) => {
 
     // IDに一致するデータを削除
     await Product.findByIdAndDelete(id);
+
+    logger.info(logMsg.ADMIN_PRODUCT.DELETE_END,
+        { 
+            path: req.path, 
+            userId: req.user._id, 
+            username: req.user.username,
+            productId: product._id 
+        }
+    );
 
     req.flash('success', '商品を削除しました');
 
@@ -300,11 +358,28 @@ module.exports.renderCategoryEditForm = async (req, res) => {
 // カテゴリー作成処理
 module.exports.createCategory = async (req, res) => {
 
+    logger.info(logMsg.ADMIN_CATEGORY.CREATE_SATRT,
+        { 
+            path: req.path, 
+            userId: req.user._id, 
+            username: req.user.username,
+        }
+    );
+
     // リクエストからcategoryを作成
     const category = new Category(req.body.category);
 
     // categoryをDBに保存
     await category.save();
+
+    logger.info(logMsg.ADMIN_CATEGORY.CREATE_END,
+        { 
+            path: req.path, 
+            userId: req.user._id, 
+            username: req.user.username,
+            categoryId: category._id
+        }
+    );
 
     req.flash('success', 'カテゴリーを追加しました');
     res.redirect('/admin/categories');
@@ -315,13 +390,32 @@ module.exports.updateCategory = async (req, res) => {
 
     // URLからIDを取得
     const { id } = req.params;
+    let category = await Category.findById(id);
+
+    logger.info(logMsg.ADMIN_CATEGORY.UPDATE_START,
+        { 
+            path: req.path, 
+            userId: req.user._id, 
+            username: req.user.username,
+            categoryId: category._id
+        }
+    );
 
     // 対象カテゴリーを更新する
-    const category = await Category.findByIdAndUpdate(id, { name: req.body.category.name });
+    category = await Category.findByIdAndUpdate(id, { name: req.body.category.name });
     if (!category) {
         req.flash('error', '対象のカテゴリーが見つかりません');
         return res.redirect('/admin/categories');
     }
+
+    logger.info(logMsg.ADMIN_CATEGORY.UPDATE_END,
+        { 
+            path: req.path, 
+            userId: req.user._id, 
+            username: req.user.username,
+            categoryId: category._id
+        }
+    );
 
     req.flash('success', 'カテゴリーを更新しました');
     res.redirect('/admin/categories');
@@ -332,10 +426,20 @@ module.exports.deleteCategory = async (req, res) => {
 
     // URLからIDを取得
     const { id } = req.params;
+    let category = await Category.findById(id);
+
+    logger.info(logMsg.ADMIN_CATEGORY.DELETE_START,
+        { 
+            path: req.path, 
+            userId: req.user._id, 
+            username: req.user.username,
+            categoryId: category._id
+        }
+    );
 
     // 対象カテゴリーに紐づく商品の有無を調べる
     const productCount = await Product.countDocuments({ category: id });
-
+    
     // 1件でもあれば削除不可
     if (productCount > 0) {
         req.flash('error', '対象のカテゴリーは使用されているため削除できません');
@@ -343,11 +447,20 @@ module.exports.deleteCategory = async (req, res) => {
     }
 
     // 対象カテゴリーを削除する
-    const category = await Category.findByIdAndDelete(id);
+    category = await Category.findByIdAndDelete(id);
     if (!category) {
         req.flash('error', '対象のカテゴリーが見つかりません');
         return res.redirect('/admin/categories');
     }
+
+    logger.info(logMsg.ADMIN_CATEGORY.DELETE_END,
+        { 
+            path: req.path, 
+            userId: req.user._id, 
+            username: req.user.username,
+            categoryId: category._id
+        }
+    );
 
     req.flash('success', 'カテゴリーを削除しました');
     res.redirect('/admin/categories');
@@ -402,6 +515,21 @@ module.exports.updateOrderStatus = async (req, res) => {
     // 入力値を取得
     const { status } = req.body;
 
+    // 更新前のステータスを取得
+    const existingOrder = await Order.findById(orderId);
+    const oldStatus = existingOrder.status;
+
+    logger.info(logMsg.ADMIN_ORDER_STATUS.UPDATE_START,
+        { 
+            path: req.path, 
+            userId: req.user._id, 
+            username: req.user.username,
+            orderId: orderId,
+            oldStatus: oldStatus,
+            requestStatus: status
+        }
+    );
+
     // 許可されたステータスを取得
     const validStatues = Object.values(ORDER_STATUS);
 
@@ -412,7 +540,18 @@ module.exports.updateOrderStatus = async (req, res) => {
     }
 
     // 対象オーダーのステータスを更新
-    const order = await Order.findByIdAndUpdate(orderId, { status: status }, { new: true });
+    const updatedOrder = await Order.findByIdAndUpdate(orderId, { status: status }, { new: true });
+
+    logger.info(logMsg.ADMIN_ORDER_STATUS.UPDATE_END,
+        { 
+            path: req.path, 
+            userId: req.user._id, 
+            username: req.user.username,
+            orderId: orderId,
+            oldStatus: oldStatus,
+            newStatus: updatedOrder.status
+        }
+    );
 
     if (!templates[status]) {
         console.error(`Error: Template for status "${status}" not found.`);
@@ -422,7 +561,7 @@ module.exports.updateOrderStatus = async (req, res) => {
     // メール用のデータを取得
     const data = {
         username: req.user.username,
-        orderNumber: order.orderNumber,
+        orderNumber: updatedOrder.orderNumber,
     }
 
     // 注文確定のメールフォーマットを取得

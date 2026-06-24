@@ -17,6 +17,9 @@ const LocalStrategy = require('passport-local');
 
 const ExpressError = require('./exceptions/ExpressError');
 
+// ログ出力用
+const logger = require('./helpers/logger');
+
 // モデルの読み込み
 const User = require('./models/user');
 
@@ -40,6 +43,8 @@ mongoose.connect(dbUrl)
         console.log('MongoDB : connection success');
     })
     .catch((err) => {
+        logger.error('Database connection failed', { stack: err.stack });
+        process.exit(1);
         console.log('MongoDB : connection error');
         console.log(err);
     }
@@ -105,6 +110,7 @@ app.use((req, res, next) => {
 app.use((err, req, res, next) => {
     const { statusCode = 500 } = err;
     if (!err.message) err.message = '問題が発生しました';
+    logger.error(`${err.message} (Status: ${statusCode})`, { path: req.path, stack: err.stack });
     res.status(statusCode).render('error', { err });
 });
 
