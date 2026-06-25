@@ -1,32 +1,16 @@
 
-// プロダクション環境（本番環境）以外の場合に .env を読み込む設定
-if (process.env.NODE_ENV !== "production") {
-    require('dotenv').config();
-}
-
-// 外部パッケージのインポート
+// express を使用
 const express = require('express');
-const mongoose = require('mongoose');
-const path = require('path');
-const ejsMate = require('ejs-mate');
-const session = require('express-session');
-const flash = require('connect-flash');
+const app = express();
+
+// 依存先をまとめる
 const methodOverride = require('method-override');
-const passport = require('passport');
-const LocalStrategy = require('passport-local');
-
+const sessionConfig = require('./config/session');
+const passport = require('./config/passport');
+const flash = require('connect-flash');
 const ExpressError = require('./exceptions/ExpressError');
-
-// ログ出力用
 const logger = require('./helpers/logger');
-
-// モデルの読み込み
-const User = require('./models/user');
-
-// ミドルウェアの読み込み
 const { setLocals } = require('./middlewares/middlewares');
-
-// ルートの読み込み
 const userRoutes = require('./routes/users');
 const adminRoutes = require('./routes/admin');
 const productRoutes = require('./routes/products');
@@ -34,58 +18,28 @@ const reviewRoutes = require('./routes/reviews');
 const cartRoutes = require('./routes/cart');
 const orderRoutes = require('./routes/order');
 
-// DBの接続先
-const dbUrl = 'mongodb://localhost:27017/my-fashin-store';
+// viewEngineの設定
+const path = require('path');
+require('./config/viewEngine')(app, path.join(__dirname, 'views'));
 
-// DBに接続
-mongoose.connect(dbUrl)
-    .then(() => {
-        console.log('MongoDB : connection success');
-    })
-    .catch((err) => {
-        logger.error('Database connection failed', { stack: err.stack });
-        process.exit(1);
-        console.log('MongoDB : connection error');
-        console.log(err);
-    }
-);
-
-// expressを使用可能にする
-const app = express();
-
-// ejsを使用できるようにする
-app.engine('ejs', ejsMate);
-app.set('view engine', 'ejs');
-app.set('views', path.join(__dirname, 'views'));
-
-// リクエスト結果をreq.bodyに入れるための処理
-app.use(express.urlencoded({ extended: true }));
-
-app.use(methodOverride('_method'));
+// 静的ファイルのパス設定
 app.use(express.static(path.join(__dirname, 'public')));
 
-// sessionの設定
-const sessionConfig = {
-    secret: 'mysecret',
-    resave: false,
-    saveUninitialized: true,
-    cookie: {
-        httpOnly: true,
-        maxAge: 1000 * 60 * 60 * 24 * 7,
-    }
-}
-app.use(session(sessionConfig));
+// 解析系ミドルウェア
+app.use(express.urlencoded({ extended: true }));
+app.use(methodOverride('_method'));
 
-// パスポートの設定
+// セッションの設定
+app.use(sessionConfig);
+
+// パスポートの設定(セッションと認証)
 app.use(passport.initialize());
 app.use(passport.session());
-passport.use(new LocalStrategy({ usernameField: 'email' }, User.authenticate()));
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
 
+// flash の使用
 app.use(flash());
 
-// ejs内で変数を利用できるようにする
+// アプリ共通
 app.use(setLocals);
 
 // トップページのルーティング
@@ -114,7 +68,4 @@ app.use((err, req, res, next) => {
     res.status(statusCode).render('error', { err });
 });
 
-// ポートを立ち上げる
-app.listen(3000, () => {
-    console.log('waiting request : port 3000');
-});
+module.exports = app;
