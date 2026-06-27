@@ -14,7 +14,6 @@ const admin = require('../controllers/admin');
 const { productSchema, categorySchema } = require('../schemas/schemas');
 
 const { validate, isAdmin } = require('../middlewares/middlewares');
-const catchAsync = require('../helpers/catchAsync');
 
 // 全てのルートにisAdminを適用
 router.use(isAdmin);
@@ -31,8 +30,8 @@ router.route('/dashboard')
 
 // 商品一覧
 router.route('/products')
-    .get(catchAsync(admin.productIndex))
-    .post(upload.array('product[images]'), validate(productSchema), catchAsync(admin.createProduct))
+    .get(admin.productIndex)
+    .post(upload.array('product[images]'), validate(productSchema), admin.createProduct)
 
 // 商品新規登録
 router.route('/products/new')
@@ -40,13 +39,12 @@ router.route('/products/new')
 
 // 商品詳細
 router.route('/products/:id')
-    .get(catchAsync(admin.renderShowForm))
-    .put(upload.array('product[images]'), validate(productSchema), catchAsync(admin.updateProduct))
-    .delete(catchAsync(admin.deleteProduct))
+    .put(upload.array('product[images]'), validate(productSchema), admin.updateProduct)
+    .delete(admin.deleteProduct)
 
 // 商品編集
 router.route('/products/:id/edit')
-    .get(catchAsync(admin.renderProductEditForm))
+    .get(admin.renderProductEditForm)
 
 
 // |ーーーーーーーーーーーーーーーーーーーーーーーーー
@@ -55,17 +53,17 @@ router.route('/products/:id/edit')
 
 // カテゴリー一覧
 router.route('/categories')
-    .get(catchAsync(admin.categoryIndex))
-    .post(validate(categorySchema), catchAsync(admin.createCategory))
+    .get(admin.categoryIndex)
+    .post(validate(categorySchema), admin.createCategory)
 
 // カテゴリー詳細
 router.route('/categories/:id')
-    .put(validate(categorySchema), catchAsync(admin.updateCategory))
-    .delete(catchAsync(admin.deleteCategory))
+    .put(validate(categorySchema), admin.updateCategory)
+    .delete(admin.deleteCategory)
 
 // カテゴリー編集
 router.route('/categories/:id/edit')
-    .get(catchAsync(admin.renderCategoryEditForm))
+    .get(admin.renderCategoryEditForm)
 
 
 // |ーーーーーーーーーーーーーーーーーーーーーーーーー
@@ -74,10 +72,10 @@ router.route('/categories/:id/edit')
 
 // 注文一覧の取得
 router.route('/orders')
-    .get(catchAsync(admin.ordersIndex))
+    .get(admin.ordersIndex)
 
 // 注文ステータスの変更
 router.route('/orders/:orderId/update-status')
-    .put(catchAsync(admin.updateOrderStatus))
+    .put(admin.updateOrderStatus)
 
 module.exports = router;

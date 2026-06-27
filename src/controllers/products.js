@@ -10,10 +10,11 @@ const Category = require('../models/category');
 const Order = require('../models/order');
 const Review = require('../models/review');
 
+const catchAsync = require('../helpers/catchAsync');
 const { getPaginationData } = require('../helpers/pagination');
 
 // 商品一覧の表示
-module.exports.index = async (req, res) => {
+module.exports.index = catchAsync(async (req, res) => {
 
     // 検索条件を追加 (カテゴリーのフィルターを適用)
     const categoryName = req.query.category;
@@ -56,10 +57,10 @@ module.exports.index = async (req, res) => {
             queryParams: categoryName ? `&category=${encodeURIComponent(categoryName)}` : ''
         }
     );
-};
+});
 
 // 商品詳細画面表示
-module.exports.renderShowForm = async (req, res) => {
+module.exports.renderShowForm = catchAsync(async (req, res) => {
 
     // URLからIDを取得
     const { id } = req.params;
@@ -103,4 +104,4 @@ module.exports.renderShowForm = async (req, res) => {
     }
 
     res.render('products/show', { product, canWriteReview });
-}
+});

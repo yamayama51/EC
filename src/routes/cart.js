@@ -9,19 +9,18 @@ const cart = require('../controllers/cart');
 const { userSchema } = require('../schemas/schemas');
 
 const { validate, isLoggedIn } = require('../middlewares/middlewares');
-const catchAsync = require('../helpers/catchAsync');
 
 router.route('/')
-    .get(isLoggedIn, catchAsync(cart.index))
-    .post(isLoggedIn, catchAsync(cart.addToCart))
+    .get(isLoggedIn, cart.index)
+    .post(isLoggedIn, cart.addToCart)
 
 router.route('/:productId/add')
-    .patch(isLoggedIn, catchAsync(cart.addQuantity))
+    .patch(isLoggedIn, cart.addQuantity)
 
 router.route('/:productId/reduce')
-    .patch(isLoggedIn, catchAsync(cart.reduceQuantity))
+    .patch(isLoggedIn, cart.reduceQuantity)
 
 router.route('/:productId/delete')
-    .patch(isLoggedIn, catchAsync(cart.deleteOne))
+    .patch(isLoggedIn, cart.deleteOne)
 
 module.exports = router;

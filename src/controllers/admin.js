@@ -17,6 +17,8 @@ const { sendEmail } = require('../helpers/mailer');
 const templates = require('../config/mailTemplate');
 const { ORDER_STATUS } = require('../constants/index');
 
+const catchAsync = require('../helpers/catchAsync');
+
 // ログ出力用
 const logger = require('../helpers/logger');
 const logMsg = require('../constants/logMessage');
@@ -33,7 +35,7 @@ module.exports.dashboard = (req, res) => {
 // |ーーーーーーーーーーーーーーーーーーーーーーーーー
 
 // 商品一覧表示
-module.exports.productIndex = async (req, res) => {
+module.exports.productIndex = catchAsync(async (req, res) => {
 
     // フィルター適用
     // 検索条件を追加 (カテゴリーのフィルターを適用)
@@ -78,7 +80,7 @@ module.exports.productIndex = async (req, res) => {
             queryParams: categoryName ? `&category=${encodeURIComponent(categoryName)}` : ''
         }
     );
-}
+});
 
 // 商品登録画面表示
 module.exports.renderProductNewForm = (req, res) => {
@@ -87,7 +89,7 @@ module.exports.renderProductNewForm = (req, res) => {
 }
 
 // 商品編集画面表示
-module.exports.renderProductEditForm = async (req, res) => {
+module.exports.renderProductEditForm = catchAsync(async (req, res) => {
 
     // URLからIDを取得
     const { id } = req.params;
@@ -102,10 +104,10 @@ module.exports.renderProductEditForm = async (req, res) => {
     }
 
     res.render('admin/products/edit', { product });
-}
+});
 
 // 商品登録処理
-module.exports.createProduct = async (req, res) => {
+module.exports.createProduct = catchAsync(async (req, res) => {
 
     logger.info(logMsg.ADMIN_PRODUCT.CREATE_SATRT,
         { 
@@ -145,10 +147,10 @@ module.exports.createProduct = async (req, res) => {
     req.flash('success', '商品を登録しました');
 
     res.redirect(`/products/${product._id}`);
-}
+});
 
 // 商品更新処理
-module.exports.updateProduct = async (req, res) => {
+module.exports.updateProduct = catchAsync(async (req, res) => {
 
     // URLからIDを取得
     const { id } = req.params;
@@ -272,10 +274,10 @@ module.exports.updateProduct = async (req, res) => {
     req.flash('success', '商品を更新しました');
 
     res.redirect(`/products/${product._id}`);
-}
+});
 
 // 商品削除処理
-module.exports.deleteProduct = async (req, res) => {
+module.exports.deleteProduct = catchAsync(async (req, res) => {
 
     // URLからIDを取得
     const { id } = req.params;
@@ -323,7 +325,7 @@ module.exports.deleteProduct = async (req, res) => {
     req.flash('success', '商品を削除しました');
 
     res.redirect('/admin/products');
-}
+});
 
 
 // |ーーーーーーーーーーーーーーーーーーーーーーーーー
@@ -331,16 +333,16 @@ module.exports.deleteProduct = async (req, res) => {
 // |ーーーーーーーーーーーーーーーーーーーーーーーーー
 
 // カテゴリー一覧取得
-module.exports.categoryIndex = async (req, res) => {
+module.exports.categoryIndex = catchAsync(async (req, res) => {
 
     // カテゴリー一覧を取得
     const categories = await Category.find({});
 
     res.render('admin/categories/index', { categories });
-}
+});
 
 // カテゴリー編集画面取得
-module.exports.renderCategoryEditForm = async (req, res) => {
+module.exports.renderCategoryEditForm = catchAsync(async (req, res) => {
 
     // URLからIDを取得
     const { id } = req.params;
@@ -353,10 +355,10 @@ module.exports.renderCategoryEditForm = async (req, res) => {
     }
 
     res.render('admin/categories/edit', { category });
-}
+});
 
 // カテゴリー作成処理
-module.exports.createCategory = async (req, res) => {
+module.exports.createCategory = catchAsync(async (req, res) => {
 
     logger.info(logMsg.ADMIN_CATEGORY.CREATE_SATRT,
         { 
@@ -383,10 +385,10 @@ module.exports.createCategory = async (req, res) => {
 
     req.flash('success', 'カテゴリーを追加しました');
     res.redirect('/admin/categories');
-}
+});
 
 // カテゴリー編集
-module.exports.updateCategory = async (req, res) => {
+module.exports.updateCategory = catchAsync(async (req, res) => {
 
     // URLからIDを取得
     const { id } = req.params;
@@ -419,10 +421,10 @@ module.exports.updateCategory = async (req, res) => {
 
     req.flash('success', 'カテゴリーを更新しました');
     res.redirect('/admin/categories');
-}
+});
 
 // カテゴリー削除
-module.exports.deleteCategory = async (req, res) => {
+module.exports.deleteCategory = catchAsync(async (req, res) => {
 
     // URLからIDを取得
     const { id } = req.params;
@@ -464,7 +466,7 @@ module.exports.deleteCategory = async (req, res) => {
 
     req.flash('success', 'カテゴリーを削除しました');
     res.redirect('/admin/categories');
-}
+});
 
 
 // |ーーーーーーーーーーーーーーーーーーーーーーーーー
@@ -472,7 +474,7 @@ module.exports.deleteCategory = async (req, res) => {
 // |ーーーーーーーーーーーーーーーーーーーーーーーーー
 
 // 注文一覧を表示
-module.exports.ordersIndex = async (req, res) => {
+module.exports.ordersIndex = catchAsync(async (req, res) => {
 
     // フィルター条件を取得
     const statusFilter = req.query.status;
@@ -504,10 +506,10 @@ module.exports.ordersIndex = async (req, res) => {
         baseUrl: 'orders',
         queryParams: statusFilter ? `&status=${statusFilter}` : ''
     });
-}
+});
 
 // 注文ステータスの変更
-module.exports.updateOrderStatus = async (req, res) => {
+module.exports.updateOrderStatus = catchAsync(async (req, res) => {
 
     // URLからオーダーIDを取得
     const { orderId } = req.params;
@@ -572,4 +574,4 @@ module.exports.updateOrderStatus = async (req, res) => {
 
     req.flash('success', '注文ステータスを更新しました');
     res.redirect('/admin/orders');
-}
+});

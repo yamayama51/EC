@@ -8,8 +8,10 @@ const Cart = require('../models/cart');
 
 const { MAX_PRODUCT_QTY } = require('../constants/index');
 
+const catchAsync = require('../helpers/catchAsync');
+
 // カート画面表示
-module.exports.index = async (req, res) => {
+module.exports.index = catchAsync(async (req, res) => {
 
     // カート情報を取得
     let cart = await Cart.findOne({ user: req.user._id }).populate('items.productId');
@@ -28,10 +30,10 @@ module.exports.index = async (req, res) => {
     const hasSoldOut = cart.items.some(item => item.productId.stock <= 0);
 
     res.render('cart/index', { cart, total, hasSoldOut });
-}
+});
 
 // カートに追加
-module.exports.addToCart = async (req, res) => {
+module.exports.addToCart = catchAsync(async (req, res) => {
 
     // 入力データを取得
     const { productId, quantity } = req.body.cart;
@@ -78,10 +80,10 @@ module.exports.addToCart = async (req, res) => {
     await cart.save();
     
     res.redirect('/cart');
-}
+});
 
 // カート内の数量を加算
-module.exports.addQuantity = async (req, res) => {
+module.exports.addQuantity = catchAsync(async (req, res) => {
 
     // URLから商品IDを取得
     const { productId } = req.params;
@@ -109,10 +111,10 @@ module.exports.addQuantity = async (req, res) => {
     }
 
     res.redirect('/cart');
-}
+});
 
 // カート内の数量を減算
-module.exports.reduceQuantity = async (req, res) => {
+module.exports.reduceQuantity = catchAsync(async (req, res) => {
 
     // URLから商品IDを取得
     const { productId } = req.params;
@@ -149,10 +151,10 @@ module.exports.reduceQuantity = async (req, res) => {
     }
 
     res.redirect('/cart');
-}
+});
 
 // カートの商品を削除する
-module.exports.deleteOne = async (req, res) => {
+module.exports.deleteOne = catchAsync(async (req, res) => {
 
     // URLから商品IDを取得
     const { productId } = req.params;
@@ -168,4 +170,4 @@ module.exports.deleteOne = async (req, res) => {
     req.flash('success', 'カートから商品を削除しました');
 
     res.redirect('/cart');
-}
+});

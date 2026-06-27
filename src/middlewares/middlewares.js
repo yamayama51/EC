@@ -8,6 +8,7 @@ const ExpressError = require('../exceptions/ExpressError');
 const Review = require('../models/review');
 const Category = require('../models/category');
 
+const catchAsync = require('../helpers/catchAsync');
 const { getStatusBadge } = require('../helpers/viewHelpers');
 
 // ログイン状態を確認
@@ -41,7 +42,7 @@ module.exports.isAdmin = (req, res, next) => {
 }
 
 // レビューの著者かどうかを確認
-module.exports.isReviewAuthor = async (req, res, next) => {
+module.exports.isReviewAuthor = catchAsync(async (req, res, next) => {
 
     // URLからレビューIDを取得
     const { productId, reviewId } = req.params;
@@ -52,10 +53,10 @@ module.exports.isReviewAuthor = async (req, res, next) => {
         return res.redirect(`/products/${productId}`);
     }
     next();
-}
+});
 
 // res.locals に値をセットする
-module.exports.setLocals = async (req, res, next) => {
+module.exports.setLocals = catchAsync(async (req, res, next) => {
 
     // flashの設定
     res.locals.success = req.flash('success');
@@ -71,7 +72,7 @@ module.exports.setLocals = async (req, res, next) => {
     res.locals.getStatusBadge = getStatusBadge;
 
     next();
-}
+});
 
 // スキーマを受け取りバリデーションチェックをする
 module.exports.validate = (schema) => {

@@ -9,16 +9,15 @@ const order = require('../controllers/order');
 const { orderSchema } = require('../schemas/schemas');
 
 const { isLoggedIn } = require('../middlewares/middlewares');
-const catchAsync = require('../helpers/catchAsync');
 
 router.route('/')
-    .get(isLoggedIn, catchAsync(order.index))
-    .post(isLoggedIn, catchAsync(order.createOrder))
+    .get(isLoggedIn, order.index)
+    .post(isLoggedIn, order.createOrder)
 
 router.route('/success')
-    .get(isLoggedIn, catchAsync(order.renderSuccessForm))
+    .get(isLoggedIn, order.renderSuccessForm)
 
 router.route('/:id')
-    .get(isLoggedIn, catchAsync(order.renderShowForm))
+    .get(isLoggedIn, order.renderShowForm)
 
 module.exports = router;

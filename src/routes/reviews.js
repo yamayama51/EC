@@ -11,14 +11,12 @@ const { reviewSchema } = require('../schemas/schemas');
 
 const { isLoggedIn, isReviewAuthor, validate } = require('../middlewares/middlewares');
 
-const catchAsync = require('../helpers/catchAsync');
-
 // レビューの登録
 router.route('/')
-    .post(isLoggedIn, validate(reviewSchema), catchAsync(reviews.createReview))
+    .post(isLoggedIn, validate(reviewSchema), reviews.createReview)
 
 // レビューの編集・削除
 router.route('/:reviewId')
-     .delete(isLoggedIn, isReviewAuthor, catchAsync(reviews.deleteReview))
+     .delete(isLoggedIn, isReviewAuthor, reviews.deleteReview)
 
 module.exports = router;

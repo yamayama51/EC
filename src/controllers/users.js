@@ -5,6 +5,8 @@
 
 const User = require('../models/user');
 
+const catchAsync = require('../helpers/catchAsync');
+
 // ログ出力用
 const logger = require('../helpers/logger');
 const logMsg = require('../constants/logMessage');
@@ -16,7 +18,7 @@ module.exports.renderRegister = (req, res) => {
 }
 
 // ユーザー登録処理
-module.exports.register = async (req, res, next) => {
+module.exports.register = catchAsync(async (req, res, next) => {
 
     try{
 
@@ -53,7 +55,7 @@ module.exports.register = async (req, res, next) => {
         req.flash('error', e.message);
         res.redirect('/register');
     }
-}
+});
 
 // ログイン画面表示
 module.exports.renderLogin = (req, res) => {

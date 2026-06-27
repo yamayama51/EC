@@ -6,8 +6,10 @@
 const Review = require('../models/review');
 const Product = require('../models/product');
 
+const catchAsync = require('../helpers/catchAsync');
+
 // レビューの登録
-module.exports.createReview = async (req, res) => {
+module.exports.createReview = catchAsync(async (req, res) => {
 
     // セッションからユーザーIDを取得
     const userId = req.user._id;
@@ -34,10 +36,10 @@ module.exports.createReview = async (req, res) => {
     req.flash('success', 'レビューを登録しました');
 
     res.redirect(`/products/${product._id}`);
-}
+});
 
 // レビューの削除
-module.exports.deleteReview = async (req, res) => {
+module.exports.deleteReview = catchAsync(async (req, res) => {
 
     // 商品IDとレビューIDを取得
     const { productId, reviewId } = req.params;
@@ -50,4 +52,4 @@ module.exports.deleteReview = async (req, res) => {
 
     req.flash('success', 'レビューを削除しました');
     res.redirect(`/products/${productId}`);
-}
+});

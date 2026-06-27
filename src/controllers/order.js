@@ -12,12 +12,14 @@ const Cart = require('../models/cart');
 const { sendEmail } = require('../helpers/mailer');
 const templates = require('../config/mailTemplate');
 
+const catchAsync = require('../helpers/catchAsync');
+
 // ログ出力用
 const logger = require('../helpers/logger');
 const logMsg = require('../constants/logMessage');
 
 // 注文一覧の表示
-module.exports.index = async (req, res) => {
+module.exports.index = catchAsync(async (req, res) => {
 
     // セッションからユーザーIDを取得
     const userId = req.user._id;
@@ -29,10 +31,10 @@ module.exports.index = async (req, res) => {
     );
 
     res.render('orders/index', { orders, format });
-}
+});
 
 // オーダーの作成処理
-module.exports.createOrder = async (req, res) => {
+module.exports.createOrder = catchAsync(async (req, res) => {
 
     logger.info(logMsg.USER_ORDER.CREATE_SATRT,
         { 
@@ -122,10 +124,10 @@ module.exports.createOrder = async (req, res) => {
     req.flash('success', '注文が完了しました');
     res.redirect(`/orders/success?orderId=${order._id}`);
 
-}
+});
 
 // 注文詳細画面の表示
-module.exports.renderShowForm = async (req, res) => {
+module.exports.renderShowForm = catchAsync(async (req, res) => {
 
     // 注文を1件取得
     const { id } = req.params;
@@ -138,10 +140,10 @@ module.exports.renderShowForm = async (req, res) => {
     }
 
     res.render('orders/show', { order, format });
-}
+});
 
 // 注文完了画面の表示
-module.exports.renderSuccessForm = async (req, res) => {
+module.exports.renderSuccessForm = catchAsync(async (req, res) => {
 
     // URLからorderIdを取得
     const { orderId } = req.query; 
@@ -155,4 +157,4 @@ module.exports.renderSuccessForm = async (req, res) => {
     const order = await Order.findById(orderId);
 
     res.render('orders/success', { order });
-}
+});
