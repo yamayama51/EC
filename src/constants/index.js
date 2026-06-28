@@ -15,8 +15,21 @@ const ORDER_STATUS = Object.freeze({
     CANCELLED: 'cancelled'
 });
 
+// 商品のサイズ
+const PRODUCT_SIZES = Object.freeze({
+    FREE: 'free',
+    S: 's',
+    M: 'm',
+    L: 'l',
+    XL: 'xl'
+});
+
+const PRODUCT_SIZES_VALUES = Object.values(PRODUCT_SIZES);
+
 module.exports = { 
     MAX_PRODUCT_QTY,
     ORDER_STATUS,
+    PRODUCT_SIZES,
+    PRODUCT_SIZES_VALUES
 };
 
