@@ -5,7 +5,7 @@
 
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
-const { PRODUCT_SIZES } = require('../constants');
+const { PRODUCT_SIZES, PRODUCT_SIZES_VALUES } = require('../constants');
 
 // 商品バリエーションスキーマ定義
 const productVariantSchema = new Schema({
@@ -18,7 +18,8 @@ const productVariantSchema = new Schema({
     size: {
         type: String,
         required: [true, 'サイズは必須です'],
-        enum: PRODUCT_SIZES_VALUES
+        enum: PRODUCT_SIZES_VALUES,
+        default: PRODUCT_SIZES.FREE
     }
 }, {
     timestamps: true
