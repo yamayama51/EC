@@ -6,7 +6,7 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
-const { ORDER_STATUS } = require('../constants/index');
+const { ORDER_STATUS, ORDER_STATUS_VALUES } = require('../constants/index');
 
 // オーダースキーマの定義
 const orderSchema = new Schema({
@@ -48,7 +48,7 @@ const orderSchema = new Schema({
 	},
 	status: {
 		type: String,
-		enum: Object.values(ORDER_STATUS),
+		enum: ORDER_STATUS_VALUES,
 		default: ORDER_STATUS.PENDING,
 	}
 }, {

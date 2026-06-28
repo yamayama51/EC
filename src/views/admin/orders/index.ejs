@@ -14,7 +14,7 @@
         <label for="filter-status" class="text-muted small mb-2">ステータス</label>
         <select name="status" id="filter-status" class="form-select form-select-sm me-3 w-auto">
             <option value="">All</option>
-            <% Object.values(ORDER_STATUS).forEach(status => { %>
+            <% ORDER_STATUS_VALUES.forEach(status => { %>
                 <option value="<%= status %>" <%= currentStatus === status ? 'selected' : '' %>>
                     <%= status.toUpperCase() %>
                 </option>
@@ -78,7 +78,7 @@
                         <td colspan="2">
                             <form action="/admin/orders/<%= order._id %>/update-status?_method=PUT" method="POST" class="d-flex align-items-center">
                                 <select name="status" class="form-select form-select-sm me-3 w-auto">
-                                    <% Object.values(ORDER_STATUS).forEach(status => { %>
+                                    <% ORDER_STATUS_VALUES.forEach(status => { %>
                                         <option value="<%= status %>" <%= order.status === status ? 'selected' : '' %>>
                                             <%= status.toUpperCase() %>
                                         </option>

@@ -15,7 +15,7 @@ const Order = require('../models/order');
 const { getPaginationData } = require('../helpers/pagination');
 const { sendEmail } = require('../helpers/mailer');
 const templates = require('../config/mailTemplate');
-const { ORDER_STATUS } = require('../constants/index');
+const { ORDER_STATUS_VALUES } = require('../constants/index');
 
 const catchAsync = require('../helpers/catchAsync');
 
@@ -498,7 +498,7 @@ module.exports.ordersIndex = catchAsync(async (req, res) => {
     ;
 
     res.render('admin/orders/index', { 
-        ORDER_STATUS,
+        ORDER_STATUS_VALUES,
         currentStatus: statusFilter,
         orders,
         format,
@@ -533,7 +533,7 @@ module.exports.updateOrderStatus = catchAsync(async (req, res) => {
     );
 
     // 許可されたステータスを取得
-    const validStatues = Object.values(ORDER_STATUS);
+    const validStatues = ORDER_STATUS_VALUES;
 
     // 許可されたステータス以外ならエラー
     if (!validStatues.includes(status)) {

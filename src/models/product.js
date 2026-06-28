@@ -5,7 +5,6 @@
 
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
-const { PRODUCT_CATEGORIES } = require('../constants');
 
 // 画像のスキーマ定義
 const imageSchema = new Schema({
@@ -61,11 +60,6 @@ const productSchema = new Schema({
     ]
 }, {
     timestamps: true
-});
-
-// 売り切れかどうかのフラグを追加
-productSchema.virtual('isSoldOut').get(function() {
-    return this.stock <= 0;
 });
 
 // エクスポートして外部で使用できるようにする
