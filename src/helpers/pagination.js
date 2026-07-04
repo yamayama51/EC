@@ -18,7 +18,7 @@ module.exports.getPaginationData = (pageParam, totalItemsCount) => {
         totalPages,
         totalItemsCount,
         from: (page - 1) * LIMIT + 1,
-        to: Math.min(page + LIMIT, totalItemsCount),
+        to: Math.min(page * LIMIT, totalItemsCount),
         finalDisplay: this.generatePageRange(page, totalPages),
         LIMIT
     }
