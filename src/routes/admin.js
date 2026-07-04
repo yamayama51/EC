@@ -11,7 +11,7 @@ const { storage } = require('../cloudinary');
 const upload = multer({ storage });
 
 const admin = require('../controllers/admin');
-const { productSchema, categorySchema } = require('../schemas/schemas');
+const { productSchema, categorySchema, productVariantSchema } = require('../schemas/schemas');
 
 const { validate, isAdmin } = require('../middlewares/middlewares');
 
@@ -46,6 +46,23 @@ router.route('/products/:id')
 router.route('/products/:id/edit')
     .get(admin.renderProductEditForm)
 
+// |ーーーーーーーーーーーーーーーーーーーーーーーーー
+// | 商品バリエーション管理
+// |ーーーーーーーーーーーーーーーーーーーーーーーーー
+
+// バリエーション一覧
+router.route('/products/:id/variants')
+    .get(admin.variantIndex)
+    .post(validate(productVariantSchema), admin.createVariant)
+
+// バリエーション詳細
+router.route('/products/:id/variants/:variantId')
+    .put(validate(productVariantSchema), admin.updateVariant)
+    .delete(admin.deleteVariant)
+
+// バリエーション編集
+router.route('/products/:id/variants/:variantId/edit')
+    .get(admin.renderVariantEditForm)
 
 // |ーーーーーーーーーーーーーーーーーーーーーーーーー
 // | 定数管理

@@ -4,7 +4,7 @@
 // |ーーーーーーーーーーーーーーーーーーーーーーーーー
 
 const Joi = require('joi');
-const { PRODUCT_CATEGORIES } = require('../constants/index');
+const { PRODUCT_SIZES_VALUES } = require('../constants/index');
 
 // ユーザースキーマのバリデーションルールの作成
 module.exports.userSchema = Joi.object({
@@ -31,6 +31,13 @@ module.exports.productSchema = Joi.object({
     }).required(),
 	deleteImages: Joi.array(),
 	imageOrder: Joi.string().allow('', null),
+});
+
+// 商品バリエーションスキーマのバリデーションルールを作成する
+module.exports.productVariantSchema = Joi.object({
+    variant: Joi.object({
+        size: Joi.string().required().valid(...PRODUCT_SIZES_VALUES)
+    }).required()
 });
 
 // カテゴリースキーマのバリデーションルールを作成

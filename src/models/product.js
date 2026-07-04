@@ -6,6 +6,8 @@
 const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
+const { PRODUCT_SIZES, PRODUCT_SIZES_VALUES } = require('../constants');
+
 // 画像のスキーマ定義
 const imageSchema = new Schema({
     url: {

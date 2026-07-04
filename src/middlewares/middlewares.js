@@ -68,6 +68,10 @@ module.exports.setLocals = catchAsync(async (req, res, next) => {
     // カテゴリーの設定
     res.locals.categories = await Category.find({});
 
+    // 商品サイズの設定
+    const { PRODUCT_SIZES_VALUES } = require('../constants/index');
+    res.locals.sizes = PRODUCT_SIZES_VALUES;
+
     // ejsで動的にクラスを変更するための処理の設定
     res.locals.getStatusBadge = getStatusBadge;
 
@@ -78,7 +82,7 @@ module.exports.setLocals = catchAsync(async (req, res, next) => {
 module.exports.validate = (schema) => {
 
     return (req, res, next) => {
-
+        
         // FilePondの特性上、req.bodyのimagesはurlの文字列のみが送られてくる
         // Joiに合わせた構造に変える
         if (req.body.product && req.body.product.images) {

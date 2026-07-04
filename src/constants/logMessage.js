@@ -13,6 +13,14 @@ module.exports = {
         DELETE_START: '商品の削除処理を開始します',
         DELETE_END: '商品の削除処理を終了します',
     },
+    ADMIN_VARIANT: {
+        CREATE_SATRT: '商品バリエーションの登録処理を開始します',
+        CREATE_END: '商品バリエーションの登録処理を終了します',
+        UPDATE_START: '商品バリエーションの更新処理を開始します',
+        UPDATE_END: '商品バリエーションの更新処理を終了します',
+        DELETE_START: '商品バリエーションの削除処理を開始します',
+        DELETE_END: '商品バリエーションの削除処理を終了します',
+    },
     ADMIN_CATEGORY: {
         CREATE_SATRT: 'カテゴリーの登録処理を開始します',
         CREATE_END: 'カテゴリーの登録処理を終了します',

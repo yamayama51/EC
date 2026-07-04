@@ -20,9 +20,11 @@ const productVariantSchema = new Schema({
         required: [true, 'サイズは必須です'],
         enum: PRODUCT_SIZES_VALUES,
         default: PRODUCT_SIZES.FREE
-    }
+    },
 }, {
     timestamps: true
 });
+
+productVariantSchema.index({ product: 1, size: 1 }, { unique: true });
 
 module.exports = mongoose.model('ProductVariant', productVariantSchema);

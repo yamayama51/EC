@@ -1,0 +1,70 @@
+
+<%# バリエーション一覧画面 %>
+
+<% layout('layouts/boilerplate') %>
+
+<div class="faze-card">
+
+    <%# ページタイトル %>
+    <div class="faze-page-title">
+        <h2 class="mb-3">商品バリエーション一覧</h2>
+        <h4 class="text-muted mb-4">対象商品： <%= product.name %></h4>
+    </div>
+
+    <div class="container mt-4">
+        <form action="/admin/products/<%= id %>/variants" method="POST" class="validated-form mb-5 p-3 border rounded" novalidate>
+            <div class="row g-3 align-items-end">
+                <div class="col-md-3">
+                    <label for="size">サイズ</label>
+                    <select name="variant[size]" id="size" class="form-select" required>
+                        <% sizes.forEach(size => { %>
+                            <option value="<%= size %>"><%= size.toUpperCase() %></option>
+                        <% }) %>
+                    </select>
+                </div>
+                <div class="col-auto">
+                    <button type="submit" class="btn btn-primary">+ 作成</button>
+                </div>
+            </div>
+        </form>
+
+        <% if (variants.length === 0) { %>
+            <div col-md-4>
+                <p class="h4 text-muted fw-bold mb-5">現在、バリエーションがありません</p>
+            </div>
+        <% } else { %>
+            <table class="table table-hover">
+                <thead>
+                    <tr>
+                        <th class="w-75">バリエーション</th>
+                        <th class="w25">操作</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <% for(let variant of variants) { %>
+                        <tr>
+                            <td class="align-middle"><%= variant.size.toUpperCase() %></td>
+                            <td>
+                                <div class="py-3">
+                                    <a href="/admin/products/<%= id %>/variants/<%= variant._id %>/edit" class="btn btn-sm btn-outline-secondary mx-2">編集</a>
+                                    <button type="submit" class="btn btn-sm btn-danger" 
+                                            data-bs-toggle="modal" 
+                                            data-bs-target="#deleteModal" 
+                                            data-id="<%= variant._id %>" 
+                                            data-name="<%= variant.size %>"
+                                            data-url="/admin/products/<%= id %>/variants/<%= variant._id %>?_method=DELETE"> 
+                                        削除
+                                    </button>
+                                </div>
+                            </td>
+                        </tr>                    
+                    <% } %>
+                </tbody>
+            </table>
+        <% } %>
+    </div>
+</div>
+
+<%# 削除ボタン押下時の確認モーダル %>
+<%- include('../../partials/deleteModal') %>
+<script src="/javascripts/target-delete.js"></script>
