@@ -17,10 +17,10 @@ const cartSchema = new Schema ({
     },
 	items: [
 		{
-			productId: {
+			variantId: {
 				type: Schema.Types.ObjectId,
-				ref: 'Product',
-				required: [true, '商品IDは必須です'],
+				ref: 'ProductVariant',
+				required: [true, 'バリアントIDは必須です'],
 			},
 			quantity: {
 				type: Number,

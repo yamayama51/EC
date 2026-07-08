@@ -26,8 +26,14 @@ module.exports.index = catchAsync(async (req, res) => {
 
     // ユーザーに一致するオーダー情報を取得
     const orders = await Order.find({ user: userId })
-        .populate('items.productId')
-        .sort({ createdAt: -1 }
+        .populate({
+            path: 'items.variantId',
+            model: 'ProductVariant',
+            populate: {
+                path: 'product',
+                model: 'Product'
+            }
+        }).sort({ createdAt: -1 }
     );
 
     res.render('orders/index', { orders, format });
@@ -48,7 +54,16 @@ module.exports.createOrder = catchAsync(async (req, res) => {
     const userId = req.user._id;
 
     // カート情報を取得
-    let cart = await Cart.findOne({ user: userId }).populate('items.productId');
+    let cart = await Cart.findOne({ user: userId }).
+        populate({
+            path: 'items.variantId',
+            model: 'ProductVariant',
+            populate: {
+                path: 'product',
+                model: 'Product'
+            }
+        }
+    );
     if (!cart) {
         cart = new Cart({ user: userId, items: [] });
         await cart.save();
@@ -68,12 +83,12 @@ module.exports.createOrder = catchAsync(async (req, res) => {
     // カート内のアイテム情報を取得する
     let total = 0;
     const orderItems = cart.items.map(item => {
-        total += item.productId.price * item.quantity;
+        total += item.variantId.product.price * item.quantity;
         return {
-            productId: item.productId._id,
-            name: item.productId.name,
+            variantId: item.variantId,
+            name: item.variantId.product.name,
             quantity: item.quantity,
-            priceAtPurchase: item.productId.price,
+            priceAtPurchase: item.variantId.product.price,
         }
     });
 
@@ -131,7 +146,16 @@ module.exports.renderShowForm = catchAsync(async (req, res) => {
 
     // 注文を1件取得
     const { id } = req.params;
-    const order = await Order.findById(id).populate('items.productId');
+    const order = await Order.findById(id)
+        .populate({
+            path: 'items.variantId',
+            model: 'ProductVariant',
+            populate: { 
+                path: 'product',
+                model: 'Product'
+            }
+        }
+    );
 
     // orderを取得できない場合、注文者本人でない場合、管理者でない場合(管理者であれば閲覧可能)
     if (!order || (!order.user.equals(req.user._id)) && !req.user.isAdmin) {

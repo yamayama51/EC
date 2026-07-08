@@ -14,13 +14,13 @@ router.route('/')
     .get(isLoggedIn, cart.index)
     .post(isLoggedIn, cart.addToCart)
 
-router.route('/:productId/add')
+router.route('/:variantId/add')
     .patch(isLoggedIn, cart.addQuantity)
 
-router.route('/:productId/reduce')
+router.route('/:variantId/reduce')
     .patch(isLoggedIn, cart.reduceQuantity)
 
-router.route('/:productId/delete')
+router.route('/:variantId/delete')
     .patch(isLoggedIn, cart.deleteOne)
 
 module.exports = router;

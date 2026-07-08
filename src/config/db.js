@@ -10,7 +10,7 @@ const logger = require('../helpers/logger');
 
 const connectDB = async () => {
     try {
-        const uri = process.env.MONGO_URI || 'mongodb://localhost:27017/my-fashin-store';
+        const uri = process.env.MONGO_URI || 'mongodb://localhost:27017/Faze';
 
         await mongoose.connect(uri);
         console.log('MongoDBに正常に接続されました');

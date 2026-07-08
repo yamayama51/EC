@@ -22,10 +22,15 @@ const orderSchema = new Schema({
 	},
 	items: [
 		{
-			productId: {
+			// productId: {
+			// 	type: Schema.Types.ObjectId,
+			// 	ref: 'Product',
+			// 	required: [true, '商品IDは必須です'],
+			// },
+			variantId: {
 				type: Schema.Types.ObjectId,
 				ref: 'Product',
-				required: [true, '商品IDは必須です'],
+				required: [true, '商品バリエーションIDは必須です'],
 			},
 			name: {
 				type: String,

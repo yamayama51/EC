@@ -82,6 +82,7 @@
                 <form action="/cart" method="post" class="mb-3">
                     <input type="hidden" name="cart[productId]" value="<%= product._id %>">
 
+                    <%# 数量 %>
                     <div class="row mb-5 align-items-center">
                         <label for="quantity" class="col-3 fw-bold">数量</label>
                         <div class="col-9">
@@ -92,12 +93,20 @@
                             </select>
                         </div>
                     </div>
-                    <div class="d-grid gap-2">
-                        <% if (product.stock <= 0) { %>
-                        <button class="btn btn-dark py-3 fw-bold mb-3 disabled">現在購入できません</button>
-                        <% } else { %>
-                        <button type="submit" class="btn btn-dark py-3 fw-bold mb-3">カートに入れる</button>
+
+                    <%# サイズ %>
+                    <div class="mb-5">
+                        <input type="hidden" name="cart[variantId]" value="<%= selectedVariant._id %>">
+                        <% for (variant of variants) { %>
+                            <a href="/products/<%= product._id %>?size=<%= variant.size %>" 
+                                class="btn btn-outline-secondary mx-1 <%= selectedVariant && selectedVariant._id.equals(variant._id) ? 'active' : '' %>">
+                                <%= variant.size.toUpperCase() %>
+                            </a>
                         <% } %>
+                    </div>
+
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-dark py-3 fw-bold mb-3">カートに入れる</button>
                         <a href="/products" class="btn text-muted">商品一覧に戻る</a>
                     </div>
                 </form>

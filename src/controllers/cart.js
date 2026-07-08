@@ -3,7 +3,6 @@
 // | カートのDB処理・htmlの表示等(処理系)
 // |ーーーーーーーーーーーーーーーーーーーーーーーーー
 
-const Product = require('../models/product');
 const Cart = require('../models/cart');
 
 const { MAX_PRODUCT_QTY } = require('../constants/index');
@@ -14,29 +13,40 @@ const catchAsync = require('../helpers/catchAsync');
 module.exports.index = catchAsync(async (req, res) => {
 
     // カート情報を取得
-    let cart = await Cart.findOne({ user: req.user._id }).populate('items.productId');
+    let cart = await Cart.findOne({ user: req.user._id })
+        .populate({
+            path: 'items.variantId',
+            model: 'ProductVariant',
+            populate: { 
+                path: 'product',
+                model: 'Product'
+            }
+        }
+    );
     if (!cart) {
         cart = new Cart({ user: req.user._id, items: [] });
         await cart.save();
     }
 
     // 商品の合計金額を計算する
+    // TODO : カートに入っているアイテムが削除されるとばぐります
     let total = 0;
     for (let item of cart.items) {
-        total += item.productId.price * item.quantity; 
+        total += item.variantId.product.price * item.quantity;
     }
 
-    // カート内に売り切れの商品があるかどうかを確認
-    const hasSoldOut = cart.items.some(item => item.productId.stock <= 0);
+    // // カート内に売り切れの商品があるかどうかを確認
+    // const hasSoldOut = cart.items.some(item => item.productId.stock <= 0);
 
-    res.render('cart/index', { cart, total, hasSoldOut });
+    // res.render('cart/index', { cart, total, hasSoldOut });
+    res.render('cart/index', { cart, total });
 });
 
 // カートに追加
 module.exports.addToCart = catchAsync(async (req, res) => {
 
     // 入力データを取得
-    const { productId, quantity } = req.body.cart;
+    const { variantId, quantity } = req.body.cart;
 
     // カートを取得し、ない場合は作成
     let cart = await Cart.findOne({ user: req.user._id });
@@ -45,15 +55,15 @@ module.exports.addToCart = catchAsync(async (req, res) => {
         await cart.save();
     }
 
-    // 在庫数が0以下なら戻す
-    const product = await Product.findById(productId);
-    if (!product || product.stock <= 0) {
-        req.flash('error', '申し訳ありません。この商品は現在売り切れです。');
-        return res.redirect(`/products/${productId}`);
-    }
+    // // 在庫数が0以下なら戻す
+    // const product = await Product.findById(productId);
+    // if (!product || product.stock <= 0) {
+    //     req.flash('error', '申し訳ありません。この商品は現在売り切れです。');
+    //     return res.redirect(`/products/${productId}`);
+    // }
 
     // すでに同じ商品がカートにあるかを確認する
-    const existingItem = cart.items.find(item => item.productId.equals(productId));
+    const existingItem = cart.items.find(item => item.variantId.equals(variantId));
 
     // 現在カートに入っている数量を取得
     const currentQuantityInCart = existingItem ? existingItem.quantity : 0;
@@ -73,7 +83,7 @@ module.exports.addToCart = catchAsync(async (req, res) => {
     } else {
         
         // なければ新しく追加
-        cart.items.push({ productId, quantity });
+        cart.items.push({ variantId, quantity });
     }
 
     // ユーザー情報を保存
@@ -86,17 +96,27 @@ module.exports.addToCart = catchAsync(async (req, res) => {
 module.exports.addQuantity = catchAsync(async (req, res) => {
 
     // URLから商品IDを取得
-    const { productId } = req.params;
+    const { variantId } = req.params;
 
     // カート情報を取得
-    let cart = await Cart.findOne({ user: req.user._id }).populate('items.productId');
+    // let cart = await Cart.findOne({ user: req.user._id }).populate('items.productId');
+    let cart = await Cart.findOne({ user: req.user._id });
+    // let cart = await Cart.findOne({ user: req.user._id })
+    //     .populate({
+    //         path: 'items.variantId',
+    //         populate: {
+    //             path: 'product',
+    //             model: 'Product'
+    //         }
+    //     }
+    // );
     if (!cart) {
         cart = new Cart({ user: req.user._id, items: [] });
         await cart.save();
     }
 
     // カートのアイテムを探す
-    const cartItem = cart.items.find(item => item.productId.equals(productId));
+    const cartItem = cart.items.find(item => item.variantId.equals(variantId));
 
     // 数量を+1して保存
     if (cartItem) {
@@ -117,17 +137,18 @@ module.exports.addQuantity = catchAsync(async (req, res) => {
 module.exports.reduceQuantity = catchAsync(async (req, res) => {
 
     // URLから商品IDを取得
-    const { productId } = req.params;
+    const { variantId } = req.params;
 
     // カート情報を取得
-    let cart = await Cart.findOne({ user: req.user._id }).populate('items.productId');
+    // let cart = await Cart.findOne({ user: req.user._id }).populate('items.productId');
+    let cart = await Cart.findOne({ user: req.user._id });
     if (!cart) {
         cart = new Cart({ user: req.user._id, items: [] });
         await cart.save();
     }
 
     // カートのアイテムを探す
-    const cartItem = cart.items.find(item => item.productId.equals(productId));
+    const cartItem = cart.items.find(item => item.variantId.equals(variantId));
     
     if (cartItem) {
 
@@ -138,7 +159,7 @@ module.exports.reduceQuantity = catchAsync(async (req, res) => {
             await Cart.findOneAndUpdate(
                 { user: req.user._id }, 
                 {
-                    $pull: { items: { productId: productId } }
+                    $pull: { items: { variantId: variantId } }
                 }
             );
             req.flash('success', 'カートから商品を削除しました');
@@ -157,13 +178,13 @@ module.exports.reduceQuantity = catchAsync(async (req, res) => {
 module.exports.deleteOne = catchAsync(async (req, res) => {
 
     // URLから商品IDを取得
-    const { productId } = req.params;
+    const { variantId } = req.params;
 
     // 該当商品をカートから削除
     await Cart.findOneAndUpdate(
         { user: req.user._id }, 
         {
-            $pull: { items: { productId: productId } }
+            $pull: { items: { variantId: variantId } }
         }
     );
 

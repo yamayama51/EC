@@ -20,10 +20,10 @@
                 <div class="d-flex align-items-center py-4 border-bottom">
 
                     <%# 画像部分 %>
-                    <a href="/products/<%= item.productId._id %>" class="text-decoration-none">
+                    <a href="/products/<%= item.variantId.product._id %>" class="text-decoration-none">
                         <div class="ratio ratio-1x1 bg-white rounded-3 shadow-sm overflow-hidden img-thumbnail">
-                            <% if (item.productId.images.length > 0) { %>
-                                <img src="<%= item.productId.images[0].thumbnail %>" class="object-fit-cover" alt="product-img">
+                            <% if (item.variantId.product.images.length > 0) { %>
+                                <img src="<%= item.variantId.product.images[0].thumbnail %>" class="object-fit-cover" alt="product-img">
                             <% } else { %>
                                 <img src="/images/no-image.png" class="object-fit-cover" alt="no-img">
                             <% } %>
@@ -32,8 +32,9 @@
 
                     <%# アイテム詳細 %>
                     <div class="flex-grow-1 ms-3 ms-md-4">
-                        <a href="/products/<%= item.productId._id %>" class="h6 text-decoration-none"><%= item.productId.name %></a>
-                        <p class="h6 text-dark">&yen; <%= item.productId.price.toLocaleString() %></p>
+                        <a href="/products/<%= item.variantId.product._id %>" class="h6 text-decoration-none"><%= item.variantId.product.name %></a>
+                        <p class="h6 text-dark">&yen; <%= item.variantId.product.price.toLocaleString() %></p>
+                        <p class="small text-muted">サイズ：<%= item.variantId.size.toUpperCase() %></p>
                     </div>
 
                     <%# カート操作 %>
@@ -41,7 +42,7 @@
                         <ul class="pagination pagination-sm">
                             <% if (item.quantity !== 1) { %>
                                 <li class="page-item">
-                                    <form action="/cart/<%= item.productId._id %>/reduce?_method=PATCH" method="POST">
+                                    <form action="/cart/<%= item.variantId._id %>/reduce?_method=PATCH" method="POST">
                                         <button class="page-link text-dark">-</button>
                                     </form>
                                 </li>
@@ -49,13 +50,13 @@
                             <li class="page-item disabled"><p class="page-link"><%= item.quantity %></p></li>
                             <% if (item.quantity < 10) { %>
                                 <li class="page-item">
-                                    <form action="/cart/<%= item.productId._id %>/add?_method=PATCH" method="POST">
+                                    <form action="/cart/<%= item.variantId._id %>/add?_method=PATCH" method="POST">
                                         <button class="page-link text-dark">+</button>
                                     </form>
                                 </li>
                             <% } %>
                         </ul>
-                        <form action="/cart/<%= item.productId._id %>/delete?_method=PATCH" method="POST">
+                        <form action="/cart/<%= item.variantId._id %>/delete?_method=PATCH" method="POST">
                             <button class="btn btn-link btn-sm text-muted text-decoration-none p-0 small">削除</button>
                         </form>
                     </div>
@@ -91,12 +92,8 @@
 
                     <form action="/orders" method="post">
                         <div class="d-grid gap-2">
-                            <% if (hasSoldOut) { %>
-                                <button class="btn btn-dark btn-lg py-3 fw-bold shadow-sm disabled">売り切れの商品が含まれています</button>
-                            <% } else { %>
-                                <button type="submit" class="btn btn-dark btn-lg py-2 fw-bold shadow-sm mb-3">注文する</button>
-                                <a href="/products" class="btn text-muted">買い物を続ける</a>
-                            <% } %>
+                            <button type="submit" class="btn btn-dark btn-lg py-2 fw-bold shadow-sm mb-3">注文する</button>
+                            <a href="/products" class="btn text-muted">買い物を続ける</a>
                         </div>
                     </form>
                 <% } else { %>

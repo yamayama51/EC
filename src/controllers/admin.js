@@ -331,7 +331,7 @@ module.exports.deleteProduct = catchAsync(async (req, res) => {
     }
 
     // 商品に紐づくバリエーションをすべて削除する
-    await ProductVariant.deleteMany({ product: id });
+    await Variant.deleteMany({ product: id });
 
     // 商品に紐づくレビューをすべて削除する
     await Review.deleteMany({ product: id });
@@ -718,7 +718,7 @@ module.exports.ordersIndex = catchAsync(async (req, res) => {
 
     // ページ数からlimit件分の注文データを取得
     const orders = await Order.find(query)
-        .populate('items.productId')
+        .populate('items.variantId')
         .populate('user')
         .skip((pagination.currentPage - 1) * pagination.LIMIT)
         .limit(pagination.LIMIT)

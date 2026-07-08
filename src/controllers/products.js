@@ -6,6 +6,7 @@
 const { cloudinary } = require('../cloudinary');
 
 const Product = require('../models/product');
+const Variant = require('../models/productVariant');
 const Category = require('../models/category');
 const Order = require('../models/order');
 const Review = require('../models/review');
@@ -65,6 +66,9 @@ module.exports.renderShowForm = catchAsync(async (req, res) => {
     // URLからIDを取得
     const { id } = req.params;
 
+    // クエリから選択中のサイズを探す
+    const { size } = req.query;
+
     // DBから商品を取得
     const product = await Product.findById(id).populate({
         path: 'reviews',
@@ -78,6 +82,18 @@ module.exports.renderShowForm = catchAsync(async (req, res) => {
         req.flash('error', '商品が見つかりませんでした');
         return res.redirect('/products');
     }
+
+    // 商品に紐づくバリエーションを取得
+    const variants = await Variant.find({ product: product._id });
+    if (!variants) {
+        req.flash('error', '商品バリエーションが見つかりませんでした');
+        return res.redirect('/products');
+    }
+
+    // 選択中のサイズを決定
+    let selectedVariant = size 
+        ? variants.find(v => v.size.toString() === size)
+        : variants[0];
 
     // レビュー書込み権限があるかを確認
     let canWriteReview = false;
@@ -103,5 +119,5 @@ module.exports.renderShowForm = catchAsync(async (req, res) => {
         }
     }
 
-    res.render('products/show', { product, canWriteReview });
+    res.render('products/show', { product, variants, selectedVariant, canWriteReview });
 });
