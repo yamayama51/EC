@@ -84,7 +84,7 @@ module.exports.renderShowForm = catchAsync(async (req, res) => {
     }
 
     // 商品に紐づくバリエーションを取得
-    const variants = await Variant.find({ product: product._id });
+    const variants = await Variant.find({ product: product._id }).sort({ sizeOrder: 1 });
     if (!variants) {
         req.flash('error', '商品バリエーションが見つかりませんでした');
         return res.redirect('/products');

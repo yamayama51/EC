@@ -16,8 +16,7 @@ const Order = require('../models/order');
 const { getPaginationData } = require('../helpers/pagination');
 const { sendEmail } = require('../helpers/mailer');
 const templates = require('../config/mailTemplate');
-const { ORDER_STATUS_VALUES } = require('../constants/index');
-const { PRODUCT_SIZES, PRODUCT_SIZES_VALUES } = require('../constants/index');
+const { ORDER_STATUS_VALUES, PRODUCT_SIZES_CONFIG, PRODUCT_SIZES_VALUES } = require('../constants/index');
 
 const catchAsync = require('../helpers/catchAsync');
 
@@ -379,7 +378,7 @@ module.exports.variantIndex = catchAsync(async (req, res) => {
     }
 
     // バリエーションを取得
-    const variants = await Variant.find({ product: id });
+    const variants = await Variant.find({ product: id }).sort({ sizeOrder: 1 });
     if (!variants) {
         req.flash('error', '対象のバリエーションが見つかりません');
         return res.redirect(`/admin/products/${id}/variants`);
@@ -427,11 +426,20 @@ module.exports.createVariant = catchAsync(async (req, res) => {
     );
 
     try {
-        // リクエスト内容を取得
-        let variant = new Variant(req.body.variant);
+        // サイズに応じて順番をつける
+        const sizeInput = req.body.variant.size;
+        console.log(sizeInput);
 
-        // バリアントに商品IDを紐づける
-        variant.product = id;
+        // 定数から対応する順番を取得
+        const sizeOrder = PRODUCT_SIZES_CONFIG[sizeInput]?.order ?? 99;
+        console.log(sizeOrder);
+
+        const variant = new Variant({
+            product: id,
+            size: sizeInput,
+            sizeOrder: sizeOrder,
+        });
+        console.log(variant);
 
         await variant.save();
 
