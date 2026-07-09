@@ -209,6 +209,10 @@ html {
     width: 100px;
 }
 
+.col-isActive {
+    width: 100px;
+}
+
 .col-action {
     width: 150px;
 }

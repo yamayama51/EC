@@ -48,6 +48,7 @@
                 <th class="col-name">商品名</th>
                 <th class="col-category">カテゴリー</th>
                 <th class="col-price">価格</th>
+                <th class="col-isActive">表示状態</th>
                 <th class="col-action">操作</th>
             </tr>
         </thead>
@@ -68,6 +69,9 @@
                 <td><a href="/products/<%= product._id %>" class="text-decoration-none text-dark"><%= product.name %></a></td>
                 <td><%= product.category.name %></td>
                 <td>¥<%= product.price.toLocaleString() %></td>
+                <td><span class="badge <%= product.isActive ? 'bg-success' : 'bg-secondary' %>">
+                    <%= product.isActive ? '表示' : '非表示' %>
+                </span></td>
 
                 <td>
                     <a href="/admin/products/<%= product.id %>/edit" class="btn btn-sm btn-outline-secondary mx-2">編集</a>

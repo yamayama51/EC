@@ -7,6 +7,7 @@ const mongoose = require('mongoose');
 const { Schema } = mongoose;
 
 const { PRODUCT_SIZES, PRODUCT_SIZES_VALUES } = require('../constants');
+const { boolean } = require('joi');
 
 // 画像のスキーマ定義
 const imageSchema = new Schema({
@@ -59,7 +60,11 @@ const productSchema = new Schema({
             type: Schema.Types.ObjectId,
             ref: 'Review'
         }
-    ]
+    ],
+    isActive: {
+        type: Boolean,
+        default: false
+    }
 }, {
     timestamps: true
 });

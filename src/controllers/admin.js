@@ -173,9 +173,13 @@ module.exports.updateProduct = catchAsync(async (req, res) => {
          }
     );
 
+    console.log(req.body);
+
     // 商品データの画像以外を一度更新する
+    const isActive = req.body.product.isActive === 'true';
     await Product.findByIdAndUpdate(id, 
         {
+            isActive: isActive,
             name: req.body.product.name,
             price: req.body.product.price,
             description: req.body.product.description,
@@ -278,27 +282,6 @@ module.exports.updateProduct = catchAsync(async (req, res) => {
             productId: product._id 
         }
     );
-
-    // 商品のバリエーションの修正------------------
-    // トランザクションが必要
-
-    // 送られてきたバリエーションのIDをすべて取得する
-    const incomingIds = req.body.variants.map(v => v.id).filter(id => id !== null && id !== undefined);
-
-    // 送られてきたID以外をすべて削除
-    await ProductVariant.deleteMany({
-        product: product._id,
-        _id: { $nin: incomingIds }
-    });
-
-    // 残りのデータを登録・更新する
-    for (let variant of req.body.variants) {
-        if (variant.id) {
-            await ProductVariant.findOneAndUpdate(variant.id, variant);
-        } else {
-            await ProductVariant.createCategory({ ...variant, product: product._id });
-        }
-    }
 
     req.flash('success', '商品を更新しました');
 

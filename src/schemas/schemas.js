@@ -17,6 +17,7 @@ module.exports.userSchema = Joi.object({
 // 商品スキーマのバリデーションルールを作成する
 module.exports.productSchema = Joi.object({
     product: Joi.object({
+		isActive: Joi.string().optional(),
         name: Joi.string().required(),
         price: Joi.number().required().min(0).max(10000000),
         description: Joi.string().required(),

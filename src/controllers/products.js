@@ -19,7 +19,7 @@ module.exports.index = catchAsync(async (req, res) => {
 
     // 検索条件を追加 (カテゴリーのフィルターを適用)
     const categoryName = req.query.category;
-    let query = {};
+    let query = { isActive: true };
 
     // カテゴリーのフィルターを適用
     if (categoryName) {

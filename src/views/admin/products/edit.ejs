@@ -24,8 +24,13 @@
                         <div class="mb-4">
                             <label for="image" class="form-label small fw-bold text-muted ms-1">商品画像のアップロード(10枚まで)</label>
                             <input type="file" id="image" name="product[images]" class="form-control form-control-lg fs-6 filepond" accept="image/*" data-files="<%= JSON.stringify(product.images) %>">
-
                             <input type="hidden" name="imageOrder" id="imageOrderInput">
+                        </div>
+
+                        <%# 表示・非表示切り替え %>
+                        <div class="form-check form-switch mb-3">
+                            <input class="form-check-input" type="checkbox" role="switch" id="isActive" value="true" name="product[isActive]" <%= product.isActive ? 'checked' : '' %>>
+                            <label class="form-check-label" for="isActive">商品を表示する</label>
                         </div>
 
                         <%# 商品名 %>
