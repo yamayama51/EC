@@ -99,7 +99,7 @@
                         <input type="hidden" name="cart[variantId]" value="<%= selectedVariant._id %>">
                         <% for (variant of variants) { %>
                             <a href="/products/<%= product._id %>?size=<%= variant.size %>" 
-                                class="btn btn-outline-secondary mx-1 <%= selectedVariant && selectedVariant._id.equals(variant._id) ? 'active' : '' %>">
+                                class="faze-size-btn btn btn-outline-secondary mx-1 <%= selectedVariant && selectedVariant._id.equals(variant._id) ? 'active' : '' %>">
                                 <%= variant.size.toUpperCase() %>
                             </a>
                         <% } %>

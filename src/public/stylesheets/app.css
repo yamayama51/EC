@@ -65,6 +65,11 @@ html {
     font-size: 0.75rem;
 }
 
+.faze-size-btn {
+    min-width: 40px;
+    text-align: center;
+}
+
 /* Bootstrapのボタンを少し修正 */
 .btn-dark {
     border: none;
