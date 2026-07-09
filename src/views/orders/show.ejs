@@ -37,10 +37,10 @@
                                                 <%= item.variantId.product.name %>
                                             </a>
                                         <% } else { %>
-                                            <span class="text-muted">削除済み商品</span>
+                                            <span class="text-muted"><%= item.productName %> (削除済み商品)</span>
                                         <% } %>
                                     </td>
-                                    <td class="text-center"><%= item.variantId.size.toUpperCase() %></td>
+                                    <td class="text-center"><%= item.size.toUpperCase() %></td>
                                     <td class="text-center"><%= item.quantity %></td>
                                     <td class="text-end">¥<%= item.priceAtPurchase.toLocaleString() %></td>
                                 </tr>

@@ -85,8 +85,9 @@ module.exports.createOrder = catchAsync(async (req, res) => {
     const orderItems = cart.items.map(item => {
         total += item.variantId.product.price * item.quantity;
         return {
-            variantId: item.variantId,
-            name: item.variantId.product.name,
+            variantId: item.variantId._id,
+            productName: item.variantId.product.name,
+            size: item.variantId.size,
             quantity: item.quantity,
             priceAtPurchase: item.variantId.product.price,
         }
@@ -134,7 +135,7 @@ module.exports.createOrder = catchAsync(async (req, res) => {
     const template = templates.placed(data);
 
     // 注文完了メールを送信する
-    await sendEmail('req.user.email', template.subject, template.body);
+    // await sendEmail('req.user.email', template.subject, template.body);
 
     req.flash('success', '注文が完了しました');
     res.redirect(`/orders/success?orderId=${order._id}`);

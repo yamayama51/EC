@@ -22,17 +22,12 @@ const orderSchema = new Schema({
 	},
 	items: [
 		{
-			// productId: {
-			// 	type: Schema.Types.ObjectId,
-			// 	ref: 'Product',
-			// 	required: [true, '商品IDは必須です'],
-			// },
 			variantId: {
 				type: Schema.Types.ObjectId,
-				ref: 'Product',
-				required: [true, '商品バリエーションIDは必須です'],
+				ref: 'ProductVariant',
+				required: [true, 'バリアントIDは必須です'],
 			},
-			name: {
+			productName: {
 				type: String,
 				required: [true, '商品名は必須です']
 			},
@@ -44,6 +39,10 @@ const orderSchema = new Schema({
 			priceAtPurchase: {
 				type: Number,
 				required: [true, '購入時の価格は必須です'],
+			},
+			size: {
+				type: String,
+				required: [true, 'サイズの価格は必須です'],
 			}
 		}
 	],
