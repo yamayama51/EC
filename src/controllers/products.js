@@ -101,10 +101,13 @@ module.exports.renderShowForm = catchAsync(async (req, res) => {
     // ログインしているかを確認
     if (req.user) {
 
+        // バリエーションIDをループする
+        const variantIds = variants.map(v => v._id);
+
         // 購入済みかどうかを確認
         const hasPurchased = await Order.findOne({
             user: req.user._id,
-            'items.productId': id
+            'items.variantId': { $in: variantIds }
         });
 
         // レビューを投稿済みかを確認
