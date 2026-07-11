@@ -37,6 +37,18 @@
       }
 
       form.classList.add('was-validated')
-    }, false)
+    }, false);
+
+    // 戻るボタン対策
+    window.addEventListener('pageshow', (event) => {
+      // キャッシュから復帰した場合のみボタンをリセット
+      const buttons = document.querySelectorAll('button[type="submit"]');
+      buttons.forEach(btn => {
+        if (btn.disabled) {
+          btn.disabled = false;
+          btn.innerText = btn.getAttribute('data-original-text') || '送信';
+        }
+      });
+    });
   })
 })()
