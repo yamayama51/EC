@@ -19,19 +19,16 @@ module.exports.index = catchAsync(async (req, res) => {
 
     // 検索条件を追加 (カテゴリーのフィルターを適用)
     const categoryName = req.query.category;
-    let query = { isActive: true };
+    let query = { isActive: true }; // ここでベースを作成
 
     // カテゴリーのフィルターを適用
     if (categoryName) {
-
-        // 名前からカテゴリーを検索
         const categoryDoc = await Category.findOne({ name: categoryName });
 
-        // カテゴリーが存在すればIDで絞り込む
         if (categoryDoc) {
-            query = { category: categoryDoc._id };
+            query.category = categoryDoc._id; 
         } else {
-            query = {};
+            query.isActive = false; 
         }
     }
 
