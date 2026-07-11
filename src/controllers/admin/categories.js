@@ -4,6 +4,7 @@
 // |ーーーーーーーーーーーーーーーーーーーーーーーーー
 
 const Category = require('../../models/category');
+const Product = require('../../models/product');
 
 const catchAsync = require('../../helpers/catchAsync');
 const logger = require('../../helpers/logger');
