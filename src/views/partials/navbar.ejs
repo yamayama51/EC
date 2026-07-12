@@ -12,6 +12,13 @@
     
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
       <ul class="navbar-nav">
+        <%# 管理者の場合 %>
+        <% if (currentUser && currentUser.isAdmin) { %>
+          <li class="nav-item">
+            <a class="nav-link fw-bold text-success" href="/admin/dashboard">DASHBOARD</a>
+          </li>    
+        <%# 非管理者の場合 %>
+        <% } %>
         <li class="nav-item">
           <a class="nav-link" href="/">HOME</a>
         </li>
@@ -38,13 +45,6 @@
           <a class="nav-link" href="/login">LOGIN</a>
         </li>
         <% } else { %>
-          <%# 管理者の場合 %>
-          <% if (currentUser.isAdmin) { %>
-            <li class="nav-item">
-              <a class="nav-link fw-bold text-success" href="/admin/dashboard">DASHBOARD</a>
-            </li>    
-          <%# 非管理者の場合 %>
-          <% } %>
           <li class="nav-item">
           <a class="nav-link" href="/cart">CART</a>
           </li>
