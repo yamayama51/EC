@@ -13,8 +13,6 @@ const { sendEmail } = require('../helpers/mailer');
 const templates = require('../config/mailTemplate');
 
 const catchAsync = require('../helpers/catchAsync');
-
-// ログ出力用
 const logger = require('../helpers/logger');
 const logMsg = require('../constants/logMessage');
 
@@ -93,11 +91,50 @@ module.exports.createOrder = catchAsync(async (req, res) => {
         }
     });
 
+    // Orderの番号を作成
+    let orderNumber;
+    try {
+
+        // 日本時間の現在時刻を作る
+        const now = new Date();
+        const offset = 9 * 60 * 60 * 1000;
+        const jstDate = new Date(now.getTime() + offset);
+
+        // 日付文字列を作成 ('20260712' の形式)
+        const dateStr = jstDate.toISOString().split('T')[0].replace(/-/g, '');
+
+        // 検索用の「今日の0時」と「明日の0時」を日本時間ベースで作る
+
+        const startOfToday = new Date(jstDate);
+        startOfToday.setUTCHours(0, 0, 0, 0);
+
+        const startOfTomorrow = new Date(startOfToday);
+        startOfTomorrow.setUTCDate(startOfTomorrow.getUTCDate() + 1);
+
+        // 同日付の連番を取得
+        const count = await Order.countDocuments({
+            createdAt: {
+                $gte: startOfToday,
+                $lt: startOfTomorrow
+            }
+        });
+
+        // 連番を4桁にする
+        const sequence = (count + 1).toString().padStart(4, '0');
+
+        orderNumber = `faze-${dateStr}-${sequence}`;
+
+    } catch (err) {
+        console.log('注文番号の採番に失敗しました');
+        throw new Error('注文番号の採番に失敗しました');
+	}
+
     // Orderを作成
     const order = new Order({
         user: userId,
         items: orderItems,
         totalPrice: total,
+        orderNumber: orderNumber
     });
 
     // Orderを保存
@@ -135,7 +172,7 @@ module.exports.createOrder = catchAsync(async (req, res) => {
     const template = templates.placed(data);
 
     // 注文完了メールを送信する
-    // await sendEmail('req.user.email', template.subject, template.body);
+    await sendEmail('req.user.email', template.subject, template.body);
 
     req.flash('success', '注文が完了しました');
     res.redirect(`/orders/success?orderId=${order._id}`);
