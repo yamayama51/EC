@@ -3,59 +3,95 @@
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top border-bottom faze-navbar">
   <div class="container-fluid">
-
     <a class="navbar-brand fw-bold py-3" href="/">FAZE.</a>
 
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNavDropdown" aria-controls="navbarNavDropdown" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="fw-bold faze-toggler">MENU</span>
+    <%# スマホの時だけ表示されるトグラー %>
+    <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
+      <span class="navbar-toggler-icon"></span>
     </button>
-    
+
+    <%# PC用のヘッダーナビゲーション %>
     <div class="collapse navbar-collapse" id="navbarNavDropdown">
-      <ul class="navbar-nav">
-        <%# 管理者の場合 %>
-        <% if (currentUser && currentUser.isAdmin) { %>
+        <ul class="navbar-nav">
+          <%# 管理者の場合 %>
+          <% if (currentUser && currentUser.isAdmin) { %>
+            <li class="nav-item">
+              <a class="nav-link fw-bold text-success" href="/admin/dashboard">DASHBOARD</a>
+            </li>    
+          <%# 非管理者の場合 %>
+          <% } %>
           <li class="nav-item">
-            <a class="nav-link fw-bold text-success" href="/admin/dashboard">DASHBOARD</a>
-          </li>    
-        <%# 非管理者の場合 %>
-        <% } %>
-        <li class="nav-item">
-          <a class="nav-link" href="/">HOME</a>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link" href="/products">ALL ITEM</a>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="/products" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            CATEGORY
-          </a>
-          <ul class="dropdown-menu">
-            <% Object.values(categories).forEach(category => { %>
-              <li><a class="dropdown-item" href="/products?category=<%= category.name %>">
-                <%= category.name %>
-              </a></li>
-            <% }) %>
-          </ul>
-        </li>
-      </ul>
-      <ul class="navbar-nav ms-auto">
-        <%# ログインしていない場合 %>
-        <% if (!currentUser) { %>
-        <li class="nav-item">
-          <a class="nav-link" href="/login">LOGIN</a>
-        </li>
-        <% } else { %>
-          <li class="nav-item">
-          <a class="nav-link" href="/cart">CART</a>
+            <a class="nav-link" href="/">HOME</a>
           </li>
           <li class="nav-item">
-            <a class="nav-link" href="/orders">ORDERS</a>
+            <a class="nav-link" href="/products">ALL ITEM</a>
           </li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="/products" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+              CATEGORY
+            </a>
+            <ul class="dropdown-menu">
+              <% Object.values(categories).forEach(category => { %>
+                <li><a class="dropdown-item" href="/products?category=<%= category.name %>">
+                  <%= category.name %>
+                </a></li>
+              <% }) %>
+            </ul>
+          </li>
+        </ul>
+        <ul class="navbar-nav ms-auto">
+          <%# ログインしていない場合 %>
+          <% if (!currentUser) { %>
           <li class="nav-item">
-            <a class="nav-link" href="/logout">LOGOUT</a>
+            <a class="nav-link" href="/login">LOGIN</a>
           </li>
-        <% } %>
-      </ul>
+          <% } else { %>
+            <li class="nav-item">
+            <a class="nav-link" href="/cart">CART</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/orders">ORDERS</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="/logout">LOGOUT</a>
+            </li>
+          <% } %>
+        </ul>
+      </div>
     </div>
+    
+    <%# オフキャンバス本体 %>
+    <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
+      <div class="offcanvas-header mt-5">
+        <h5 class="offcanvas-title" id="offcanvasNavbarLabel">MENU</h5>
+        <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
+      </div>
+      
+      <div class="offcanvas-body">
+        <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+          <% if (currentUser && currentUser.isAdmin) { %>
+            <li class="nav-item"><a class="nav-link fw-bold text-success" href="/admin/dashboard">DASHBOARD</a></li>
+          <% } %>
+          <li class="nav-item"><a class="nav-link" href="/">HOME</a></li>
+          <li class="nav-item"><a class="nav-link" href="/products">ALL ITEM</a></li>
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">CATEGORY</a>
+            <ul class="dropdown-menu">
+              <% Object.values(categories).forEach(category => { %>
+                <li><a class="dropdown-item" href="/products?category=<%= category.name %>"><%= category.name %></a></li>
+              <% }) %>
+            </ul>
+          </li>
+          
+          <%# ログイン状態のメニューもここに入れる %>
+          <% if (!currentUser) { %>
+            <li class="nav-item"><a class="nav-link" href="/login">LOGIN</a></li>
+          <% } else { %>
+            <li class="nav-item"><a class="nav-link" href="/cart">CART</a></li>
+            <li class="nav-item"><a class="nav-link" href="/orders">ORDERS</a></li>
+            <li class="nav-item"><a class="nav-link" href="/logout">LOGOUT</a></li>
+          <% } %>
+        </ul>
+      </div>
   </div>
 </nav>
