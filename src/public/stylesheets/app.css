@@ -46,18 +46,22 @@ html {
         padding-left: 0px;
     }
     .offcanvas {
-        width: 85% !important;
+        width: 80% !important;
     }
     .offcanvas .nav-link {
-        font-size: 1.5rem !important;
+        font-size: 1.0rem !important;
+        font-weight: bold;
     }
-    .offcanvas .dropdown-item {
-        font-size: 1.2rem !important;
+    .offcanvas .nav-child {
+        text-decoration: none;
+        font-size: 0.9rem !important;
     }
     .offcanvas-title {
-        font-size: 1.5rem !important;
+        font-size: 1.2rem !important;
     }
 }
+
+
 
 /* スマホサイズ */
 @media (max-width: 768px) {

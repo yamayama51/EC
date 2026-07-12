@@ -62,26 +62,28 @@
     
     <%# オフキャンバス本体 %>
     <div class="offcanvas offcanvas-end" tabindex="-1" id="offcanvasNavbar" aria-labelledby="offcanvasNavbarLabel">
-      <div class="offcanvas-header mt-5">
+      <div class="offcanvas-header mt-5 ms-5">
         <h5 class="offcanvas-title" id="offcanvasNavbarLabel">MENU</h5>
         <button type="button" class="btn-close" data-bs-dismiss="offcanvas" aria-label="Close"></button>
       </div>
       
       <div class="offcanvas-body">
-        <ul class="navbar-nav justify-content-end flex-grow-1 pe-3">
+        <ul class="navbar-nav justify-content-end flex-grow-1 pe-3 ms-5">
           <% if (currentUser && currentUser.isAdmin) { %>
             <li class="nav-item"><a class="nav-link fw-bold text-success" href="/admin/dashboard">DASHBOARD</a></li>
           <% } %>
           <li class="nav-item"><a class="nav-link" href="/">HOME</a></li>
           <li class="nav-item"><a class="nav-link" href="/products">ALL ITEM</a></li>
-          <li class="nav-item dropdown">
-            <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">CATEGORY</a>
-            <ul class="dropdown-menu">
-              <% Object.values(categories).forEach(category => { %>
-                <li><a class="dropdown-item" href="/products?category=<%= category.name %>"><%= category.name %></a></li>
-              <% }) %>
-            </ul>
+          <li class="nav-item">
+            <span class="nav-link text-muted">CATEGORY</span>
           </li>
+          <% Object.values(categories).forEach(category => { %>
+            <li class="nav-item">
+              <a class="nav-link nav-child ps-4" href="/products?category=<%= category.name %>">
+                <%= category.name %>
+              </a>
+            </li>
+          <% }) %>
           
           <%# ログイン状態のメニューもここに入れる %>
           <% if (!currentUser) { %>
