@@ -9,6 +9,19 @@ const LIMIT = 20;
 // ページングのデータを返す処理
 module.exports.getPaginationData = (pageParam, totalItemsCount) => {
 
+    // データが0件の場合は特別な値を返す
+    if (totalItemsCount === 0) {
+        return {
+            currentPage: 1,
+            totalPages: 0,
+            totalItemsCount: 0,
+            from: 0,
+            to: 0,
+            finalDisplay: [],
+            LIMIT
+        };
+    }
+
     // 指定されたページ数と最大ページ数を取得
     const page = parseInt(pageParam) || 1;
     const totalPages = Math.ceil(totalItemsCount / LIMIT);
