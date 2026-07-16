@@ -6,14 +6,14 @@
 const express = require('express');
 const router = express.Router();
 
-const products = require('../controllers/products');
+const productController = require('../controllers/productController');
 
 // 商品一覧
 router.route('/')
-    .get(products.index)
+    .get(productController.index)
 
 // 商品詳細
 router.route('/:id')
-    .get(products.renderShowForm)
+    .get(productController.renderShowForm)
 
 module.exports = router;

@@ -4,10 +4,7 @@
 // |ーーーーーーーーーーーーーーーーーーーーーーーーー
 
 const User = require('../models/user');
-
 const catchAsync = require('../helpers/catchAsync');
-
-// ログ出力用
 const logger = require('../helpers/logger');
 const logMsg = require('../constants/logMessage');
 
