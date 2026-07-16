@@ -5,6 +5,7 @@
 
 const Product = require('../models/product');
 const Variant = require('../models/productVariant');
+const Category = require('../models/category');
 
 const { getPaginationData } = require('../helpers/pagination');
 
@@ -41,7 +42,7 @@ module.exports.getProductsList = async (searchOptions) => {
         products,
         categoryName: searchOptions.categoryName,
         pagination,
-        queryParams: searchOptions.categoryName ? `&category=${encodeURIComponent(categoryName)}` : ''
+        queryParams: searchOptions.categoryName ? `&category=${encodeURIComponent(searchOptions.categoryName)}` : ''
     }
 }
 
