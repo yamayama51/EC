@@ -9,6 +9,7 @@ const Product = require('../../models/product');
 const Variant = require('../../models/productVariant');
 const Review = require('../../models/review');
 const Category = require('../../models/category');
+const Cart = require('../../models/cart');
 
 const { getPaginationData } = require('../../helpers/pagination');
 const catchAsync = require('../../helpers/catchAsync');

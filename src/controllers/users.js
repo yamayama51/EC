@@ -4,6 +4,7 @@
 // |ーーーーーーーーーーーーーーーーーーーーーーーーー
 
 const User = require('../models/user');
+const Cart = require('../models/cart');
 const catchAsync = require('../helpers/catchAsync');
 const logger = require('../helpers/logger');
 const logMsg = require('../constants/logMessage');
@@ -33,6 +34,10 @@ module.exports.register = catchAsync(async (req, res, next) => {
 
         // 登録処理
         const registeredUser = await User.register(user, password);
+
+        // ユーザーの登録時に対象ユーザーのカートを作成する
+        const cart = new Cart({ user: registeredUser._id, items: [] });
+        await cart.save();
 
         logger.info(logMsg.USER.CREATE_END,
             { 
