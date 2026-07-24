@@ -32,12 +32,12 @@
                             <% for (let item of order.items) { %>
                                 <tr>
                                     <td class="py-3">
-                                        <% if (item.variantId && item.variantId.product) { %>
+                                        <% if (item.variantId?.product?.isActive) { %>
                                             <a href="/products/<%= item.variantId.product._id %>" class="text-decoration-none">
                                                 <%= item.variantId.product.name %>
                                             </a>
                                         <% } else { %>
-                                            <span class="text-muted"><%= item.productName %> (削除済み商品)</span>
+                                            <span class="text-muted"><%= item.productName %> (販売終了)</span>
                                         <% } %>
                                     </td>
                                     <td class="text-center"><%= item.size.toUpperCase() %></td>

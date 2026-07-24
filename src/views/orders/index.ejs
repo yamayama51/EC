@@ -42,8 +42,7 @@
                 <%# 注文アイテム一覧 %>
                 <div class="list-group list-group-flush mb-3">
                     <% for (item of order.items) { %>
-                        <% if (item.variantId) { %>
-                            
+                        <% if (item.variantId?.product?.isActive) { %>
                             <div class="list-group-item d-flex align-items-center justify-content-between py-3 px-3 bg-transparent">
                                 <div class="d-flex align-items-center">
                                     <a href="/products/<%= item.variantId.product._id %>" class="me-3">
@@ -66,12 +65,9 @@
                                         </p>
                                     </div>
                                 </div>
-                                <div>
-                                    
-                                </div>
                             </div>
 
-                        <%# アイテムが削除されている場合の表示 %>
+                        <%# アイテムが削除されているまたは非表示の場合の表示 %>
                         <% } else { %>
                             <div class="list-group-item d-flex align-items-center justify-content-between py-3 px-3 bg-transparent">
                                 <div class="d-flex align-items-center">
