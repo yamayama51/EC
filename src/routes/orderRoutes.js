@@ -5,19 +5,18 @@
 
 const express = require('express');
 const router = express.Router();
-const order = require('../controllers/order');
-const { orderSchema } = require('../schemas/schemas');
+const orderController = require('../controllers/orderController');
 
 const { isLoggedIn } = require('../middlewares/middlewares');
 
 router.route('/')
-    .get(isLoggedIn, order.index)
-    .post(isLoggedIn, order.createOrder)
+    .get(isLoggedIn, orderController.index)
+    .post(isLoggedIn, orderController.createOrder)
 
 router.route('/success')
-    .get(isLoggedIn, order.renderSuccessForm)
+    .get(isLoggedIn, orderController.renderSuccessForm)
 
 router.route('/:id')
-    .get(isLoggedIn, order.renderShowForm)
+    .get(isLoggedIn, orderController.renderShowForm)
 
 module.exports = router;

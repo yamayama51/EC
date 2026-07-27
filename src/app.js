@@ -16,7 +16,7 @@ const adminRoutes = require('./routes/admin/index');
 const productRoutes = require('./routes/productRoutes');
 const reviewRoutes = require('./routes/reviews');
 const cartRoutes = require('./routes/cartRoutes');
-const orderRoutes = require('./routes/order');
+const orderRoutes = require('./routes/orderRoutes');
 
 // viewEngineの設定
 const path = require('path');

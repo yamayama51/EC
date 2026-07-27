@@ -7,10 +7,9 @@ const Cart = require('../models/cart');
 
 const { MAX_PRODUCT_QTY } = require('../constants/index');
 
-// 引数のユーザIDのカート情報を返す
-module.exports.getCartData = async (userId) => {
+// カートデータの取得
+module.exports.getCartByUserId = async (userId) => {
 
-    // カート情報を取得
     let cart = await Cart.findOne({ user: userId })
         .populate({
             path: 'items.variantId',
@@ -21,6 +20,20 @@ module.exports.getCartData = async (userId) => {
             }
         }
     );
+
+    if (!cart) {
+        cart = new Cart({ user: userId, items: [] });
+        await cart.save();
+    }
+
+    return cart;
+}
+
+// 引数のユーザIDのカート情報を返す
+module.exports.getCartData = async (userId) => {
+
+    // カート情報を取得
+    let cart = await module.exports.getCartByUserId(userId);
 
     // カート内の各商品が現在販売中かを確認し販売中でなければ削除
     for (let item of cart.items) {
@@ -148,4 +161,25 @@ module.exports.deleteOne = async (userId, variantId) => {
     }
 
     return true;
+}
+
+// オーダー用のデータを作成する
+module.exports.formatCartForOrder = (cart) => {
+
+    let total = 0;
+    const orderItems = cart.items.map(item => {
+        total += item.variantId.product.price * item.quantity;
+        return {
+            variantId: item.variantId._id,
+            productName: item.variantId.product.name,
+            size: item.variantId.size,
+            quantity: item.quantity,
+            priceAtPurchase: item.variantId.product.price,
+        }
+    });
+
+    return {
+        total,
+        orderItems
+    };
 }
