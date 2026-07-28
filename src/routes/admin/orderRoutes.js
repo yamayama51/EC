@@ -6,14 +6,14 @@
 const express = require('express');
 const router = express.Router();
 
-const orders = require('../../controllers/admin/orders');
+const orderController = require('../../controllers/admin/orderController');
 
 // 注文一覧の取得
 router.route('/')
-    .get(orders.index)
+    .get(orderController.index)
 
 // 注文ステータスの変更
 router.route('/:orderId/update-status')
-    .put(orders.updateOrderStatus)
+    .put(orderController.updateOrderStatus)
 
 module.exports = router;

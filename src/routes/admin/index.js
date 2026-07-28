@@ -16,7 +16,7 @@ router.use(isAdmin);
 const productsRoutes = require('./products');
 const productVariantsRoutes = require('./productVariants');
 const categoriesRoutes = require('./categoryRoutes');
-const ordersRoutes = require('./orders');
+const ordersRoutes = require('./orderRoutes');
 
 // 管理者ダッシュボード
 router.get('/dashboard', admin.dashboard);

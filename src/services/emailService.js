@@ -6,6 +6,7 @@
 const { sendEmail } = require('../helpers/mailer');
 const templates = require('../config/mailTemplate');
 
+// 注文確定時のメール送信
 module.exports.sendOrderPlacedEmail = async (user, order) => {
 
     // メール用のデータを取得
@@ -20,5 +21,25 @@ module.exports.sendOrderPlacedEmail = async (user, order) => {
 
     // 注文完了メールを送信する
     await sendEmail('user.email', template.subject, template.body);
+}
 
+// 注文ステータス変更時のメール送信
+module.exports.sendUpdateStatusEmail = async (user, status, updatedOrder) => {
+
+    if (!templates[status]) {
+        console.error(`Error: Template for status "${status}" not found.`);
+        throw new Error(`ステータス "${status}" に対応するメールテンプレートが見つかりません`);
+    }
+
+    // メール用のデータを取得
+    const data = {
+        username: user.username,
+        orderNumber: updatedOrder.orderNumber,
+    }
+
+    // 注文確定のメールフォーマットを取得
+    const template = templates[status](data);
+
+    // 注文完了メールを送信する
+    await sendEmail(user.email, template.subject, template.body);
 }

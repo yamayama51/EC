@@ -6,23 +6,23 @@
 const express = require('express');
 const router = express.Router();
 
-const categories = require('../../controllers/admin/categoryController');
+const categoryController = require('../../controllers/admin/categoryController');
 const { categorySchema } = require('../../schemas/schemas');
 
 const { validate } = require('../../middlewares/middlewares');
 
 // カテゴリー一覧
 router.route('/')
-    .get(categories.index)
-    .post(validate(categorySchema), categories.createCategory)
+    .get(categoryController.index)
+    .post(validate(categorySchema), categoryController.createCategory)
 
 // カテゴリー詳細
 router.route('/:id')
-    .put(validate(categorySchema), categories.updateCategory)
-    .delete(categories.deleteCategory)
+    .put(validate(categorySchema), categoryController.updateCategory)
+    .delete(categoryController.deleteCategory)
 
 // カテゴリー編集
 router.route('/:id/edit')
-    .get(categories.renderEditForm)
+    .get(categoryController.renderEditForm)
 
 module.exports = router;
