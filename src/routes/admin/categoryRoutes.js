@@ -6,7 +6,7 @@
 const express = require('express');
 const router = express.Router();
 
-const categories = require('../../controllers/admin/categories');
+const categories = require('../../controllers/admin/categoryController');
 const { categorySchema } = require('../../schemas/schemas');
 
 const { validate } = require('../../middlewares/middlewares');
