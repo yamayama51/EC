@@ -79,3 +79,10 @@ module.exports.getProductDetail = async (id, size) => {
         selectedVariant
     }
 }
+
+// 商品1件のProductデータを返す
+module.exports.getProductData = async (productId) => {
+
+    const product = await Product.findById(productId);
+    return product;
+}

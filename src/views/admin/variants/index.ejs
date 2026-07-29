@@ -8,7 +8,8 @@
     <%# ページタイトル %>
     <div class="faze-page-title">
         <h2 class="mb-3">商品バリエーション一覧</h2>
-        <h4 class="text-muted mb-4">対象商品： <%= product.name %></h4>
+        <h4 class="text-muted">対象商品： <%= product.name %></h4>
+        <a href="/admin/products/<%= id %>/edit" class="btn btn-outline-secondary mb-3">商品詳細へ</a>
     </div>
 
     <div class="container mt-4">

@@ -14,7 +14,7 @@ router.use(isAdmin);
 
 // 各管理者ルートを取得
 const productsRoutes = require('./products');
-const productVariantsRoutes = require('./productVariants');
+const productVariantsRoutes = require('./productVariantRoutes');
 const categoriesRoutes = require('./categoryRoutes');
 const ordersRoutes = require('./orderRoutes');
 

@@ -6,23 +6,23 @@
 const express = require('express');
 const router = express.Router();
 
-const productVariants = require('../../controllers/admin/productVariants');
+const productVariantController = require('../../controllers/admin/productVariantController');
 const { productVariantSchema } = require('../../schemas/schemas');
 
 const { validate } = require('../../middlewares/middlewares');
 
 // バリエーション一覧
 router.route('/products/:id/variants')
-    .get(productVariants.index)
-    .post(validate(productVariantSchema), productVariants.createVariant)
+    .get(productVariantController.index)
+    .post(validate(productVariantSchema), productVariantController.createVariant)
 
 // バリエーション詳細
 router.route('/products/:id/variants/:variantId')
-    .put(validate(productVariantSchema), productVariants.updateVariant)
-    .delete(productVariants.deleteVariant)
+    .put(validate(productVariantSchema), productVariantController.updateVariant)
+    .delete(productVariantController.deleteVariant)
 
 // バリエーション編集
 router.route('/products/:id/variants/:variantId/edit')
-    .get(productVariants.renderEditForm)
+    .get(productVariantController.renderEditForm)
 
 module.exports = router;
