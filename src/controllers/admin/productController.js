@@ -123,7 +123,7 @@ module.exports.updateProduct = catchAsync(async (req, res) => {
 
     req.flash('success', '商品を更新しました');
 
-    res.redirect(`/products/${product._id}`);
+    res.redirect('/admin/products');
 });
 
 // 商品削除処理
