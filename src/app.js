@@ -10,7 +10,7 @@ const passport = require('./config/passport');
 const flash = require('connect-flash');
 const ExpressError = require('./exceptions/ExpressError');
 const logger = require('./helpers/logger');
-const { setLocals } = require('./middlewares/middlewares');
+const { setLocals, trackHistory } = require('./middlewares/middlewares');
 const userRoutes = require('./routes/userRoutes');
 const adminRoutes = require('./routes/admin/index');
 const productRoutes = require('./routes/productRoutes');
@@ -41,6 +41,7 @@ app.use(flash());
 
 // アプリ共通
 app.use(setLocals);
+app.use(trackHistory);
 
 // トップページのルーティング
 app.get('/', (req, res) => {

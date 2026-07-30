@@ -22,7 +22,6 @@ module.exports.isLoggedIn = (req, res, next) => {
     next();
 }
 
-// 未ログインユーザーがログインユーザーしか使用できない機能を触ろうとした用
 // 現在のURLを一時的に保存する
 module.exports.storeReturnTo = (req, res, next) => {
     if (req.session.returnTo) {
@@ -30,6 +29,22 @@ module.exports.storeReturnTo = (req, res, next) => {
     }
     next();
 }
+
+// GETリクエストの時のURLをセッションに保存する
+module.exports.trackHistory = (req, res, next) => {
+
+    // ログイン画面、ログアウト処理は履歴に残さないように除外する
+    const excludePaths = ['/login', '/register', '/logout'];
+    
+    const isExcluded = excludePaths.some(path => req.originalUrl.startsWith(path));
+
+    if (!isExcluded && req.method === 'GET') {
+        // 直前に閲覧していたGETリクエストのURLをセッションに保持する
+        req.session.returnTo = req.originalUrl;
+    }
+    
+    next();
+};
 
 // 管理者かどうかを確認
 module.exports.isAdmin = (req, res, next) => {

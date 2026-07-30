@@ -6,23 +6,23 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
-const users = require('../controllers/userController');
+const userController = require('../controllers/userController');
 const { userSchema } = require('../schemas/schemas');
 
 const { storeReturnTo, validate } = require('../middlewares/middlewares');
 
 // ユーザー登録
 router.route('/register')
-    .get(users.renderRegister)
-    .post(validate(userSchema), users.register)
+    .get(userController.renderRegister)
+    .post(storeReturnTo, validate(userSchema), userController.register)
 
 // ログイン
 router.route('/login')
-    .get(users.renderLogin)
-    .post(storeReturnTo, passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }), users.login)
+    .get(userController.renderLogin)
+    .post(storeReturnTo, passport.authenticate('local', { failureFlash: true, failureRedirect: '/login' }), userController.login)
 
 // ログアウト
 router.route('/logout')
-    .get(users.logout)
+    .get(userController.logout)
 
 module.exports = router;

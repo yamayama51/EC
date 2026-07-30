@@ -5,6 +5,8 @@
 
 const User = require('../models/user');
 const Cart = require('../models/cart');
+const cartService = require('../services/cartService');
+
 const catchAsync = require('../helpers/catchAsync');
 const logger = require('../helpers/logger');
 const logMsg = require('../constants/logMessage');
@@ -51,7 +53,12 @@ module.exports.register = catchAsync(async (req, res, next) => {
         req.login(registeredUser, err => {
             if (err) return next(err);
             req.flash('success', 'FAZE. へようこそ');
-            res.redirect('/products');
+            
+            // リダイレクト先を変更
+            const redirectUrl = res.locals.returnTo || '/';
+            delete res.locals.returnTo;
+
+            res.redirect(redirectUrl);
         });
     } catch (e) {
         req.flash('error', e.message);
@@ -66,7 +73,7 @@ module.exports.renderLogin = (req, res) => {
 }
 
 // ログイン処理
-module.exports.login = (req, res) => {
+module.exports.login = catchAsync(async (req, res) => {
 
     logger.info(logMsg.USER.LOGIN,
         { 
@@ -78,31 +85,33 @@ module.exports.login = (req, res) => {
         }
     );
         
-    req.flash('success', `${req.user.username} 様 おかえりなさい`);
+    req.flash('success', `${req.user.username} さん おかえりなさい`);
 
     // リダイレクト先を変更
-    const redirectUrl = res.locals.returnTo || 'products';
+    const redirectUrl = res.locals.returnTo || '/';
     delete res.locals.returnTo;
 
     res.redirect(redirectUrl);
-}
+});
 
 // ログアウト処理
 module.exports.logout = (req, res) => {
 
-    logger.info(logMsg.USER.LOGOUT,
-        { 
-            path: req.path,
-            userId: req.user._id,
-            username: req.user.username,
-        }
-    );
+    if (req.user) {
+        logger.info(logMsg.USER.LOGOUT,
+            { 
+                path: req.path,
+                userId: req.user._id,
+                username: req.user.username,
+            }
+        );
 
-    req.logout((err) => {
-        if (err) {
-            return next();
-        }
-        req.flash('success', 'ログアウトしました');
-        res.redirect('/products');
-    });
+        req.logout((err) => {
+            if (err) {
+                return next();
+            }
+            req.flash('success', 'ログアウトしました');
+        });
+    }
+    res.redirect('/');
 }
