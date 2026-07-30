@@ -78,7 +78,7 @@ module.exports.login = (req, res) => {
         }
     );
         
-    req.flash('success', 'おかえりなさい');
+    req.flash('success', `${req.user.username} 様 おかえりなさい`);
 
     // リダイレクト先を変更
     const redirectUrl = res.locals.returnTo || 'products';

@@ -6,7 +6,7 @@
 const express = require('express');
 const router = express.Router();
 const passport = require('passport');
-const users = require('../controllers/users');
+const users = require('../controllers/userController');
 const { userSchema } = require('../schemas/schemas');
 
 const { storeReturnTo, validate } = require('../middlewares/middlewares');
