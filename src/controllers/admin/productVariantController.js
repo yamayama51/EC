@@ -22,7 +22,7 @@ module.exports.index = catchAsync(async (req, res) => {
     const { id } = req.params;
 
     // 商品を取得
-    const product = await productService.getProductData(id);
+    const product = await productService.getProductById(id);
     if (!product) {
         req.flash('error', '対象の商品が見つかりません');
         return res.redirect(`/admin/products/${id}/variants`);
@@ -45,7 +45,7 @@ module.exports.renderEditForm = catchAsync(async (req, res) => {
     const { id, variantId } = req.params;
 
     // 商品を取得
-    const product = await productService.getProductData(id);
+    const product = await productService.getProductById(id);
     if (!product) {
         req.flash('error', '対象の商品が見つかりません');
         return res.redirect(`/admin/products/${id}/variants`);

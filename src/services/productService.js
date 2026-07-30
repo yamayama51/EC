@@ -12,9 +12,12 @@ const { getPaginationData } = require('../helpers/pagination');
 // 商品のリストを返す
 module.exports.getProductsList = async (searchOptions) => {
 
+    let query = {};
     // クエリの作成 (必須条件をあらかじめ入れる)
-    const query = { isActive: searchOptions.isActive };
-
+    if (searchOptions.isActive) {
+        query = { isActive: searchOptions.isActive };
+    }
+    
     // カテゴリーでフィルターを適用
     if (searchOptions.categoryName) {
         const categoryDoc = await Category.findOne( { name: searchOptions.categoryName });
@@ -47,6 +50,7 @@ module.exports.getProductsList = async (searchOptions) => {
 }
 
 // 商品1件の詳細データを返す
+// MEMO : これはまずそうな関数
 module.exports.getProductDetail = async (id, size) => {
 
     // DBから商品を取得
@@ -81,8 +85,23 @@ module.exports.getProductDetail = async (id, size) => {
 }
 
 // 商品1件のProductデータを返す
-module.exports.getProductData = async (productId) => {
+module.exports.getProductById = async (productId, options = {}) => {
 
-    const product = await Product.findById(productId);
-    return product;
+    // 商品情報の取得を予約
+    let query = Product.findById(productId);
+
+    // カテゴリーの指定があれば紐づける
+    if (options.populateCategory) {
+        query = query.populate('category');
+    }
+
+    // レビューの指定があれば紐づける
+    if (options.populateCategory) {
+        query = query.populate({
+            path: 'reviews',
+            populate: { path: 'author'}
+        });
+    }
+
+    return await query;
 }

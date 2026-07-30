@@ -13,7 +13,7 @@ const { isAdmin } = require('../../middlewares/middlewares');
 router.use(isAdmin);
 
 // 各管理者ルートを取得
-const productsRoutes = require('./products');
+const productsRoutes = require('./productRoutes');
 const productVariantsRoutes = require('./productVariantRoutes');
 const categoriesRoutes = require('./categoryRoutes');
 const ordersRoutes = require('./orderRoutes');
