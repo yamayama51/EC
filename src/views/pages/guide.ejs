@@ -1,0 +1,88 @@
+
+<%# 購入手順ページ %>
+
+<% layout('layouts/boilerplate') %>
+
+<div class="container-fluid mb-5" style="max-width: 900px;">
+    <div class="faze-page-title">
+        <h2>ご利用・お支払いについて</h2>
+    </div>
+
+    <%# お支払いについて %>
+    <div class="card shadow-sm mb-4">
+      <div class="card-body">
+        <h3 class="card-title h5 mb-3 text-dark fw-bold">お支払い方法について</h3>
+        <p>お支払い方法はPayPayでの送金のみとなっております。</p>
+        <p>購入手続き完了後、登録のメールアドレスにメールが届きます。</p>
+        <p>メールに記載されているPayPayIDをPayPayアプリで検索・入金をお願いします。</p>
+        <p class="fw-bold text-danger">入金確認をもって注文の確定となります。</p>
+        
+        <div class="alert alert-light border small mb-3">
+          ご注意<br>
+          ※支払い期限は購入手続き完了後、<strong>30分以内</strong>となっています。<br>
+          それ以降のお支払いはおやめください（期限切れは自動キャンセルとなります）。
+        </div>
+
+        <%# 画像 %>
+        <div class="text-center my-3">
+          <img src="/images/paypay-guide.png" alt="PayPay送金手順のスクショ" class="img-fluid rounded border" style="max-width: 300px;">
+          <p class="text-muted small mt-3">▲ PayPayアプリでの送金イメージ</p>
+        </div>
+      </div>
+    </div>
+
+  <%# 配送方法について %>
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <h3 class="card-title h5 mb-3 text-dark fw-bold">配送方法・配送料について</h3>
+      
+      <div class="mb-3">
+        <p class="mb-2">当ショップの商品は、原則として<strong>「手渡し」</strong>での受け渡しとなります。</p>
+        <p class="text-muted small">※発送をご希望の場合は、個別対応となりますので下記手順をご確認ください。</p>
+      </div>
+
+      <div class="border-start border-3 border-secondary ps-3 mb-3">
+        <p class="fw-bold mb-1">発送をご希望の場合の手順</p>
+        <ol class="small mb-0 ps-3">
+          <li>当サイトのメールアドレス、または公式InstagramのDMへお問い合わせください。</li>
+          <li>ご案内するGoogle Formに「注文ID・氏名・配送先住所」をご入力いただきます。</li>
+          <li>配送料（250円）を含めた入金が確認でき次第、順次発送いたします。</li>
+        </ol>
+      </div>
+
+      <div class="alert alert-light border small mb-3">
+        ご注意<br>
+        配送をご希望の場合は、商品代金とは別に配送料として<strong>250円</strong>を頂戴いたします。また、発送は入金確認後となりますのであらかじめご了承ください。
+      </div>
+    </div>
+  </div>
+
+    <%# ステータスについて %>
+    <div class="card shadow-sm mb-4">
+      <div class="card-body">
+        <h3 class="card-title h5 mb-3 text-dark fw-bold">注文ステータスについて</h3>
+        <p class="text-muted small">注文履歴から現在の状態が確認できます。</p>
+        <ul class="list-group list-group-flush font-monospace">
+          <li class="list-group-item">PENDING <span class="text-muted ms-2">：入金待ちです</span></li>
+          <li class="list-group-item">PAID <span class="text-muted ms-2">：支払い完了です</span></li>
+          <li class="list-group-item">ARRIVED <span class="text-muted ms-2">：運営元に商品が到着しました</span></li>
+          <li class="list-group-item">DELIVERD <span class="text-muted ms-2">：商品のお届けが完了しました</span></li>
+          <li class="list-group-item">CANCELLED <span class="text-muted ms-2">：注文キャンセル（または支払期限超過）</span></li>
+        </ul>
+      </div>
+    </div>
+
+    <%# お問い合わせ %>
+    <div class="card shadow-sm mb-5">
+      <div class="card-body">
+        <h3 class="card-title h5 mb-3 text-dark fw-bold">お問い合わせについて</h3>
+        <p class="small text-muted mb-3">ご不明な点やトラブルがございましたら、以下よりお気軽にお問い合わせください。担当者が返信いたします。</p>
+          <p>Email： <span class="text-muted">my.faze.store@gmail.com</span></p>
+          <p>Instagram：<a href="https://instagram.com/faze._official" target="_blank">@Faze. Official</a></p>
+      </div>
+    </div>
+
+    <div class="text-center">
+      <a href="/" class="btn btn-dark px-4">トップページに戻る</a>
+    </div>
+  </div>

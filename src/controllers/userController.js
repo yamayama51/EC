@@ -95,23 +95,25 @@ module.exports.login = catchAsync(async (req, res) => {
 });
 
 // ログアウト処理
-module.exports.logout = (req, res) => {
+module.exports.logout = (req, res, next) => {
 
-    if (req.user) {
-        logger.info(logMsg.USER.LOGOUT,
-            { 
-                path: req.path,
-                userId: req.user._id,
-                username: req.user.username,
-            }
-        );
-
-        req.logout((err) => {
-            if (err) {
-                return next();
-            }
-            req.flash('success', 'ログアウトしました');
-        });
+    if (!req.user) {
+        res.redirect('/');
     }
-    res.redirect('/');
+
+    logger.info(logMsg.USER.LOGOUT,
+        { 
+            path: req.path,
+            userId: req.user._id,
+            username: req.user.username,
+        }
+    );
+
+    req.logout((err) => {
+        if (err) {
+            return next();
+        }
+        req.flash('success', 'ログアウトしました');
+        return res.redirect('/');
+    });
 }

@@ -1,17 +1,93 @@
 
 <%# ホームページ %>
 
-<% layout('layouts/boilerplate') %>
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FAZE.</title>
 
-<%# メインビジュアル（一番目立つところ） %>
-<section class="py-5 text-center container">
-    <div class="row py-lg-5">
-        <div class="col-lg-8 col-md-8 mx-auto">
-        <h1 class="fw-light">FAZE.</h1>
-        <p class="lead text-muted">最新のトレンドを、あなたに。<br>厳選されたアイテムを心ゆくまでお楽しみください。</p>
-        <p>
-            <a href="/products" class="text-dark text-decoration-none my-2">SHOP ALL</a>
-        </p>
+    <%# アイコン %>
+    <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+
+    <%# フォント %>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap" rel="stylesheet">
+
+    <%# bootstrap : css %>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <%# 自作 : css %>
+    <link rel="stylesheet" href="/stylesheets/app.css">
+</head>
+
+<body class="d-flex flex-column min-vh-100 bg-light">
+
+    <%- include('../partials/navbar') %>
+
+    <main class="d-flex flex-column">
+        <%- include('../partials/flash') %>
+
+        <div class="d-flex flex-column justify-content-between text-center">
+
+            <%# メインビジュアル %>
+            <div class="d-flex flex-column justify-content-center align-items-center vh-100 pt-3 mb-5 tracking-wide-lg"
+                style="background-image: url('/images/hero-bg.png'); background-size: cover; background-position: bottom;">
+                <h1 class="display-1 fw-light mb-3">FAZE.</h1>
+                <p class="h5 fw-light mb-5 text-muted tracking-wide-lg">My Face, Your Faze.</p>
+                <div class="h6 fw-normal mb-5">
+                    <p>その顔、その動揺。</p>
+                    <p>違和感を纏うという選択。</p>
+                </div>
+                <div class="vr mx-auto" style="width: 1px; height: 30px; background-color: #2e2e2e; opacity: 0.5;"></div>
+                <p class="h5 fw-light py-5">
+                    <a href="/products" class="text-dark text-decoration-none my-2">ENTER</a>
+                </p>
+            </div>
+
+            <%# アバウト %>
+            <div class="my-5">
+                <p class="h5 fw-light mb-5 tracking-wide-lg">- ABOUT -</p>
+                <div class="mx-auto mb-5" style="width: 40px; height: 1px; background-color: #919191;"></div>
+                <div class="text-muted">
+                    <p>始まりは、一枚のTシャツだった。</p>
+                    <p>そこにあったのは、小さな遊び心と、少しの違和感だけ。</p>
+                    <p>それがFaze.の原点。</p>
+                </div>
+            </div>
+
+            <hr>
+
+            <%# コンセプト %>
+            <div class="mt-5 px-5">
+                <p class="h5 fw-light mb-5 tracking-wide-lg">- CONCEPT -</p>
+                <div class="mx-auto mb-5" style="width: 40px; height: 1px; background-color: #919191;"></div>
+                <div class="text-muted">
+                    <p class="h5 fw-normal mb-3 tracking-wide-lg">DESIGN THE REACTION.</p>
+                    <p class="h6 fw-normal mb-5 tracking-wide-lg">～ 反応をデザインする。 ～</p>
+                </div>
+
+                <div class="text-muted mb-5">
+                    <p>小さな違和感を身に纏い、街を歩く。</p>
+                    <p>静かな視線を感じる。</p>
+                    <p>笑う者もいれば、二度見する者もいる。</p>
+                    <p>いつも通りの日常に、ほんの一滴の困惑を。</p>
+                </div>
+
+            </div>
+
         </div>
-    </div>
-</section>
+
+    </main>
+    <%- include('../partials/footer') %>
+
+    <%# bootstrap : js %>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+
+    <%# 自作 : js %>
+    <script src="/javascripts/validateForm.js"></script>
+    <script src="/javascripts/flash-helper.js"></script>
+</body>
+</html>

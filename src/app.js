@@ -48,6 +48,10 @@ app.get('/', (req, res) => {
     res.render('pages/home');
 });
 
+app.get('/guide', (req, res) => {
+    res.render('pages/guide');
+});
+
 // ルーティングの設定
 app.use('/', userRoutes);
 app.use('/cart', cartRoutes);

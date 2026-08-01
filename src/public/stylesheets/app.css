@@ -5,11 +5,17 @@ body {
     line-height: 1.6;
     color: #333;
     -webkit-font-smoothing: antialiased;
+    letter-spacing: 0.05em;
 }
 
 /* PCサイズ（デフォルト） */
 html {
     font-size: 16px; 
+}
+
+/* ロゴや見出し専用の「さらに文字間を広げた」クラス */
+.tracking-wide-lg {
+    letter-spacing: 0.2em;
 }
 
 /* カルーセルの左右ボタンを丸くする */

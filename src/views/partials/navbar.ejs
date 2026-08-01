@@ -3,7 +3,7 @@
 
 <nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top border-bottom faze-navbar">
   <div class="container-fluid">
-    <a class="navbar-brand fw-bold py-3" href="/">FAZE.</a>
+    <a class="navbar-brand fw-normal py-3" href="/">FAZE.</a>
 
     <%# スマホの時だけ表示されるトグラー %>
     <button class="navbar-toggler" type="button" data-bs-toggle="offcanvas" data-bs-target="#offcanvasNavbar" aria-controls="offcanvasNavbar">
@@ -22,6 +22,9 @@
           <% } %>
           <li class="nav-item">
             <a class="nav-link" href="/">HOME</a>
+          </li>
+          <li class="nav-item">
+            <a class="nav-link" href="/guide">GUIDE</a>
           </li>
           <li class="nav-item">
             <a class="nav-link" href="/products">ALL ITEM</a>
@@ -84,6 +87,7 @@
               </a>
             </li>
           <% }) %>
+          <li class="nav-item"><a class="nav-link" href="/guide">GUIDE</a></li>
           
           <%# ログイン状態のメニューもここに入れる %>
           <% if (!currentUser) { %>

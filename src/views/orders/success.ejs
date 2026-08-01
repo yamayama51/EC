@@ -4,7 +4,7 @@
 <% layout('layouts/boilerplate') %>
 
 <div class="row justify-content-center align-items-center mt-5">
-    <div class="col-md-6 text-center bg-white p-5 rounded-4 shadow-sm border border-light">
+    <div class="col-md-8 text-center bg-white p-5 rounded-4 shadow-sm border border-light">
         
         <%# アイコン %>
         <div class="mb-4 text-success">
@@ -15,10 +15,11 @@
 
         <%# サンクスメッセージ %>
         <h1 class="h3 fw-bold mb-3 text-dark">ご注文ありがとうございます</h1>
-        <p class="text-secondary small mb-5">
+        <p class="text-secondary small mb-3">
             注文はまだ完了していません。<br>
             お支払い方法のご案内をメールで送付しました。入金確認後に発送準備を開始します。
         </p>
+        <p class="text-secondary small mb-5">お支払方法や配送方法については<span><a href="/guide">こちら</a></span>からご確認いただけます。</p>
 
         <%# 注文情報 %>
         <div class="bg-light p-4 rounded-3 text-start mb-5">
