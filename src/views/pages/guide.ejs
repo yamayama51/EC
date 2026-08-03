@@ -23,39 +23,56 @@
           それ以降のお支払いはおやめください（期限切れは自動キャンセルとなります）。
         </div>
 
-        <%# 画像 %>
-        <div class="text-center my-3">
-          <img src="/images/paypay-guide.png" alt="PayPay送金手順のスクショ" class="img-fluid rounded border" style="max-width: 300px;">
-          <p class="text-muted small mt-3">▲ PayPayアプリでの送金イメージ</p>
+      </div>
+    </div>
+
+    <%# 支払い手順 %>
+    <div class="card shadow-sm mb-4">
+      <div class="card-body">
+        <h3 class="card-title h5 mb-3 text-dark fw-bold">お支払い手順について</h3>
+        <p class="text-muted mb-3">ご注文いただきありがとうございます。お手数ですが、以下の手順に沿ってお支払いをお願いいたします。</p>
+        
+        <div class="px-3">
+          <ol>
+            <li class="mb-2">注文が完了しましたら、ご登録いただいたメールアドレス宛に確認メールをお送りいたします。</li>
+            <li class="mb-2">メールの中に「お支払い先のPayPayID」が記載されておりますのでご確認ください。</li>
+            <li class="mb-2">PayPayアプリを開き、ホーム画面の「送る」をタップします。</li>
+            <li class="mb-2">一番上の検索窓（入力欄）に、メールに記載されていたPayPayIDを入力して検索してください。</li>
+            <li class="mb-2">当サイトの公式アカウントが表示されますので、**ご注文金額**を間違いのないようご確認のうえ、送金をお願いいたします。</li>
+          </ol>
+        </div>
+        
+        <div class="alert alert-light border mt-3 mb-0 text-secondary small">
+          <i class="me-1"></i> 担当者がご入金を確認でき次第、すぐにお商品の準備に取り掛からせていただきます。
         </div>
       </div>
     </div>
 
-  <%# 配送方法について %>
-  <div class="card shadow-sm mb-4">
-    <div class="card-body">
-      <h3 class="card-title h5 mb-3 text-dark fw-bold">配送方法・配送料について</h3>
-      
-      <div class="mb-3">
-        <p class="mb-2">当ショップの商品は、原則として<strong>「手渡し」</strong>での受け渡しとなります。</p>
-        <p class="text-muted small">※発送をご希望の場合は、個別対応となりますので下記手順をご確認ください。</p>
-      </div>
+    <%# 配送方法について %>
+    <div class="card shadow-sm mb-4">
+      <div class="card-body">
+        <h3 class="card-title h5 mb-3 text-dark fw-bold">配送方法・配送料について</h3>
+        
+        <div class="mb-3">
+          <p class="mb-2">当ショップの商品は、原則として<strong>「手渡し」</strong>での受け渡しとなります。</p>
+          <p class="text-muted small">※発送をご希望の場合は、個別対応となりますので下記手順をご確認ください。</p>
+        </div>
 
-      <div class="border-start border-3 border-secondary ps-3 mb-3">
-        <p class="fw-bold mb-1">発送をご希望の場合の手順</p>
-        <ol class="small mb-0 ps-3">
-          <li>当サイトのメールアドレス、または公式InstagramのDMへお問い合わせください。</li>
-          <li>ご案内するGoogle Formに「注文ID・氏名・配送先住所」をご入力いただきます。</li>
-          <li>配送料（250円）を含めた入金が確認でき次第、順次発送いたします。</li>
-        </ol>
-      </div>
+        <div class="border-start border-3 border-secondary ps-3 mb-3">
+          <p class="fw-bold mb-1">発送をご希望の場合の手順</p>
+          <ol class="small mb-0 ps-3">
+            <li>当サイトのメールアドレス、または公式InstagramのDMへお問い合わせください。</li>
+            <li>ご案内するGoogle Formに「注文ID・氏名・配送先住所」をご入力いただきます。</li>
+            <li>配送料（250円）を含めた入金が確認でき次第、順次発送いたします。</li>
+          </ol>
+        </div>
 
-      <div class="alert alert-light border small mb-3">
-        ご注意<br>
-        配送をご希望の場合は、商品代金とは別に配送料として<strong>250円</strong>を頂戴いたします。また、発送は入金確認後となりますのであらかじめご了承ください。
+        <div class="alert alert-light border small mb-3">
+          ご注意<br>
+          配送をご希望の場合は、商品代金とは別に配送料として<strong>250円</strong>を頂戴いたします。また、発送は入金確認後となりますのであらかじめご了承ください。
+        </div>
       </div>
     </div>
-  </div>
 
     <%# ステータスについて %>
     <div class="card shadow-sm mb-4">
