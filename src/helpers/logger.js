@@ -68,6 +68,21 @@ const logger = winston.createLogger({
                 })
             ),
         }),
+
+        // コンソールの出力
+        new winston.transports.Console({
+            level: 'info',
+            format: winston.format.combine(
+                winston.format.timestamp({ format: 'YYYY-MM-DD HH:mm:ss' }),
+                winston.format.colorize(),
+                winston.format.printf(({ timestamp, level, message, path, ...meta }) => {
+                    const metaString = Object.keys(meta).length > 0
+                        ? ` | ${Object.entries(meta).map(([k, v]) => `${k}=${v}`).join(', ')}`
+                        : ``;
+                    return `[${timestamp}] ${level} | Path: ${path || 'N/A'} | Msg: ${message}${metaString}`;
+                })
+            )
+        })
     ]
 });
 
