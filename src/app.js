@@ -69,8 +69,13 @@ app.use((req, res, next) => {
 app.use((err, req, res, next) => {
     const { statusCode = 500 } = err;
     if (!err.message) err.message = '問題が発生しました';
+
+    // サーバー側のログは常に書き込む
     logger.error(`${err.message} (Status: ${statusCode})`, { path: req.path, stack: err.stack });
-    res.status(statusCode).render('error', { err });
+
+    // 開発環境のみ error オブジェクトにスタックを渡す。
+    const errorData = process.env.NODE_ENV === 'development' ? err : {};
+    res.status(statusCode).render('error', { err: errorData });
 });
 
 module.exports = app;
