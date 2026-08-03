@@ -19,8 +19,7 @@ module.exports.sendEmail = async (to, subject, text) => {
     try {
         await transporter.sendMail({
             from: '"FAZE OFFICIAL" <' + process.env.EMAIL_USER + '>',
-            // to: to,
-            to: process.env.KARIMEADO,
+            to: to,
             subject: subject,
             text: text
         });

@@ -20,7 +20,7 @@ module.exports.sendOrderPlacedEmail = async (user, order) => {
     const template = templates.placed(data);
 
     // 注文完了メールを送信する
-    await sendEmail('user.email', template.subject, template.body);
+    await sendEmail(user.email, template.subject, template.body);
 }
 
 // 注文ステータス変更時のメール送信
