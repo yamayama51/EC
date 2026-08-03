@@ -26,15 +26,30 @@ module.exports.getCategoryById = async (categoryId) => {
 
 // カテゴリー作成
 module.exports.createCategory = async (categoryData) => {
+
+    // 重複チェックを行う
+    const existingCategory = await Category.findOne({ name: categoryData.name });
+    if (existingCategory) {
+        return { success: false, message: 'このカテゴリー名は既に登録されています。' };
+    }
     
     const category = new Category(categoryData);
     await category.save();
 
-    return category;
+    return { success: true, category };
 }
 
 // カテゴリー更新
 module.exports.updateCategory = async (categoryId, categoryData) => {
+
+    // 重複チェックを行う
+    const existingCategory = await Category.findOne({
+        name: categoryData.name,
+        _id: { $ne: categoryId }
+    });
+    if (existingCategory) {
+        return { success: false, message: 'このカテゴリー名は既に登録されています。' };
+    }
 
     // 引数で受け取ったカテゴリーデータに更新する
     const category = await Category.findByIdAndUpdate(
@@ -43,7 +58,7 @@ module.exports.updateCategory = async (categoryId, categoryData) => {
         { new: true }
     );
 
-    return category;
+    return { success: true, category };
 }
 
 // カテゴリー削除

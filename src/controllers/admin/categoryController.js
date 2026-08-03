@@ -46,14 +46,18 @@ module.exports.createCategory = catchAsync(async (req, res) => {
     );
 
     // リクエストからcategoryを作成
-    const category = await categoryService.createCategory(req.body.category);
+    const result = await categoryService.createCategory(req.body.category);
+    if (!result.success) {
+        req.flash('error', result.message);
+        return res.redirect('/admin/categories');
+    }
 
     logger.info(logMsg.ADMIN_CATEGORY.CREATE_END,
         { 
             path: req.path, 
             userId: req.user._id, 
             username: req.user.username,
-            categoryId: category._id
+            categoryId: result.category._id
         }
     );
 
@@ -76,12 +80,13 @@ module.exports.updateCategory = catchAsync(async (req, res) => {
             categoryId: category._id
         }
     );
+    
 
     // 対象カテゴリーを更新する
-    const updateCategory = await categoryService.updateCategory(id, req.body.category);
-    if (!updateCategory) {
-        req.flash('error', '対象のカテゴリーが見つかりません');
-        return res.redirect('/admin/categories');
+    const result = await categoryService.updateCategory(id, req.body.category);
+    if (!result.success) {
+        req.flash('error', result.message);
+        return res.redirect(`/admin/categories/${id}/edit`);
     }
 
     logger.info(logMsg.ADMIN_CATEGORY.UPDATE_END,
@@ -89,7 +94,7 @@ module.exports.updateCategory = catchAsync(async (req, res) => {
             path: req.path, 
             userId: req.user._id, 
             username: req.user.username,
-            categoryId: updateCategory._id
+            categoryId: result.category._id
         }
     );
 
