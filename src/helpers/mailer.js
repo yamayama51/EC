@@ -3,26 +3,21 @@
 // | メール送信の補助処理
 // |ーーーーーーーーーーーーーーーーーーーーーーーーー
 
-const nodemailer = require('nodemailer');
+const { Resend } = require('resend');
 
-// 送信の設定
-const transporter = nodemailer.createTransport({
-    service: 'gmail',
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-    }
-});
+// Resendを使用できるようにする
+const resend = new Resend(process.env.RESEND_API_KEY);
 
 // メール送信のための関数
 module.exports.sendEmail = async (to, subject, text) => {
     try {
-        await transporter.sendMail({
-            from: '"FAZE OFFICIAL" <' + process.env.EMAIL_USER + '>',
+        const data = await resend.emails.send({
+            from: `FAZE OFFICIAL <${process.env.MAIL_FROM}>`,
             to: to,
             subject: subject,
             text: text
         });
+
         console.log('メール送信成功');
     } catch (error) {
         console.log('メール送信失敗');

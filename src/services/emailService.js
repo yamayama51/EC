@@ -14,6 +14,7 @@ module.exports.sendOrderPlacedEmail = async (user, order) => {
         username: user.username,
         orderNumber: order.orderNumber,
         amount : order.totalPrice,
+        orderId: order._id
     }
 
     // 注文確定のメールフォーマットを取得
@@ -35,6 +36,7 @@ module.exports.sendUpdateStatusEmail = async (user, status, updatedOrder) => {
     const data = {
         username: user.username,
         orderNumber: updatedOrder.orderNumber,
+        orderId: updatedOrder._id
     }
 
     // 注文確定のメールフォーマットを取得
