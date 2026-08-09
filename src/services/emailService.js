@@ -7,11 +7,11 @@ const { sendEmail } = require('../helpers/mailer');
 const templates = require('../config/mailTemplate');
 
 // 注文確定時のメール送信
-module.exports.sendOrderPlacedEmail = async (user, order) => {
+module.exports.sendOrderPlacedEmail = async (toUser, order) => {
 
     // メール用のデータを取得
     const data = {
-        username: user.username,
+        username: toUser.username,
         orderNumber: order.orderNumber,
         amount : order.totalPrice,
         orderId: order._id
@@ -21,11 +21,11 @@ module.exports.sendOrderPlacedEmail = async (user, order) => {
     const template = templates.placed(data);
 
     // 注文完了メールを送信する
-    await sendEmail(user.email, template.subject, template.body);
+    await sendEmail(toUser.email, template.subject, template.body);
 }
 
 // 注文ステータス変更時のメール送信
-module.exports.sendUpdateStatusEmail = async (user, status, updatedOrder) => {
+module.exports.sendUpdateStatusEmail = async (toUser, status, updatedOrder) => {
 
     if (!templates[status]) {
         console.error(`Error: Template for status "${status}" not found.`);
@@ -34,7 +34,7 @@ module.exports.sendUpdateStatusEmail = async (user, status, updatedOrder) => {
 
     // メール用のデータを取得
     const data = {
-        username: user.username,
+        username: toUser.username,
         orderNumber: updatedOrder.orderNumber,
         orderId: updatedOrder._id
     }
@@ -43,5 +43,5 @@ module.exports.sendUpdateStatusEmail = async (user, status, updatedOrder) => {
     const template = templates[status](data);
 
     // 注文完了メールを送信する
-    await sendEmail(user.email, template.subject, template.body);
+    await sendEmail(toUser.email, template.subject, template.body);
 }

@@ -78,7 +78,7 @@ module.exports.updateOrderStatus = catchAsync(async (req, res) => {
     );
 
     // 注文ステータス更新メール
-    await emailService.sendUpdateStatusEmail(req.user, status, result.updatedOrder);
+    await emailService.sendUpdateStatusEmail(result.updatedOrder.user, status, result.updatedOrder);
 
     req.flash('success', '注文ステータスを更新しました');
     res.redirect('/admin/orders');

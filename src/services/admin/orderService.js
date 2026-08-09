@@ -50,8 +50,8 @@ module.exports.updateOrderStatus = async (orderId, statusData) => {
     const updatedOrder = await Order.findByIdAndUpdate(
         orderId,
         { status: statusData },
-        { new: true }
-    );
+        { new: true })
+        .populate('user', 'username email');
 
     return { success: true, updatedOrder };
 }
