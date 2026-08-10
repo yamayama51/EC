@@ -61,7 +61,7 @@
                         <dd class="col-sm-7"><small><%= order.orderNumber %></small></dd>
 
                         <dt class="col-sm-5 text-muted">注文日時</dt>
-                        <dd class="col-sm-7"><%= format(order.createdAt, 'yyyy/MM/dd HH:mm') %></dd>
+                        <dd class="col-sm-7"><%= formatDate(order.createdAt) %></dd>
 
                         <dt class="col-sm-5 text-muted">ステータス</dt>
                         <dd class="col-sm-7">

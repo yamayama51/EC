@@ -90,6 +90,19 @@ module.exports.setLocals = catchAsync(async (req, res, next) => {
     // ejsで動的にクラスを変更するための処理の設定
     res.locals.getStatusBadge = getStatusBadge;
 
+    // 表示時刻を日本時間に合わせる
+    res.locals.formatDate = (dateString) => {
+        if (!dateString) return '';
+        return new Date(dateString).toLocaleString('ja-JP', {
+            timeZone: 'Asia/Tokyo',
+            year: 'numeric',
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit'
+        });
+    }
+
     next();
 });
 

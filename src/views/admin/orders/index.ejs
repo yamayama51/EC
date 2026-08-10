@@ -63,12 +63,12 @@
 
                         <%# 注文日時 %>
                         <td>
-                            <%= format(order.createdAt, 'yyyy/MM/dd HH:mm') %>
+                            <%= formatDate(order.createdAt) %>
                         </td>
 
                         <%# 支払期限 %>
                         <td class="<%= (new Date() > order.paymentDeadline && order.status === 'pending') ? 'text-danger fw-bold' : '' %>">
-                            <%= format(order.paymentDeadline, 'yyyy/MM/dd HH:mm') %>
+                            <%= formatDate(order.paymentDeadline) %>
                         </td>
 
                         <%# 注文者メールアドレス %>
