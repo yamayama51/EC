@@ -103,8 +103,9 @@ module.exports.createOrder = catchAsync(async (req, res) => {
         }
     );
 
-    // 注文完了メールの送信
+    // 注文者・管理者へメールを送信する
     await emailService.sendOrderPlacedEmail(req.user, order);
+    await emailService.sendAdminNotificationEmail(req.user, order);
 
     req.flash('success', '注文が完了しました');
     res.redirect(`/orders/success?orderId=${order._id}`);
