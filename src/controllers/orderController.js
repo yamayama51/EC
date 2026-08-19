@@ -55,6 +55,11 @@ module.exports.renderSuccessForm = catchAsync(async (req, res) => {
     // IDからオーダーを取得
     const order = await orderService.getOrderById(orderId);
 
+    // オーダーが自分の注文ではない場合
+    if (!order || !order.user.equals(req.user._id)) {
+        return res.redirect('/products');
+    }
+
     res.render('orders/success', { order });
 });
 
