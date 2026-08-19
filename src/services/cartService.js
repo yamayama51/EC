@@ -130,7 +130,7 @@ module.exports.reduceQuantity = async (userId, variantId) => {
 
             // 該当商品をカートから削除
             await Cart.findOneAndUpdate(
-                { user: req.user._id }, 
+                { user: userId }, 
                 {
                     $pull: { items: { variantId: variantId } }
                 }
