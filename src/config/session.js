@@ -7,11 +7,13 @@ const session = require('express-session');
 
 // sessionの設定
 module.exports = session({
-    secret: 'mysecret',
+    secret: process.env.SESSION_SECRET,
     resave: false,
-    saveUninitialized: true,
+    saveUninitialized: false,
     cookie: {
         httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'lax',
         maxAge: 1000 * 60 * 60 * 24 * 7,
     }
 });
